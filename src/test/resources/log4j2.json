@@ -1,0 +1,43 @@
+{
+  "configuration": {
+    "monitorInterval": "720",
+    "name": "Default",
+    "appenders": {
+      "Console": {
+        "name":"System",
+        "target":"SYSTEM_OUT",
+        "PatternLayout": {
+          "pattern":"%d{HH:mm:ss} [%t] %-5level %logger{1} - %msg%n"
+        }
+      },
+      "RollingFile": {
+        "name":"File",
+        "fileName":"logs/necklace_service.log",
+        "filePattern":"logs/necklace_service_%i.log",
+        "PatternLayout": {
+          "pattern":"%d{yyyy-mm-dd HH:mm:ss} [%t] %-5level [%logger{3}] Method:%M Line:%L - %msg%n"
+        },
+        "Policies": {
+          "SizeBasedTriggeringPolicy": {
+            "size":"10 KB"
+          }
+        },
+        "DefaultRolloverStrategy": {
+          "max":"1000"
+        }
+      }
+    },
+    "loggers": {
+      "root": {
+        "LevelRangeFilter": {"minLevel":"FATAL", "maxLevel": "TRACE", "onMatch": "ACCEPT", "OnMismatch": "DENY"},
+        "level": "DEBUG",
+        "appender-ref": [{
+          "ref":"System"
+        },
+          {
+            "ref":"File"
+          }]
+      }
+    }
+  }
+}
