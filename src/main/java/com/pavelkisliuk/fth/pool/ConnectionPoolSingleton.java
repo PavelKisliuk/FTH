@@ -1,4 +1,4 @@
-/*  By Pavel Kisliuk, 27.05.2019
+/*  By Pavel Kisliuk, 07.07.2019
  *  This is class for education and nothing rights don't reserved.
  */
 
@@ -18,34 +18,92 @@ import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ * The {@code ConnectionPoolSingleton} class is thread-safety enum singleton class-wrapper
+ * for {@code List} of {@code Connection}. Class realize system of obtaining connections to database
+ * without closing the connection after using.
+ * <p>
  *
+ * @author Kisliuk Pavel Sergeevich
+ * @since 12.0
  */
 public enum ConnectionPoolSingleton {
+	/**
+	 * Instance of singleton.
+	 */
 	INSTANCE(10);
 
 	private static final Logger LOGGER = LogManager.getLogger();
+
+	/**
+	 * Lock for multithreading realization.
+	 */
 	private static final ReentrantLock LOCK = new ReentrantLock(); //может ли быть static?
+
+	/**
+	 * Path to database.
+	 */
 	private static final String DATABASE_URL =
 			"jdbc:derby:F:\\JavaSE\\Projects\\FTH\\src\\test\\resources\\database\\testdb";
+
+	/**
+	 * Database login.
+	 */
 	private static final String DATABASE_LOGIN = "inProjectWithoutLaba";
+
+	/**
+	 * Database password.
+	 */
 	private static final String DATABASE_PASSWORD = "vProektBezLabyi";
+
+	/**
+	 * Default pool size.
+	 */
 	private int poolSize;
+
+	/**
+	 * Flag for point if pool create.
+	 */
 	private boolean isCreated;
+
+	/**
+	 * Pool for connection receiving.
+	 */
 	private List<Connection> connectionPool;
+
+	/**
+	 * {@code List} of connection, which in using.
+	 */
 	private List<Connection> usedConnectionGroup;
 
+	/**
+	 * Default constructor.
+	 * @param startPoolSize for default pool size.
+	 */
 	ConnectionPoolSingleton(int startPoolSize) {
 		this.poolSize = startPoolSize;
 	}
 
+	/**
+	 * Return size of pool.
+	 * @return amount of connections in {@code connectionPool}.
+	 */
 	public int getPoolSize() {
 		return connectionPool.size();
 	}
 
+	/**
+	 * Return size of using connections.
+	 * @return amount of connections in {@code usedConnectionGroup}.
+	 */
 	public int getUsedConnectionSize() {
 		return usedConnectionGroup.size();
 	}
 
+	/**
+	 * Check if close all connections in {@code ConnectionPoolSingleton}.
+	 * @return {@code true} if all connections close, otherwise return {@code false}.
+	 * @throws ConnectionPoolException if {@code SQLException} occurred.
+	 */
 	public boolean isClose() throws ConnectionPoolException {
 		LOGGER.log(Level.DEBUG, "Start ConnectionPoolSingleton -> isClose().");
 		boolean flag = true;
@@ -70,6 +128,11 @@ public enum ConnectionPoolSingleton {
 		return flag;
 	}
 
+	/**
+	 * Check if open all connections in {@code ConnectionPoolSingleton}.
+	 * @return {@code true} if all connections open, otherwise return {@code false}.
+	 * @throws ConnectionPoolException if {@code SQLException} occurred.
+	 */
 	public boolean isOpen() throws ConnectionPoolException {
 		LOGGER.log(Level.DEBUG, "Start ConnectionPoolSingleton -> isOpen().");
 		boolean flag = true;
@@ -94,6 +157,11 @@ public enum ConnectionPoolSingleton {
 		return flag;
 	}
 
+	/**
+	 * Return {@code Connection} from connectionPool.
+	 * @return {@code Optional} of {@code Connection}. If connection is available in {@code connectionPool}
+	 * return this connection, otherwise return {@code null}.
+	 */
 	public Optional<Connection> obtainConnection() {
 		LOGGER.log(Level.DEBUG, "Start ConnectionPoolSingleton -> obtainConnection().");
 		try {
@@ -113,12 +181,18 @@ public enum ConnectionPoolSingleton {
 		}
 	}
 
+	/**
+	 * Give back connection to {@code connectionPool}.
+	 * @param connection is returning connection.
+	 * @throws ConnectionPoolException if @param connection is {@code null} or closed.
+	 */
 	public void releaseConnection(Connection connection) throws ConnectionPoolException { //можно ли при null аргументе просто ничего не делать
 		LOGGER.log(Level.DEBUG, "Start ConnectionPoolSingleton -> releaseConnection().");
 		try {
 			if (connection == null ||
 					connection.isClosed()) {
-				throw new ConnectionPoolException("Invalid argument in ConnectionPoolSingleton -> releaseConnection().");
+				throw new ConnectionPoolException(
+						"Invalid argument in ConnectionPoolSingleton -> releaseConnection().");
 			}
 		} catch (SQLException e) {
 			throw new ConnectionPoolException("SQL exception in ConnectionPoolSingleton -> releaseConnection().", e);
@@ -133,6 +207,10 @@ public enum ConnectionPoolSingleton {
 		LOGGER.log(Level.DEBUG, "Finish ConnectionPoolSingleton -> releaseConnection().");
 	}
 
+	/**
+	 * Create pool of {@code Connection} and add it in {@code connectionPool}.
+	 * @throws ConnectionPoolException if {@code SQLException} occurred.
+	 */
 	public void createPool() throws ConnectionPoolException {
 		LOGGER.log(Level.DEBUG, "Start ConnectionPoolSingleton -> createPool().");
 		if (isCreated) {
@@ -154,6 +232,10 @@ public enum ConnectionPoolSingleton {
 		LOGGER.log(Level.DEBUG, "Finish ConnectionPoolSingleton -> createPool().");
 	}
 
+	/**
+	 * Destroy pool of {@code Connection} and clear {@code connectionPool} and {@code usedConnectionGroup}.
+	 * @throws ConnectionPoolException if {@code SQLException} occurred.
+	 */
 	public void destroyPool() throws ConnectionPoolException {
 		LOGGER.log(Level.DEBUG, "Start ConnectionPoolSingleton -> destroyPool().");
 		if (!isCreated) {
