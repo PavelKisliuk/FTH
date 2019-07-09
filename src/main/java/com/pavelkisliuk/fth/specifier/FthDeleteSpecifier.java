@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 public interface FthDeleteSpecifier extends FthSpecifier {
 	/**
 	 * Paste metadata in {@code PreparedStatement} to delete this data from database.
+	 * <p>
 	 *
 	 * @param statement for pasting metadata into.
 	 * @throws FthSpecifierException if {@code SQLException} occurred.

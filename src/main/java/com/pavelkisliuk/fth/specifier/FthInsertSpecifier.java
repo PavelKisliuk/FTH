@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 public interface FthInsertSpecifier extends FthSpecifier {
 	/**
 	 * Paste metadata in {@code PreparedStatement} to insert this data to database.
+	 * <p>
 	 *
 	 * @param statement for pasting metadata into.
 	 * @throws FthSpecifierException if {@code SQLException} occurred.

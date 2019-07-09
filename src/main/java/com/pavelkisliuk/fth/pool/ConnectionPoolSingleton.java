@@ -77,6 +77,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Default constructor.
+	 * <p>
 	 *
 	 * @param startPoolSize for default pool size.
 	 */
@@ -86,6 +87,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Return size of pool.
+	 * <p>
 	 *
 	 * @return amount of connections in {@code connectionPool}.
 	 */
@@ -95,6 +97,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Return size of using connections.
+	 * <p>
 	 *
 	 * @return amount of connections in {@code usedConnectionGroup}.
 	 */
@@ -104,6 +107,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Check if close all connections in {@code ConnectionPoolSingleton}.
+	 * <p>
 	 *
 	 * @return {@code true} if all connections close, otherwise return {@code false}.
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
@@ -137,6 +141,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Check if open all connections in {@code ConnectionPoolSingleton}.
+	 * <p>
 	 *
 	 * @return {@code true} if all connections open, otherwise return {@code false}.
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
@@ -170,6 +175,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Return {@code Connection} from connectionPool.
+	 * <p>
 	 *
 	 * @return {@code Optional} of {@code Connection}. If connection is available in {@code connectionPool}
 	 * return this connection, otherwise return {@code null}.
@@ -189,6 +195,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Give back connection to {@code connectionPool}.
+	 * <p>
 	 *
 	 * @param connection is returning connection.
 	 * @throws ConnectionPoolException if @param connection is {@code null} or closed.
@@ -216,6 +223,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Create pool of {@code Connection} and add it in {@code connectionPool}.
+	 * <p>
 	 *
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */
@@ -242,6 +250,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Destroy pool of {@code Connection} and clear {@code connectionPool} and {@code usedConnectionGroup}.
+	 * <p>
 	 *
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */

@@ -25,6 +25,7 @@ import java.sql.PreparedStatement;
 public interface FthSelectSpecifier extends FthSpecifier {
 	/**
 	 * Return factory for creation data from database.
+	 * <p>
 	 *
 	 * @return factory for creation data from database by {@code FthRepositorySingleton}.
 	 */
@@ -33,6 +34,7 @@ public interface FthSelectSpecifier extends FthSpecifier {
 	/**
 	 * Paste metadata in {@code PreparedStatement} and return this {@code PreparedStatement}
 	 * with pasted metadata to select data from database by {@code FthRepositorySingleton}.
+	 * <p>
 	 *
 	 * @param statement for pasting metadata into.
 	 * @return {@param statement} with pasted metadata.

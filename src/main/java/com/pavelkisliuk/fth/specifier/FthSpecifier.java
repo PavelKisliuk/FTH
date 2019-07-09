@@ -20,6 +20,7 @@ import com.pavelkisliuk.fth.repository.FthRepositorySingleton;
 public interface FthSpecifier {
 	/**
 	 * Return SQL request as String.
+	 * <p>
 	 *
 	 * @return SQL request for {@code PreparedStatement} as String.
 	 */
