@@ -4,12 +4,14 @@
 
 package com.pavelkisliuk.fth.model;
 
+import com.pavelkisliuk.fth.repository.FthRepositorySingleton;
+
 /**
- * Interface for unification of reference data types, which are used by {@code FthRepository}.
+ * Interface for unification of reference data types, which are used by {@code FthRepositorySingleton}.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see com.pavelkisliuk.fth.repository.FthRepository
+ * @see FthRepositorySingleton
  * @since 12.0
  */
 public interface FthData {
