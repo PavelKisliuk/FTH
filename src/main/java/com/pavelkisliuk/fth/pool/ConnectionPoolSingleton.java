@@ -12,8 +12,8 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -37,7 +37,7 @@ public enum ConnectionPoolSingleton {
 	/**
 	 * Lock for multithreading realization.
 	 */
-	private static final ReentrantLock LOCK = new ReentrantLock(); //может ли быть static?
+	private static final ReentrantLock LOCK = new ReentrantLock(); //может ли быть static? Тем более, что класс Singleton
 
 	/**
 	 * Path to database.
@@ -68,15 +68,16 @@ public enum ConnectionPoolSingleton {
 	/**
 	 * Pool for connection receiving.
 	 */
-	private List<Connection> connectionPool;
+	private ArrayDeque<Connection> connectionPool;
 
 	/**
 	 * {@code List} of connection, which in using.
 	 */
-	private List<Connection> usedConnectionGroup;
+	private HashSet<Connection> usedConnectionGroup;
 
 	/**
 	 * Default constructor.
+	 *
 	 * @param startPoolSize for default pool size.
 	 */
 	ConnectionPoolSingleton(int startPoolSize) {
@@ -85,6 +86,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Return size of pool.
+	 *
 	 * @return amount of connections in {@code connectionPool}.
 	 */
 	public int getPoolSize() {
@@ -93,6 +95,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Return size of using connections.
+	 *
 	 * @return amount of connections in {@code usedConnectionGroup}.
 	 */
 	public int getUsedConnectionSize() {
@@ -101,10 +104,12 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Check if close all connections in {@code ConnectionPoolSingleton}.
+	 *
 	 * @return {@code true} if all connections close, otherwise return {@code false}.
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */
 	public boolean isClose() throws ConnectionPoolException {
+		LOCK.lock();
 		LOGGER.log(Level.DEBUG, "Start ConnectionPoolSingleton -> isClose().");
 		boolean flag = true;
 		try {
@@ -123,6 +128,8 @@ public enum ConnectionPoolSingleton {
 			}
 		} catch (SQLException e) {
 			throw new ConnectionPoolException("SQL exception in ConnectionPoolSingleton -> isClose().", e);
+		} finally {
+			LOCK.unlock();
 		}
 		LOGGER.log(Level.DEBUG, "Finish ConnectionPoolSingleton -> isClose().");
 		return flag;
@@ -130,10 +137,12 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Check if open all connections in {@code ConnectionPoolSingleton}.
+	 *
 	 * @return {@code true} if all connections open, otherwise return {@code false}.
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */
 	public boolean isOpen() throws ConnectionPoolException {
+		LOCK.lock();
 		LOGGER.log(Level.DEBUG, "Start ConnectionPoolSingleton -> isOpen().");
 		boolean flag = true;
 		try {
@@ -152,6 +161,8 @@ public enum ConnectionPoolSingleton {
 			}
 		} catch (SQLException e) {
 			throw new ConnectionPoolException("SQL exception in ConnectionPoolSingleton -> isOpen().", e);
+		} finally {
+			LOCK.unlock();
 		}
 		LOGGER.log(Level.DEBUG, "Finish ConnectionPoolSingleton -> isOpen().");
 		return flag;
@@ -159,21 +170,16 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Return {@code Connection} from connectionPool.
+	 *
 	 * @return {@code Optional} of {@code Connection}. If connection is available in {@code connectionPool}
 	 * return this connection, otherwise return {@code null}.
 	 */
 	public Optional<Connection> obtainConnection() {
+		LOCK.lock();
 		LOGGER.log(Level.DEBUG, "Start ConnectionPoolSingleton -> obtainConnection().");
 		try {
-			LOCK.lock();
-			Connection connection = null;
-			if (!connectionPool.isEmpty()) {
-				connection = connectionPool.remove(connectionPool.size() - 1);
-				usedConnectionGroup.add(connection);
-				LOGGER.log(Level.DEBUG, "Connection acquired. Return acquired connection.");
-			} else {
-				LOGGER.log(Level.INFO, "Connection not acquired. Return null.");
-			}
+			Connection connection = connectionPool.poll();
+			usedConnectionGroup.add(connection);
 			LOGGER.log(Level.DEBUG, "Finish ConnectionPoolSingleton -> obtainConnection().");
 			return Optional.ofNullable(connection);
 		} finally {
@@ -183,6 +189,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Give back connection to {@code connectionPool}.
+	 *
 	 * @param connection is returning connection.
 	 * @throws ConnectionPoolException if @param connection is {@code null} or closed.
 	 */
@@ -198,10 +205,10 @@ public enum ConnectionPoolSingleton {
 			throw new ConnectionPoolException("SQL exception in ConnectionPoolSingleton -> releaseConnection().", e);
 		}
 		if (usedConnectionGroup.contains(connection)) { //надо ли здесь лочить?
-			connectionPool.add(connection);
+			connectionPool.offer(connection);
 			usedConnectionGroup.remove(connection);
 			LOGGER.log(Level.DEBUG, "Connection released.");
-		} else {
+		} else { //Если пришёл Connection не из этого пула?
 			LOGGER.log(Level.WARN, "Acquired not this pool connection.");
 		}
 		LOGGER.log(Level.DEBUG, "Finish ConnectionPoolSingleton -> releaseConnection().");
@@ -209,6 +216,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Create pool of {@code Connection} and add it in {@code connectionPool}.
+	 *
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */
 	public void createPool() throws ConnectionPoolException {
@@ -217,8 +225,8 @@ public enum ConnectionPoolSingleton {
 			LOGGER.log(Level.INFO, "Pool is already created.");
 			return;
 		}
-		connectionPool = new ArrayList<>();
-		usedConnectionGroup = new ArrayList<>();
+		connectionPool = new ArrayDeque<>();
+		usedConnectionGroup = new HashSet<>();
 		try {
 			LOGGER.log(Level.DEBUG, "Start creation.");
 			for (int i = 0; i < poolSize; i++) {
@@ -234,6 +242,7 @@ public enum ConnectionPoolSingleton {
 
 	/**
 	 * Destroy pool of {@code Connection} and clear {@code connectionPool} and {@code usedConnectionGroup}.
+	 *
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */
 	public void destroyPool() throws ConnectionPoolException {
@@ -255,11 +264,11 @@ public enum ConnectionPoolSingleton {
 		} catch (SQLException e) {
 			throw new ConnectionPoolException("SQL exception in ConnectionPoolSingleton -> destroyPool().", e);
 		} finally {
+			connectionPool.clear();
+			usedConnectionGroup.clear();
+			isCreated = false;
 			LOCK.unlock();
 		}
-		connectionPool.clear();
-		usedConnectionGroup.clear();
-		isCreated = false;
 		LOGGER.log(Level.DEBUG, "Finish ConnectionPoolSingleton -> destroyPool().");
 	}
 }
