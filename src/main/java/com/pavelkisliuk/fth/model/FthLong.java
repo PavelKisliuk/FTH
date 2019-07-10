@@ -17,7 +17,7 @@ public class FthLong implements FthData {
 	/**
 	 * Wrapped variable.
 	 */
-	private long bigInt; //примитив или класс?
+	private long bigInt;
 
 	/**
 	 * Constructor for initialization.
