@@ -10,6 +10,7 @@ package com.pavelkisliuk.fth.model;
  *
  * @author Kisliuk Pavel Sergeevich
  * @see FthData
+ * @see FthString
  * @since 12.0
  */
 public class FthLong implements FthData {

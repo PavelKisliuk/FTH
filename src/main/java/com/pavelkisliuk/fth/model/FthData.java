@@ -10,6 +10,8 @@ package com.pavelkisliuk.fth.model;
  *
  * @author Kisliuk Pavel Sergeevich
  * @see com.pavelkisliuk.fth.repository.FthRepositorySingleton
+ * @see FthLong
+ * @see FthString
  * @since 12.0
  */
 public interface FthData {
