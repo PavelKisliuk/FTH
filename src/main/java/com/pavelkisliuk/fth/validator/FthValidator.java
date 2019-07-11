@@ -12,11 +12,14 @@ import com.pavelkisliuk.fth.model.FthData;
  *
  * @author Kisliuk Pavel Sergeevich
  * @see com.pavelkisliuk.fth.model.FthData
+ * @see RegistrationDataValidator
  * @since 12.0
  */
 public interface FthValidator {
 	/**
 	 * Inspect {@code FthData} instance for correct data.
+	 * <p>
+	 *
 	 * @param data is data for validation.
 	 * @return {@code true} if {@param data} valid, else return {@code false}.
 	 */
