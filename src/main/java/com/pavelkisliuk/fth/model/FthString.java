@@ -42,7 +42,7 @@ public class FthString implements FthData {
 	 *
 	 * @param string is variable for setting.
 	 */
-	public void setString(String string) {
+	public void set(String string) {
 		this.string = string;
 	}
 
