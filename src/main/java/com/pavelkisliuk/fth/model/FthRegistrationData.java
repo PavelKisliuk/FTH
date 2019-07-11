@@ -42,6 +42,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code name} getter.
+	 * <p>
 	 *
 	 * @return {@code name}.
 	 */
@@ -51,6 +52,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code name} setter.
+	 * <p>
 	 *
 	 * @param name is variable for setting.
 	 */
@@ -60,6 +62,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code surname} getter.
+	 * <p>
 	 *
 	 * @return {@code surname}.
 	 */
@@ -69,6 +72,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code surname} setter.
+	 * <p>
 	 *
 	 * @param surname is variable for setting.
 	 */
@@ -78,6 +82,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code email} getter.
+	 * <p>
 	 *
 	 * @return {@code email}.
 	 */
@@ -87,6 +92,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code email} setter.
+	 * <p>
 	 *
 	 * @param email is variable for setting.
 	 */
@@ -96,6 +102,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code password} getter.
+	 * <p>
 	 *
 	 * @return {@code password}.
 	 */
@@ -105,6 +112,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code password} setter.
+	 * <p>
 	 *
 	 * @param password is variable for setting.
 	 */
@@ -114,6 +122,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code confirmPassword} getter.
+	 * <p>
 	 *
 	 * @return {@code confirmPassword}.
 	 */
@@ -123,6 +132,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code confirmPassword} setter.
+	 * <p>
 	 *
 	 * @param confirmPassword is variable for setting.
 	 */
@@ -132,6 +142,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code key} getter.
+	 * <p>
 	 *
 	 * @return {@code key}.
 	 */
@@ -141,6 +152,7 @@ public class FthRegistrationData implements FthData {
 
 	/**
 	 * The {@code key} setter.
+	 * <p>
 	 *
 	 * @param key is variable for setting.
 	 */

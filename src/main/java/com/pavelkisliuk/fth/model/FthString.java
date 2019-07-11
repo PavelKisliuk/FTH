@@ -21,6 +21,7 @@ public class FthString implements FthData {
 
 	/**
 	 * Constructor for initialization.
+	 * <p>
 	 *
 	 * @param string is variable for initialization {@code FthString}.
 	 */
@@ -30,6 +31,7 @@ public class FthString implements FthData {
 
 	/**
 	 * Getter for {@code FthString}.
+	 * <p>
 	 *
 	 * @return {@code string}.
 	 */
@@ -39,6 +41,7 @@ public class FthString implements FthData {
 
 	/**
 	 * Setter for {@code FthString}.
+	 * <p>
 	 *
 	 * @param string is variable for setting.
 	 */

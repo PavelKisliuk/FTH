@@ -25,6 +25,8 @@ import java.sql.SQLException;
 class FthStringCreator implements FthRepositoryFactory {
 	/**
 	 * Return instance of {@code FthString}.
+	 * <p>
+	 *
 	 * @param resultSet of data for creation {@code FthData} instance.
 	 * @return instance of {@code FthString}.
 	 * @throws FthRepositoryFactoryException if {@code SQLException} occurred.

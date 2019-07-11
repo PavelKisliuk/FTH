@@ -31,6 +31,7 @@ public class RegistrationDataInsertSpecifier implements FthInsertSpecifier {
 
 	/**
 	 * Constructor for {@code data} initializing.
+	 * <p>
 	 *
 	 * @param data for {@code data} initializing.
 	 */

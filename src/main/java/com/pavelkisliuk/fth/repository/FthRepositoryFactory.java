@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 public interface FthRepositoryFactory {
 	/**
 	 * Return instance of {@code FthData}.
+	 * <p>
 	 *
 	 * @param resultSet of data for creation {@code FthData} instance.
 	 * @return instance of {@code FthData}.

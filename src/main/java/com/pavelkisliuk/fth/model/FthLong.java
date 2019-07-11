@@ -21,6 +21,7 @@ public class FthLong implements FthData {
 
 	/**
 	 * Constructor for initialization.
+	 * <p>
 	 *
 	 * @param bigInt is variable for initialization {@code FthLong}.
 	 */
@@ -30,6 +31,7 @@ public class FthLong implements FthData {
 
 	/**
 	 * Getter for {@code FthLong}.
+	 * <p>
 	 *
 	 * @return {@code bigInt}.
 	 */
@@ -39,6 +41,7 @@ public class FthLong implements FthData {
 
 	/**
 	 * Setter for {@code FthLong}.
+	 * <p>
 	 *
 	 * @param bigInt is variable for setting.
 	 */

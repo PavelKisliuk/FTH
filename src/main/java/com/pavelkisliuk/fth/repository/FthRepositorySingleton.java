@@ -43,6 +43,7 @@ public enum FthRepositorySingleton {
 
 	/**
 	 * Insert data into database.
+	 * <p>
 	 *
 	 * @param specifier for obtaining special actions.
 	 * @throws FthRepositoryException if {@code SQLException}, {@code FthSpecifierException} occurred.
@@ -71,6 +72,7 @@ public enum FthRepositorySingleton {
 
 	/**
 	 * Delete data from database.
+	 * <p>
 	 *
 	 * @param specifier for obtaining special actions.
 	 * @throws FthRepositoryException if {@code SQLException}, {@code FthSpecifierException} occurred.
@@ -99,6 +101,7 @@ public enum FthRepositorySingleton {
 
 	/**
 	 * Select data in database.
+	 * <p>
 	 *
 	 * @param specifier for obtaining special actions.
 	 * @return {@code List} of {@code FthData}.
