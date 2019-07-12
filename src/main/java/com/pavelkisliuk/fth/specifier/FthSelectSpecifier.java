@@ -5,7 +5,7 @@
 package com.pavelkisliuk.fth.specifier;
 
 import com.pavelkisliuk.fth.exception.FthSpecifierException;
-import com.pavelkisliuk.fth.repository.FthRepositoryFactory;
+import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 
 import java.sql.PreparedStatement;
 
@@ -16,7 +16,7 @@ import java.sql.PreparedStatement;
  *
  * @author Kisliuk Pavel Sergeevich
  * @see com.pavelkisliuk.fth.repository.FthRepositorySingleton
- * @see FthRepositoryFactory
+ * @see FthDataByResultSetFactory
  * @see FthSpecifier
  * @see FthInsertSpecifier
  * @see FthDeleteSpecifier
@@ -29,7 +29,7 @@ public interface FthSelectSpecifier extends FthSpecifier {
 	 *
 	 * @return factory for creation data from database by {@code FthRepositorySingleton}.
 	 */
-	FthRepositoryFactory createFactory();
+	FthDataByResultSetFactory createFactory();
 
 	/**
 	 * Paste metadata in {@code PreparedStatement} and return this {@code PreparedStatement}

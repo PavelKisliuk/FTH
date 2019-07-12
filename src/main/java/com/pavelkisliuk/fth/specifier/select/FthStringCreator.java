@@ -7,7 +7,7 @@ package com.pavelkisliuk.fth.specifier.select;
 import com.pavelkisliuk.fth.exception.FthRepositoryFactoryException;
 import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthString;
-import com.pavelkisliuk.fth.repository.FthRepositoryFactory;
+import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,12 +17,12 @@ import java.sql.SQLException;
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see com.pavelkisliuk.fth.repository.FthRepositoryFactory
+ * @see FthDataByResultSetFactory
  * @see com.pavelkisliuk.fth.model.FthData
  * @see com.pavelkisliuk.fth.model.FthString
  * @since 12.0
  */
-class FthStringCreator implements FthRepositoryFactory {
+class FthStringCreator implements FthDataByResultSetFactory {
 	/**
 	 * Return instance of {@code FthString}.
 	 * <p>

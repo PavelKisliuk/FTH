@@ -117,7 +117,7 @@ public enum FthRepositorySingleton {
 		Connection connection = connectionOptional.get();
 		try (PreparedStatement statement = connection.prepareStatement(specifier.deriveSequelRequest());
 			 ResultSet resultSet = specifier.pasteMeta(statement).executeQuery()) {
-			FthRepositoryFactory factory = specifier.createFactory();
+			FthDataByResultSetFactory factory = specifier.createFactory();
 			while (resultSet.next()) {
 				dataList.add(factory.create(resultSet));
 			}

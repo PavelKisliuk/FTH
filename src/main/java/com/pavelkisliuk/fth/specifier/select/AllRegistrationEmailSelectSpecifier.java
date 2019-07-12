@@ -4,7 +4,7 @@
 
 package com.pavelkisliuk.fth.specifier.select;
 
-import com.pavelkisliuk.fth.repository.FthRepositoryFactory;
+import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 import com.pavelkisliuk.fth.specifier.FthSelectSpecifier;
 
 import java.sql.PreparedStatement;
@@ -16,7 +16,7 @@ import java.sql.PreparedStatement;
  *
  * @author Kisliuk Pavel Sergeevich
  * @see com.pavelkisliuk.fth.repository.FthRepositorySingleton
- * @see FthRepositoryFactory
+ * @see FthDataByResultSetFactory
  * @see FthSelectSpecifier
  * @see AllClientEmailSelectSpecifier
  * @see FthStringCreator
@@ -30,7 +30,7 @@ public class AllRegistrationEmailSelectSpecifier implements FthSelectSpecifier {
 	 * @return {@code FthStringCreator} for creation data from database by {@code FthRepositorySingleton}.
 	 */
 	@Override
-	public FthRepositoryFactory createFactory() {
+	public FthDataByResultSetFactory createFactory() {
 		return new FthStringCreator();
 	}
 

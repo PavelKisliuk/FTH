@@ -10,7 +10,7 @@ import com.pavelkisliuk.fth.model.FthData;
 import java.sql.ResultSet;
 
 /**
- * FthRepositoryFactory is interface for creation {@code FthData} instances in {@code FthRepositorySingleton}.
+ * FthDataByResultSetFactory is interface for creation {@code FthData} instances in {@code FthRepositorySingleton}.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
@@ -18,7 +18,7 @@ import java.sql.ResultSet;
  * @see FthData
  * @since 12.0
  */
-public interface FthRepositoryFactory {
+public interface FthDataByResultSetFactory {
 	/**
 	 * Return instance of {@code FthData}.
 	 * <p>
