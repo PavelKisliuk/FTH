@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
  * @see FthRepositoryFactory
  * @see FthSelectSpecifier
  * @see AllRegistrationEmailSelectSpecifier
+ * @see FthStringCreator
  * @since 12.0
  */
 public class AllClientEmailSelectSpecifier implements FthSelectSpecifier {
