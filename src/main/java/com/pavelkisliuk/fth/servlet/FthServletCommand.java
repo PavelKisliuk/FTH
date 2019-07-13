@@ -4,6 +4,7 @@
 
 package com.pavelkisliuk.fth.servlet;
 
+import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.exception.FthServletException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,5 +24,5 @@ interface FthServletCommand {
 	 *
 	 * @throws FthServletException if some exceptions occurred.
 	 */
-	void execute(HttpServletRequest request, HttpServletResponse response) throws FthServletException;
+	void execute(HttpServletRequest request, HttpServletResponse response) throws FthServletException, FthCommandException;
 }

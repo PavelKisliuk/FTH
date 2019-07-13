@@ -12,7 +12,7 @@ import com.pavelkisliuk.fth.model.FthData;
  *
  * @author Kisliuk Pavel Sergeevich
  * @see com.pavelkisliuk.fth.model.FthData
- * @see RegistrationDataValidator
+ * @see FthRegistrationDataValidator
  * @since 12.0
  */
 public interface FthValidator {

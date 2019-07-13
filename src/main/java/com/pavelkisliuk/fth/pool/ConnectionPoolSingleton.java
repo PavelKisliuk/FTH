@@ -236,11 +236,11 @@ public enum ConnectionPoolSingleton {
 		connectionPool = new ArrayDeque<>();
 		usedConnectionGroup = new HashSet<>();
 		try {
-			LOGGER.log(Level.DEBUG, "Start creation.");
+			LOGGER.log(Level.INFO, "Start creation.");
 			for (int i = 0; i < poolSize; i++) {
 				connectionPool.add(DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD));
 			}
-			LOGGER.log(Level.DEBUG, "Finish creation.");
+			LOGGER.log(Level.INFO, "Finish creation.");
 		} catch (SQLException e) {
 			throw new ConnectionPoolException("SQL exception in ConnectionPoolSingleton -> createPool().", e);
 		}
@@ -262,14 +262,14 @@ public enum ConnectionPoolSingleton {
 		}
 		try {
 			LOCK.lock(); //нужно ли проверять, не лочил ли он что-либо? Если выдаётся соединение, то тут будет ждать, чтобы войти?
-			LOGGER.log(Level.DEBUG, "Start destroying.");
+			LOGGER.log(Level.INFO, "Start destroying.");
 			for (Connection connection : connectionPool) {
 				connection.close();
 			}
 			for (Connection connection : usedConnectionGroup) {
 				connection.close();
 			}
-			LOGGER.log(Level.DEBUG, "Finish destroying.");
+			LOGGER.log(Level.INFO, "Finish destroying.");
 		} catch (SQLException e) {
 			throw new ConnectionPoolException("SQL exception in ConnectionPoolSingleton -> destroyPool().", e);
 		} finally {

@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 
 /**
- * The class {@code RegistrationDataValidator} is realization of interface {@code FthValidator} for
+ * The class {@code FthRegistrationDataValidator} is realization of interface {@code FthValidator} for
  * validation {@code FthRegistrationData}.
  * <p>
  *
@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * @see FthValidator
  * @since 12.0
  */
-public class RegistrationDataValidator implements FthValidator {
+public class FthRegistrationDataValidator implements FthValidator {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String NAME_EMPTY = "Field \"name\" empty.\n";
@@ -74,7 +74,7 @@ public class RegistrationDataValidator implements FthValidator {
 	 * @return {@code true} if {@param registrationData} empty, else return {@code false}.
 	 */
 	private boolean isDataNotEmpty(FthRegistrationData registrationData) {
-		LOGGER.log(Level.DEBUG, "Start RegistrationDataValidator -> isDataNotEmpty().");
+		LOGGER.log(Level.DEBUG, "Start FthRegistrationDataValidator -> isDataNotEmpty().");
 		boolean flag = true;
 		if (registrationData.getName() == null || registrationData.getName().isBlank()) {
 			LOGGER.log(Level.WARN, "Empty data in registrationData.getName().");
@@ -101,7 +101,7 @@ public class RegistrationDataValidator implements FthValidator {
 			flag = false;
 			messageGroup.add(CONFIRM_PASSWORD_EMPTY);
 		}
-		LOGGER.log(Level.DEBUG, "Finish RegistrationDataValidator -> isDataNotEmpty().");
+		LOGGER.log(Level.DEBUG, "Finish FthRegistrationDataValidator -> isDataNotEmpty().");
 		return flag;
 	}
 
@@ -113,7 +113,7 @@ public class RegistrationDataValidator implements FthValidator {
 	 * @return {@code true} if {@param registrationData} correct, else return {@code false}.
 	 */
 	private boolean isDataCorrect(FthRegistrationData registrationData) {
-		LOGGER.log(Level.DEBUG, "Start RegistrationDataValidator -> isDataCorrect().");
+		LOGGER.log(Level.DEBUG, "Start FthRegistrationDataValidator -> isDataCorrect().");
 		boolean flag = true;
 		if (registrationData.getName().length() > 30) {
 			LOGGER.log(Level.WARN, "Long name data in registrationData.getName().");
@@ -151,7 +151,7 @@ public class RegistrationDataValidator implements FthValidator {
 			flag = false;
 			messageGroup.add(DIFFERENT_PASSWORDS);
 		}
-		LOGGER.log(Level.DEBUG, "Finish RegistrationDataValidator -> isDataCorrect().");
+		LOGGER.log(Level.DEBUG, "Finish FthRegistrationDataValidator -> isDataCorrect().");
 		return flag;
 	}
 
@@ -164,7 +164,7 @@ public class RegistrationDataValidator implements FthValidator {
 	 * else return {@code false}.
 	 */
 	private boolean isEmailUnique(FthRegistrationData registrationData) {
-		LOGGER.log(Level.DEBUG, "Start RegistrationDataValidator -> isEmailUnique().");
+		LOGGER.log(Level.DEBUG, "Start FthRegistrationDataValidator -> isEmailUnique().");
 		boolean flag = true;
 		try {
 			if (FthRepositorySingleton.INSTANCE.query(new AllRegistrationEmailSelectSpecifier()).
@@ -179,7 +179,7 @@ public class RegistrationDataValidator implements FthValidator {
 			messageGroup.add("Something wrong! Try again later.");
 			flag = false;
 		}
-		LOGGER.log(Level.DEBUG, "Finish RegistrationDataValidator -> isEmailUnique().");
+		LOGGER.log(Level.DEBUG, "Finish FthRegistrationDataValidator -> isEmailUnique().");
 		return flag;
 	}
 
