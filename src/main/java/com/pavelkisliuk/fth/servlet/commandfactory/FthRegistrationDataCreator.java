@@ -2,7 +2,7 @@
  *  This is class for education and nothing rights don't reserved.
  */
 
-package com.pavelkisliuk.fth.servlet;
+package com.pavelkisliuk.fth.servlet.commandfactory;
 
 import com.pavelkisliuk.fth.model.FthRegistrationData;
 

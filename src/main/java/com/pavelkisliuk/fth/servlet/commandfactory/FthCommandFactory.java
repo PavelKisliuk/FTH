@@ -2,7 +2,7 @@
  *  This is class for education and nothing rights don't reserved.
  */
 
-package com.pavelkisliuk.fth.servlet;
+package com.pavelkisliuk.fth.servlet.commandfactory;
 
 /**
  * The {@code FthCommandFactory} interface is factory for creation command to obtaining data from client
@@ -12,12 +12,12 @@ package com.pavelkisliuk.fth.servlet;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public interface FthCommandFactory {
+interface FthCommandFactory {
 	/**
-	 * Return instance of {@code FthCommandFactory}.
+	 * Return instance of {@code FthServletCommand}.
 	 * <p>
 	 *
-	 * @return instance of {@code FthCommandFactory}.
+	 * @return instance of {@code FthServletCommand}.
 	 */
-	FthCommandFactory create();
+	FthServletCommand create();
 }

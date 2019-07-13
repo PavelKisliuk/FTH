@@ -2,7 +2,7 @@
  *  This is class for education and nothing rights don't reserved.
  */
 
-package com.pavelkisliuk.fth.servlet;
+package com.pavelkisliuk.fth.servlet.commandfactory;
 
 import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.exception.FthServletException;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-interface FthServletCommand {
+public interface FthServletCommand {
 	/**
 	 * Method obtain data from client and decide how to act with it.
 	 * <p>
