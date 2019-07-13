@@ -48,6 +48,8 @@ public class FthSingUp {
 
 	/**
 	 * Registry new user in the database.
+	 * <p>
+	 *
 	 * @param registrationData is new user data for registration.
 	 * @return message for user about progress of registration as {@code String}.
 	 * @throws FthControllerException if exceptions occurred.
@@ -57,7 +59,7 @@ public class FthSingUp {
 		Map<String, String> responseJson = new HashMap<>();
 		FthRegistrationDataValidator validator = new FthRegistrationDataValidator();
 		LOGGER.log(Level.INFO, "Start validation.");
-		if(!validator.isCorrect(registrationData)) {
+		if (!validator.isCorrect(registrationData)) {
 			LOGGER.log(Level.WARN, "Incorrect data.");
 			responseJson.put(KEY_MESSAGE, validator.toString());
 		} else {
@@ -83,6 +85,8 @@ public class FthSingUp {
 
 	/**
 	 * Create unique key for confirm registration.
+	 * <p>
+	 *
 	 * @return unique key.
 	 */
 	private String createKey() {
