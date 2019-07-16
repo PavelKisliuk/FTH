@@ -7,10 +7,7 @@ package com.pavelkisliuk.fth.controller.singupservice;
 import com.google.gson.Gson;
 import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.exception.FthMailException;
-import com.pavelkisliuk.fth.exception.FthRepositoryException;
 import com.pavelkisliuk.fth.model.FthRegistrationData;
-import com.pavelkisliuk.fth.repository.FthRepositorySingleton;
-import com.pavelkisliuk.fth.specifier.insert.RegistrationDataInsertSpecifier;
 import com.pavelkisliuk.fth.validator.FthRegistrationDataValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -22,18 +19,18 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * The {@code FthSingUp} class registry new users in database.
+ * The {@code FthSingUpService} class registry new users in database.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
  * @see com.pavelkisliuk.fth.repository.FthRepositorySingleton
- * @see FthMailSender
+ * @see MailSender
  * @see com.pavelkisliuk.fth.model.FthRegistrationData
  * @see com.pavelkisliuk.fth.specifier.insert.RegistrationDataInsertSpecifier
  * @see com.pavelkisliuk.fth.validator.FthRegistrationDataValidator
  * @since 12.0
  */
-public class FthSingUp {
+public class FthSingUpService {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
@@ -55,7 +52,7 @@ public class FthSingUp {
 	 * @throws FthControllerException if exceptions occurred.
 	 */
 	public String signUp(FthRegistrationData registrationData) throws FthControllerException {
-		LOGGER.log(Level.DEBUG, "Start FthSingUp -> signUp().");
+		LOGGER.log(Level.DEBUG, "Start FthSingUpService -> signUp().");
 		Map<String, String> responseJson = new HashMap<>();
 		FthRegistrationDataValidator validator = new FthRegistrationDataValidator();
 		LOGGER.log(Level.INFO, "Start validation.");
@@ -69,17 +66,17 @@ public class FthSingUp {
 			String confirmMessage = "http://localhost:8080/FTH/start?command=confirm&key=" + key;
 
 			LOGGER.log(Level.INFO, "Try to send e-mail.");
-			FthMailSender mailSender = new FthMailSender();
+			MailSender mailSender = new MailSender();
 			try {
 				mailSender.send(confirmMessage, registrationData.getEmail());
-				FthRepositorySingleton.INSTANCE.add(new RegistrationDataInsertSpecifier(registrationData));
+				//FthRepositorySingleton.INSTANCE.add(new RegistrationDataInsertSpecifier(registrationData));
 				responseJson.put(KEY_MESSAGE, SUCCESS_SEND_EMAIL_MESSAGE);
 				responseJson.put(KEY_REDIRECT, REDIRECT_PATH);
-			} catch (FthMailException | FthRepositoryException e) {
-				throw new FthControllerException("Exception in FthSingUp -> signUp().", e);
+			} catch (FthMailException /*| FthRepositoryException*/ e) {
+				throw new FthControllerException("Exception in FthSingUpService -> signUp().", e);
 			}
 		}
-		LOGGER.log(Level.DEBUG, "Finish FthSingUp -> signUp().");
+		LOGGER.log(Level.DEBUG, "Finish FthSingUpService -> signUp().");
 		return new Gson().toJson(responseJson);
 	}
 
@@ -90,7 +87,7 @@ public class FthSingUp {
 	 * @return unique key.
 	 */
 	private String createKey() {
-		LOGGER.log(Level.DEBUG, "Start FthSingUp -> createKey().");
+		LOGGER.log(Level.DEBUG, "Start FthSingUpService -> createKey().");
 		final String keyPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		StringBuilder key = new StringBuilder();
 		Random random = new SecureRandom();
@@ -98,7 +95,7 @@ public class FthSingUp {
 			key.append(keyPattern.charAt(random.nextInt(keyPattern.length())));
 		}
 		LOGGER.log(Level.INFO, "Created key: -> " + key);
-		LOGGER.log(Level.DEBUG, "Finish FthSingUp -> createKey().");
+		LOGGER.log(Level.DEBUG, "Finish FthSingUpService -> createKey().");
 		return key.toString();
 	}
 }

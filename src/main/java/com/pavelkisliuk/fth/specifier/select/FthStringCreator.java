@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * The {@code FthStringCreator} class is factory for creation {@code FthString}.
+ * The {@code FthStringCreator} class is commandfactory for creation {@code FthString}.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich

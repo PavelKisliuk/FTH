@@ -17,21 +17,21 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 /**
- * The {@code FthMailSender} is class for sending unique key new users for confirm registration.
+ * The {@code MailSender} is class for sending unique key new users for confirm registration.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see FthSingUp
+ * @see FthSingUpService
  * @since 12.0
  */
-class FthMailSender {
+class MailSender {
 	private static final String USERNAME = "fthelperservices@gmail.com";
 	private static final String PASSWORD = "FTHServicesPavelKisliuk210194OLINKdjoankdjoank";
 	private static final String SUBJECT = "Confirmation registration";
 	private Properties props;
 
 
-	FthMailSender() {
+	MailSender() {
 		props = new Properties();
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
@@ -66,7 +66,7 @@ class FthMailSender {
 			message.setText(text);
 			Transport.send(message);
 		} catch (MessagingException e) {
-			throw new FthMailException("MessagingException in FthMailSender -> send()", e);
+			throw new FthMailException("MessagingException in MailSender -> send()", e);
 		}
 	}
 }

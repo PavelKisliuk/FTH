@@ -7,6 +7,17 @@ DROP TABLE ClientAuthenticationData;
 DROP TABLE ClientPublicData;
 DROP TABLE ClientPersonalData;
 DROP TABLE RegistrationData;
+DROP TABLE TrainerData;
+
+CREATE TABLE TrainerData (
+   trainerID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+   firstName varchar (30) NOT NULL,
+   lastName varchar (40) NOT NULL,
+   eMail varchar(255) NOT NULL,
+   password varchar (30) NOT NULL,
+   photoPath varchar (255) NOT NULL,
+   PRIMARY KEY (trainerID)
+);
 
 CREATE TABLE RegistrationData (
    firstName varchar (30) NOT NULL,
@@ -22,7 +33,9 @@ CREATE TABLE ClientPersonalData (
    lastName varchar (40) NOT NULL,
    photoPath varchar (255) NOT NULL,
    registrationKey varchar (30) NOT NULL,
-   PRIMARY KEY (clientID)
+   trainerID BIGINT NOT NULL,
+   PRIMARY KEY (clientID),
+   FOREIGN KEY (trainerID) REFERENCES TrainerData (trainerID)
 );
 
 CREATE TABLE ClientPublicData (
@@ -88,9 +101,13 @@ CREATE TABLE DrillSets (
     FOREIGN KEY (drillID) REFERENCES Drills (drillID)
 );
 
-INSERT INTO ClientPersonalData (firstName, lastName, photoPath, registrationKey)
+INSERT INTO TrainerData (firstName, lastName, eMail, password, photoPath)
 VALUES
-   ('Pavel','Kisliuk', 'testPhoto/testPhoto.jpg', '-');
+   ('Павел','Кислюк', 'pavel-2008.94@mail.ru', '210194', 'testPhoto/testPhoto.jpg');
+
+INSERT INTO ClientPersonalData (firstName, lastName, photoPath, registrationKey, trainerID)
+VALUES
+   ('Pavel','Kisliuk', 'testPhoto/testPhoto.jpg', '-', 1);
 
 INSERT INTO ClientPublicData (clientID, expiredDay, restVisitation)
 VALUES

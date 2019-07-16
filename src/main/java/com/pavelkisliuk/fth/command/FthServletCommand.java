@@ -2,7 +2,7 @@
  *  This is class for education and nothing rights don't reserved.
  */
 
-package com.pavelkisliuk.fth.servlet.commandfactory;
+package com.pavelkisliuk.fth.command;
 
 import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.exception.FthServletException;

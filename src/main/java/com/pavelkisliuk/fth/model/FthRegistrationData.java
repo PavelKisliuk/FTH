@@ -14,27 +14,23 @@ package com.pavelkisliuk.fth.model;
  * @see FthString
  * @since 12.0
  */
-public class FthRegistrationData implements FthData {
+public class FthRegistrationData extends FthAuthenticationData implements FthData {
+
 	/**
 	 * Name of user.
 	 */
 	private String name;
+
 	/**
 	 * Surname of user.
 	 */
 	private String surname;
-	/**
-	 * E-mail of user.
-	 */
-	private String email;
-	/**
-	 * Password of user
-	 */
-	private String password;
+
 	/**
 	 * Repeated password.
 	 */
 	private String confirmPassword;
+
 	/**
 	 * Key for e-mail confirmation of registration.
 	 */
@@ -78,46 +74,6 @@ public class FthRegistrationData implements FthData {
 	 */
 	public void setSurname(String surname) {
 		this.surname = surname;
-	}
-
-	/**
-	 * The {@code email} getter.
-	 * <p>
-	 *
-	 * @return {@code email}.
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * The {@code email} setter.
-	 * <p>
-	 *
-	 * @param email is variable for setting.
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
-	 * The {@code password} getter.
-	 * <p>
-	 *
-	 * @return {@code password}.
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * The {@code password} setter.
-	 * <p>
-	 *
-	 * @param password is variable for setting.
-	 */
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	/**
@@ -169,8 +125,6 @@ public class FthRegistrationData implements FthData {
 
 		if (!name.equals(that.name)) return false;
 		if (!surname.equals(that.surname)) return false;
-		if (!email.equals(that.email)) return false;
-		if (!password.equals(that.password)) return false;
 		if (!confirmPassword.equals(that.confirmPassword)) return false;
 		return key.equals(that.key);
 	}
@@ -179,8 +133,6 @@ public class FthRegistrationData implements FthData {
 	public int hashCode() {
 		int result = name.hashCode();
 		result = 31 * result + surname.hashCode();
-		result = 31 * result + email.hashCode();
-		result = 31 * result + password.hashCode();
 		result = 31 * result + confirmPassword.hashCode();
 		result = 31 * result + key.hashCode();
 		return result;
@@ -191,8 +143,6 @@ public class FthRegistrationData implements FthData {
 		return "FthRegistrationData{" +
 				"name='" + name + '\'' +
 				", surname='" + surname + '\'' +
-				", email='" + email + '\'' +
-				", password='" + password + '\'' +
 				", confirmPassword='" + confirmPassword + '\'' +
 				", key='" + key + '\'' +
 				'}';

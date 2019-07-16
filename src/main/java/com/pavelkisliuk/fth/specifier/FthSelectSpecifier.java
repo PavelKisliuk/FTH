@@ -24,10 +24,10 @@ import java.sql.PreparedStatement;
  */
 public interface FthSelectSpecifier extends FthSpecifier {
 	/**
-	 * Return factory for creation data from database.
+	 * Return commandfactory for creation data from database.
 	 * <p>
 	 *
-	 * @return factory for creation data from database by {@code FthRepositorySingleton}.
+	 * @return commandfactory for creation data from database by {@code FthRepositorySingleton}.
 	 */
 	FthDataByResultSetFactory createFactory();
 
