@@ -3,20 +3,18 @@ DROP TABLE Drills;
 DROP TABLE Exercises;
 DROP TABLE DrillBase;
 DROP TABLE DrillMuscleGroup;
-DROP TABLE ClientAuthenticationData;
+DROP TABLE AuthenticationData;
 DROP TABLE ClientPublicData;
 DROP TABLE ClientPersonalData;
-DROP TABLE RegistrationData;
 DROP TABLE TrainerData;
+DROP TABLE RegistrationData;
 
 CREATE TABLE TrainerData (
-   trainerID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+   trainerId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
    firstName varchar (30) NOT NULL,
    lastName varchar (40) NOT NULL,
-   eMail varchar(255) NOT NULL,
-   password varchar (30) NOT NULL,
    photoPath varchar (255) NOT NULL,
-   PRIMARY KEY (trainerID)
+   PRIMARY KEY (trainerId)
 );
 
 CREATE TABLE RegistrationData (
@@ -28,94 +26,96 @@ CREATE TABLE RegistrationData (
 );
 
 CREATE TABLE ClientPersonalData (
-   clientID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+   clientId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
    firstName varchar (30) NOT NULL,
    lastName varchar (40) NOT NULL,
    photoPath varchar (255) NOT NULL,
    registrationKey varchar (30) NOT NULL,
-   trainerID BIGINT NOT NULL,
-   PRIMARY KEY (clientID),
-   FOREIGN KEY (trainerID) REFERENCES TrainerData (trainerID)
+   trainerId BIGINT NOT NULL,
+   PRIMARY KEY (clientId),
+   FOREIGN KEY (trainerId) REFERENCES TrainerData (trainerId)
 );
 
 CREATE TABLE ClientPublicData (
-   clientID BIGINT NOT NULL,
+   clientId BIGINT NOT NULL,
    expiredDay DATE,
    restVisitation INT,
-   FOREIGN KEY (clientID) REFERENCES ClientPersonalData (clientID)
+   FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId)
 );
 
-CREATE TABLE ClientAuthenticationData (
-   clientID BIGINT NOT NULL,
-   clientEmail varchar (255) NOT NULL,
-   clientPassword varchar (30) NOT NULL,
-   FOREIGN KEY (clientID) REFERENCES ClientPersonalData (clientID)
+CREATE TABLE AuthenticationData (
+   personalId BIGINT NOT NULL,
+   eMail varchar (255) NOT NULL,
+   password varchar (30) NOT NULL,
+   FOREIGN KEY (personalId) REFERENCES ClientPersonalData (clientId),
+   FOREIGN KEY (personalId) REFERENCES TrainerData (trainerId)
 );
 
 CREATE TABLE DrillMuscleGroup (
-   muscleGroupID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+   muscleGroupId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
    muscleGroupName varchar (255) NOT NULL,
-   PRIMARY KEY (muscleGroupID)
+   PRIMARY KEY (muscleGroupId)
 );
 
 CREATE TABLE DrillBase (
-   drillBaseID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-   muscleGroupID BIGINT NOT NULL,
+   drillBaseId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+   muscleGroupId BIGINT NOT NULL,
    drillName varchar (255) NOT NULL,
-   PRIMARY KEY (drillBaseID),
-   FOREIGN KEY (muscleGroupID) REFERENCES DrillMuscleGroup (muscleGroupID)
+   PRIMARY KEY (drillBaseId),
+   FOREIGN KEY (muscleGroupId) REFERENCES DrillMuscleGroup (muscleGroupId)
 );
 
 CREATE TABLE Exercises (
-    exerciseID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+    exerciseId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     exerciseNumber INT NOT NULL,
     exerciseDate DATE,
-    muscleGroupID BIGINT NOT NULL,
-    clientID BIGINT NOT NULL,
-    PRIMARY KEY (exerciseID),
-    FOREIGN KEY (muscleGroupID) REFERENCES DrillMuscleGroup (muscleGroupID),
-    FOREIGN KEY (clientID) REFERENCES ClientPersonalData (clientID)
+    muscleGroupId BIGINT NOT NULL,
+    clientId BIGINT NOT NULL,
+    PRIMARY KEY (exerciseId),
+    FOREIGN KEY (muscleGroupId) REFERENCES DrillMuscleGroup (muscleGroupId),
+    FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId)
 );
 
 CREATE TABLE Drills (
-    drillID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+    drillId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     drillNumber INT NOT NULL,
-    exerciseID BIGINT NOT NULL,
-    drillBaseID BIGINT NOT NULL,
-    PRIMARY KEY (drillID),
-    FOREIGN KEY (exerciseID) REFERENCES Exercises (exerciseID),
-    FOREIGN KEY (drillBaseID) REFERENCES DrillBase (drillBaseID)
+    exerciseId BIGINT NOT NULL,
+    drillBaseId BIGINT NOT NULL,
+    PRIMARY KEY (drillId),
+    FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId),
+    FOREIGN KEY (drillBaseId) REFERENCES DrillBase (drillBaseId)
 );
 
 CREATE TABLE DrillSets (
-    setID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+    setId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     setNumber INT NOT NULL,
     necessaryReps INT NOT NULL,
     selfConsistent INT NOT NULL,
     helpConsistent INT NOT NULL,
     weightTool FLOAT NOT NULL,
     restTime TIME,
-    exerciseID BIGINT NOT NULL,
-    drillID BIGINT NOT NULL,
-    FOREIGN KEY (exerciseID) REFERENCES Exercises (exerciseID),
-    FOREIGN KEY (drillID) REFERENCES Drills (drillID)
+    exerciseId BIGINT NOT NULL,
+    drillId BIGINT NOT NULL,
+    FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId),
+    FOREIGN KEY (drillId) REFERENCES Drills (drillId)
 );
 
-INSERT INTO TrainerData (firstName, lastName, eMail, password, photoPath)
+INSERT INTO TrainerData (firstName, lastName, photoPath)
 VALUES
-   ('Павел','Кислюк', 'pavel-2008.94@mail.ru', '210194', 'testPhoto/testPhoto.jpg');
+   ('Павел','Кислюк', 'https://pp.userapi.com/c637229/v637229874/21fa5/v6r_UTH_uCw.jpg');
 
-INSERT INTO ClientPersonalData (firstName, lastName, photoPath, registrationKey, trainerID)
+INSERT INTO ClientPersonalData (firstName, lastName, photoPath, registrationKey, trainerId)
 VALUES
-   ('Pavel','Kisliuk', 'testPhoto/testPhoto.jpg', '-', 1);
+   ('Pavel','Kisliuk', 'https://pp.userapi.com/c638330/v638330874/419bb/AzS3PYR_kf0.jpg', '-', 1);
 
-INSERT INTO ClientPublicData (clientID, expiredDay, restVisitation)
+INSERT INTO ClientPublicData (clientId, expiredDay, restVisitation)
 VALUES
    (1,'2019-09-08', -1);
 
-INSERT INTO ClientAuthenticationData (clientID, clientEmail, clientPassword)
+INSERT INTO AuthenticationData (personalId, eMail, password)
 VALUES
-   (1,'pavelsergeevichkisliuk2015@mail.ru', '210194');
+   (1,'pavelsergeevichkisliuk2015@mail.ru', '210194'),
+   (1, 'pavel-2008.94@mail.ru', '210194');
 
 INSERT INTO DrillMuscleGroup (muscleGroupName)
 VALUES
@@ -127,25 +127,25 @@ VALUES
    ('Legs'),
    ('Stomach');
 
-INSERT INTO DrillBase (muscleGroupID, drillName)
+INSERT INTO DrillBase (muscleGroupId, drillName)
 VALUES
    (1,'Bench press'),
    (1,'Pectoral machine (Butterfly)'),
    (1,'Incline bench press (30*)'),
    (1,'Hammer strength flat bench press');
 
-INSERT INTO Exercises (exerciseNumber, exerciseDate, muscleGroupID, clientID)
+INSERT INTO Exercises (exerciseNumber, exerciseDate, muscleGroupId, clientId)
 VALUES
    (1,'2019-06-21', 1, 1);
 
-INSERT INTO Drills (drillNumber, exerciseID, drillBaseID)
+INSERT INTO Drills (drillNumber, exerciseId, drillBaseId)
 VALUES
    (1, 1, 1),
    (2, 1, 2),
    (3, 1, 3),
    (4, 1, 4);
 
-INSERT INTO DrillSets (setNumber, necessaryReps, selfConsistent, helpConsistent, weightTool, restTime, exerciseID, drillID)
+INSERT INTO DrillSets (setNumber, necessaryReps, selfConsistent, helpConsistent, weightTool, restTime, exerciseId, drillId)
 VALUES
    (1, 10, 9, 1, 100, '00:01:20', 1, 1),
    (2, 10, 8, 2, 95, '00:01:20', 1, 1),

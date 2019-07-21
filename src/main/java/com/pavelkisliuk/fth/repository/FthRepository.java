@@ -6,10 +6,8 @@ package com.pavelkisliuk.fth.repository;
 
 import com.pavelkisliuk.fth.exception.ConnectionPoolException;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
-import com.pavelkisliuk.fth.exception.FthRepositoryFactoryException;
-import com.pavelkisliuk.fth.exception.FthSpecifierException;
 import com.pavelkisliuk.fth.model.FthData;
-import com.pavelkisliuk.fth.pool.ConnectionPoolSingleton;
+import com.pavelkisliuk.fth.pool.ConnectionPool;
 import com.pavelkisliuk.fth.specifier.FthDeleteSpecifier;
 import com.pavelkisliuk.fth.specifier.FthInsertSpecifier;
 import com.pavelkisliuk.fth.specifier.FthSelectSpecifier;
@@ -26,14 +24,14 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The {@code FthRepositorySingleton} class is thread-safety enum singleton class
+ * The {@code FthRepository} class is thread-safety enum singleton class
  * for actions with database.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public enum FthRepositorySingleton {
+public enum FthRepository {
 	/**
 	 * Instance of singleton.
 	 */
@@ -49,25 +47,24 @@ public enum FthRepositorySingleton {
 	 * @throws FthRepositoryException if {@code SQLException}, {@code FthSpecifierException} occurred.
 	 */
 	public void add(FthInsertSpecifier specifier) throws FthRepositoryException {
-		LOGGER.log(Level.DEBUG, "Start FthRepositorySingleton -> add().");
-		Optional<Connection> connectionOptional;
-		do {
-			connectionOptional = ConnectionPoolSingleton.INSTANCE.obtainConnection();
-		} while (connectionOptional.isEmpty());
-		Connection connection = connectionOptional.get();
+		LOGGER.log(Level.DEBUG, "Start FthRepository -> add().");
+		add(specifier, obtainConnection());
+		LOGGER.log(Level.DEBUG, "Finish FthRepository -> add().");
+	}
+
+	private void add(FthInsertSpecifier specifier, Connection connection) throws FthRepositoryException {
 		try (PreparedStatement statement = connection.prepareStatement(specifier.deriveSequelRequest())) {
 			specifier.insert(statement);
 			LOGGER.log(Level.DEBUG, "Insertion achieved.");
-		} catch (SQLException | FthSpecifierException e) {
+		} catch (SQLException e) {
 			throw new FthRepositoryException("Problem in add() method!", e);
 		} finally {
 			try {
-				ConnectionPoolSingleton.INSTANCE.releaseConnection(connection);
+				ConnectionPool.INSTANCE.releaseConnection(connection);
 			} catch (ConnectionPoolException e) {
 				LOGGER.log(Level.ERROR, "Damaged connection tried to realise!", e);
 			}
 		}
-		LOGGER.log(Level.DEBUG, "Finish FthRepositorySingleton -> add().");
 	}
 
 	/**
@@ -78,25 +75,25 @@ public enum FthRepositorySingleton {
 	 * @throws FthRepositoryException if {@code SQLException}, {@code FthSpecifierException} occurred.
 	 */
 	public void remove(FthDeleteSpecifier specifier) throws FthRepositoryException {
-		LOGGER.log(Level.DEBUG, "Start FthRepositorySingleton -> remove().");
+		LOGGER.log(Level.DEBUG, "Start FthRepository -> remove().");
 		Optional<Connection> connectionOptional;
 		do {
-			connectionOptional = ConnectionPoolSingleton.INSTANCE.obtainConnection();
+			connectionOptional = ConnectionPool.INSTANCE.obtainConnection();
 		} while (connectionOptional.isEmpty());
 		Connection connection = connectionOptional.get();
 		try (PreparedStatement statement = connection.prepareStatement(specifier.deriveSequelRequest())) {
 			specifier.delete(statement);
 			LOGGER.log(Level.DEBUG, "Deletion achieved.");
-		} catch (SQLException | FthSpecifierException e) {
+		} catch (SQLException e) {
 			throw new FthRepositoryException("Problem in remove() method!", e);
 		} finally {
 			try {
-				ConnectionPoolSingleton.INSTANCE.releaseConnection(connection);
+				ConnectionPool.INSTANCE.releaseConnection(connection);
 			} catch (ConnectionPoolException e) {
 				LOGGER.log(Level.ERROR, "Damaged connection tried to realise!", e);
 			}
 		}
-		LOGGER.log(Level.DEBUG, "Finish FthRepositorySingleton -> remove().");
+		LOGGER.log(Level.DEBUG, "Finish FthRepository -> remove().");
 	}
 
 	/**
@@ -108,11 +105,11 @@ public enum FthRepositorySingleton {
 	 * @throws FthRepositoryException if {@code SQLException}, {@code FthSpecifierException} occurred.
 	 */
 	public List<FthData> query(FthSelectSpecifier specifier) throws FthRepositoryException {
-		LOGGER.log(Level.DEBUG, "Start FthRepositorySingleton -> query().");
+		LOGGER.log(Level.DEBUG, "Start FthRepository -> query().");
 		ArrayList<FthData> dataList = new ArrayList<>();
 		Optional<Connection> connectionOptional;
 		do {
-			connectionOptional = ConnectionPoolSingleton.INSTANCE.obtainConnection();
+			connectionOptional = ConnectionPool.INSTANCE.obtainConnection();
 		} while (connectionOptional.isEmpty());
 		Connection connection = connectionOptional.get();
 		try (PreparedStatement statement = connection.prepareStatement(specifier.deriveSequelRequest());
@@ -122,16 +119,24 @@ public enum FthRepositorySingleton {
 				dataList.add(factory.create(resultSet));
 			}
 			LOGGER.log(Level.DEBUG, "Data acquired.");
-		} catch (SQLException | FthSpecifierException | FthRepositoryFactoryException e) {
+		} catch (SQLException e) {
 			throw new FthRepositoryException("Problem in query() method!", e);
 		} finally {
 			try {
-				ConnectionPoolSingleton.INSTANCE.releaseConnection(connection);
+				ConnectionPool.INSTANCE.releaseConnection(connection);
 			} catch (ConnectionPoolException e) {
 				LOGGER.log(Level.ERROR, "Damaged connection tried to realise!", e);
 			}
 		}
-		LOGGER.log(Level.DEBUG, "Finish FthRepositorySingleton -> query().");
+		LOGGER.log(Level.DEBUG, "Finish FthRepository -> query().");
 		return dataList;
+	}
+
+	private Connection obtainConnection() {
+		Optional<Connection> connectionOptional;
+		do {
+			connectionOptional = ConnectionPool.INSTANCE.obtainConnection();
+		} while (connectionOptional.isEmpty());
+		return connectionOptional.get();
 	}
 }

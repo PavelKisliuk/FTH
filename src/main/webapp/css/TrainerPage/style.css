@@ -1,0 +1,170 @@
+@font-face {
+    font-weight: normal;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    src: url("../fonts/OpenSans-Regular.ttf") format("ttf");
+}
+@font-face {
+    font-weight: bold;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    src: url("../fonts/OpenSans-Bold.ttf") format("ttf");
+}
+body {
+    min-width: 320px;
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    line-height: 27px;
+    font-family: "Open Sans", "Arial", sans-serif;
+    color: #000000;
+    font-style: normal;
+    background-color: #ffffff;
+}
+img {
+    max-width: 100%;
+    height: auto;
+}
+.visually-hidden:not(:focus):not(:active) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+    white-space: nowrap;
+    clip-path: inset(100%);
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+}
+.page-header {
+    display: flex;
+    min-height: 100px;
+    color: #ffffff;
+    background: linear-gradient(rgba(35, 43, 85, 0.75), rgba(35, 43, 85, 0.95));
+}
+.couch-info {
+    display: flex;
+    min-width: 205px;
+    margin: 0;
+    padding: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(35, 43, 85, 0.55);
+}
+.couch-info__photo {
+    display: block;
+    align-self: center;
+    width: 70px;
+    height: 70px;
+    margin-left: 15px;
+    margin-right: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 25%;
+}
+.couch-info__name {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 15px;
+}
+.actions {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+.actions__list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.actions__variant {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+.actions__button {
+    width: 110px;
+    height: 45px;
+    margin: auto 0;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    cursor: pointer;
+}
+.actions__button:hover {
+    background: linear-gradient(rgba(35, 43, 85, 0.55), #232b55);
+}
+.actions__profile {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.exit-button {
+    border-right: none;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+}
+.page-main {
+    display: flex;
+}
+.client-base {
+    display: flex;
+    min-width: 302px;
+    color: #ffffff;
+    background: linear-gradient(rgba(35, 43, 85, 0.75), rgba(35, 43, 85, 0.95));
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+}
+.client-base__list {
+    list-style: none;
+    width: 100%;
+    margin: 0;
+    margin-top: 30px;
+    padding: 0;
+}
+.client-base__actual {
+    display: flex;
+    font-size: 14px;
+    line-height: 16px;
+    margin: 0;
+    padding: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+.client-base__actual:hover {
+    background: linear-gradient(rgba(35, 43, 85, 0.55), #232b55);
+}
+.client-base__notification {
+    display: block;
+    margin: auto 0;
+    margin-left: 15px;
+    padding: 0;
+    width: 25px;
+    height: 25px;
+}
+.client-1 .client-base__notification {
+    background-image: url(../img/bell.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+.client-base__photo {
+    display: block;
+    align-self: center;
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 25%;
+}
+.client-info {
+    margin: 0;
+    padding: 30px;
+}

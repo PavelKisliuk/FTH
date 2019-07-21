@@ -4,17 +4,17 @@
 
 package com.pavelkisliuk.fth.repository;
 
-import com.pavelkisliuk.fth.exception.FthRepositoryFactoryException;
+import com.pavelkisliuk.fth.exception.FthRepositoryException;
 import com.pavelkisliuk.fth.model.FthData;
 
 import java.sql.ResultSet;
 
 /**
- * FthDataByResultSetFactory is interface for creation {@code FthData} instances in {@code FthRepositorySingleton}.
+ * FthDataByResultSetFactory is interface for creation {@code FthData} instances in {@code FthRepository}.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see com.pavelkisliuk.fth.repository.FthRepositorySingleton
+ * @see FthRepository
  * @see FthData
  * @since 12.0
  */
@@ -25,7 +25,7 @@ public interface FthDataByResultSetFactory {
 	 *
 	 * @param resultSet of data for creation {@code FthData} instance.
 	 * @return instance of {@code FthData}.
-	 * @throws FthRepositoryFactoryException if {@code SQLException} occurred.
+	 * @throws FthRepositoryException if {@code SQLException} occurred.
 	 */
-	FthData create(ResultSet resultSet) throws FthRepositoryFactoryException;
+	FthData create(ResultSet resultSet) throws FthRepositoryException;
 }

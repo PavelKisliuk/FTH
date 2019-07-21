@@ -32,16 +32,18 @@ class CommandSingUp implements FthServletCommand {
 	 * @throws FthCommandException if some exception occurred.
 	 */
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws FthCommandException {
+	public String  execute(HttpServletRequest request) throws FthCommandException {
 		FthRegistrationData registrationData = new CreatorRegistrationData().create(request);
-		response.setContentType("application/json");
+		/*response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		try {
-			response.getWriter().write(new FthSingUpService().signUp(registrationData));
+			response.getWriter().write(new FthSingUpService().serve(registrationData));
+			//request.getSession().invalidate();
 		} catch (IOException e) {
 			throw new FthCommandException("IOException in CommandSingUp -> execute().", e);
 		} catch (FthControllerException e) {
 			throw new FthCommandException("FthControllerException in CommandSingUp -> execute().", e);
-		}
+		}*/
+		return"";
 	}
 }

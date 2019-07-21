@@ -66,8 +66,6 @@ public class FthLong implements FthData {
 
 	@Override
 	public String toString() {
-		return "FthLong{" +
-				"bigInt=" + bigInt +
-				'}';
+		return String.valueOf(bigInt);
 	}
 }

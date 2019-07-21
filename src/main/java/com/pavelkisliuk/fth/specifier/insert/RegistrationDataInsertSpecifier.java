@@ -4,8 +4,9 @@
 
 package com.pavelkisliuk.fth.specifier.insert;
 
-import com.pavelkisliuk.fth.exception.FthSpecifierException;
+import com.pavelkisliuk.fth.exception.FthRepositoryException;
 import com.pavelkisliuk.fth.model.FthRegistrationData;
+import com.pavelkisliuk.fth.repository.FthRepository;
 import com.pavelkisliuk.fth.specifier.FthInsertSpecifier;
 
 import java.sql.PreparedStatement;
@@ -13,11 +14,11 @@ import java.sql.SQLException;
 
 /**
  * The class {@code RegistrationDataInsertSpecifier} is realization of {@code FthInsertSpecifier}
- * for insertion data into RegistrationData table of database by {@code FthRepositorySingleton}.
+ * for insertion data into RegistrationData table of database by {@code FthRepository}.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see com.pavelkisliuk.fth.repository.FthRepositorySingleton
+ * @see FthRepository
  * @see com.pavelkisliuk.fth.specifier.FthSpecifier
  * @see com.pavelkisliuk.fth.specifier.FthInsertSpecifier
  * @see com.pavelkisliuk.fth.model.FthRegistrationData
@@ -44,10 +45,10 @@ public class RegistrationDataInsertSpecifier implements FthInsertSpecifier {
 	 * <p>
 	 *
 	 * @param preparedStatement for pasting metadata into.
-	 * @throws FthSpecifierException if {@code SQLException} occurred.
+	 * @throws FthRepositoryException if {@code SQLException} occurred.
 	 */
 	@Override
-	public void insert(PreparedStatement preparedStatement) throws FthSpecifierException {
+	public void insert(PreparedStatement preparedStatement) throws FthRepositoryException {
 		try {
 			preparedStatement.setString(1, data.getName());
 			preparedStatement.setString(2, data.getSurname());
@@ -56,7 +57,7 @@ public class RegistrationDataInsertSpecifier implements FthInsertSpecifier {
 			preparedStatement.setString(5, data.getKey());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new FthSpecifierException("SQL exception in RegistrationDataInsertSpecifier -> insert().", e);
+			throw new FthRepositoryException("SQL exception in RegistrationDataInsertSpecifier -> insert().", e);
 		}
 	}
 

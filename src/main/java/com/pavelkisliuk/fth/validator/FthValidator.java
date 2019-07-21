@@ -4,6 +4,7 @@
 
 package com.pavelkisliuk.fth.validator;
 
+import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.model.FthData;
 
 /**
@@ -12,7 +13,7 @@ import com.pavelkisliuk.fth.model.FthData;
  *
  * @author Kisliuk Pavel Sergeevich
  * @see com.pavelkisliuk.fth.model.FthData
- * @see FthRegistrationDataValidator
+ * @see RegistrationDataValidator
  * @since 12.0
  */
 public interface FthValidator {
@@ -23,5 +24,5 @@ public interface FthValidator {
 	 * @param data is data for validation.
 	 * @return {@code true} if {@param data} valid, else return {@code false}.
 	 */
-	boolean isCorrect(FthData data);
+	boolean isCorrect(FthData data) throws FthControllerException;
 }

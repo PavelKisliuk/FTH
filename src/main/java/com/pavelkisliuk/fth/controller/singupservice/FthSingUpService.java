@@ -5,10 +5,15 @@
 package com.pavelkisliuk.fth.controller.singupservice;
 
 import com.google.gson.Gson;
+import com.pavelkisliuk.fth.controller.FthService;
 import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.exception.FthMailException;
+import com.pavelkisliuk.fth.exception.FthRepositoryException;
+import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthRegistrationData;
-import com.pavelkisliuk.fth.validator.FthRegistrationDataValidator;
+import com.pavelkisliuk.fth.repository.FthRepository;
+import com.pavelkisliuk.fth.specifier.insert.RegistrationDataInsertSpecifier;
+import com.pavelkisliuk.fth.validator.RegistrationDataValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,14 +28,14 @@ import java.util.Random;
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see com.pavelkisliuk.fth.repository.FthRepositorySingleton
+ * @see FthRepository
  * @see MailSender
  * @see com.pavelkisliuk.fth.model.FthRegistrationData
  * @see com.pavelkisliuk.fth.specifier.insert.RegistrationDataInsertSpecifier
- * @see com.pavelkisliuk.fth.validator.FthRegistrationDataValidator
+ * @see RegistrationDataValidator
  * @since 12.0
  */
-public class FthSingUpService {
+public class FthSingUpService implements FthService {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
@@ -47,14 +52,16 @@ public class FthSingUpService {
 	 * Registry new user in the database.
 	 * <p>
 	 *
-	 * @param registrationData is new user data for registration.
+	 * @param data is new user data for registration.
 	 * @return message for user about progress of registration as {@code String}.
 	 * @throws FthControllerException if exceptions occurred.
 	 */
-	public String signUp(FthRegistrationData registrationData) throws FthControllerException {
+	@Override
+	public String serve(FthData data) throws FthControllerException {
 		LOGGER.log(Level.DEBUG, "Start FthSingUpService -> signUp().");
 		Map<String, String> responseJson = new HashMap<>();
-		FthRegistrationDataValidator validator = new FthRegistrationDataValidator();
+		FthRegistrationData registrationData = (FthRegistrationData) data;
+		RegistrationDataValidator validator = new RegistrationDataValidator();
 		LOGGER.log(Level.INFO, "Start validation.");
 		if (!validator.isCorrect(registrationData)) {
 			LOGGER.log(Level.WARN, "Incorrect data.");
@@ -69,10 +76,10 @@ public class FthSingUpService {
 			MailSender mailSender = new MailSender();
 			try {
 				mailSender.send(confirmMessage, registrationData.getEmail());
-				//FthRepositorySingleton.INSTANCE.add(new RegistrationDataInsertSpecifier(registrationData));
+				FthRepository.INSTANCE.add(new RegistrationDataInsertSpecifier(registrationData));
 				responseJson.put(KEY_MESSAGE, SUCCESS_SEND_EMAIL_MESSAGE);
 				responseJson.put(KEY_REDIRECT, REDIRECT_PATH);
-			} catch (FthMailException /*| FthRepositoryException*/ e) {
+			} catch (FthMailException | FthRepositoryException e) {
 				throw new FthControllerException("Exception in FthSingUpService -> signUp().", e);
 			}
 		}

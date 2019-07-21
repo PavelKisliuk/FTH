@@ -12,8 +12,8 @@
       },
       "RollingFile": {
         "name":"File",
-        "fileName":"logs/necklace_service.log",
-        "filePattern":"logs/necklace_service_%i.log",
+        "fileName":"logs/fth.log",
+        "filePattern":"logs/fth_%i.log",
         "PatternLayout": {
           "pattern":"%d{yyyy-mm-dd HH:mm:ss} [%t] %-5level [%logger{3}] Method:%M Line:%L - %msg%n"
         },

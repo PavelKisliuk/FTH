@@ -4,12 +4,14 @@
 
 package com.pavelkisliuk.fth.specifier;
 
+import com.pavelkisliuk.fth.repository.FthRepository;
+
 /**
- * FthSpecifier is interface for realization behaviour to acquire data from database by {@code FthRepositorySingleton}.
+ * FthSpecifier is interface for realization behaviour to acquire data from database by {@code FthRepository}.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see com.pavelkisliuk.fth.repository.FthRepositorySingleton
+ * @see FthRepository
  * @see FthSelectSpecifier
  * @see FthInsertSpecifier
  * @see FthDeleteSpecifier

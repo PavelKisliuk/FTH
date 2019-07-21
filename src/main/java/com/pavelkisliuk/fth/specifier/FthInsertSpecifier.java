@@ -4,17 +4,18 @@
 
 package com.pavelkisliuk.fth.specifier;
 
-import com.pavelkisliuk.fth.exception.FthSpecifierException;
+import com.pavelkisliuk.fth.exception.FthRepositoryException;
+import com.pavelkisliuk.fth.repository.FthRepository;
 
 import java.sql.PreparedStatement;
 
 /**
  * FthInsertSpecifier extends FthSpecifier is interface for realization
- * insertion data to database by {@code FthRepositorySingleton}.
+ * insertion data to database by {@code FthRepository}.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see com.pavelkisliuk.fth.repository.FthRepositorySingleton
+ * @see FthRepository
  * @see FthSpecifier
  * @see FthSelectSpecifier
  * @see FthDeleteSpecifier
@@ -26,7 +27,7 @@ public interface FthInsertSpecifier extends FthSpecifier {
 	 * <p>
 	 *
 	 * @param preparedStatement for pasting metadata into.
-	 * @throws FthSpecifierException if {@code SQLException} occurred.
+	 * @throws FthRepositoryException if {@code SQLException} occurred.
 	 */
-	void insert(PreparedStatement preparedStatement) throws FthSpecifierException;
+	void insert(PreparedStatement preparedStatement) throws FthRepositoryException;
 }

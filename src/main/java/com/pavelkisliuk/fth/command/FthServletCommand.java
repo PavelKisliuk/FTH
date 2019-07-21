@@ -18,11 +18,12 @@ import javax.servlet.http.HttpServletResponse;
  * @since 12.0
  */
 public interface FthServletCommand {
+	String TRAINER_ID_ATTRIBUTE = "trainerId";
 	/**
 	 * Method obtain data from client and decide how to act with it.
 	 * <p>
 	 *
-	 * @throws FthServletException if some exceptions occurred.
+	 * @throws FthCommandException if some exceptions occurred.
 	 */
-	void execute(HttpServletRequest request, HttpServletResponse response) throws FthServletException, FthCommandException;
+	String execute(HttpServletRequest request) throws FthCommandException;
 }

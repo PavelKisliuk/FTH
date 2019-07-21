@@ -9,7 +9,7 @@ import com.pavelkisliuk.fth.model.FthAuthenticationData;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * The {@code CreatorAuthenticationData} class is realization of {@code FthDataByRequestFactory} for
+ * The {@code CreatorTrainerData} class is realization of {@code FthDataByRequestFactory} for
  * creation {@code FthAuthenticationData} instance.
  * <p>
  *

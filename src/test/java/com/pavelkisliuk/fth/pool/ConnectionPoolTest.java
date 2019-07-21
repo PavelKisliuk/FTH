@@ -9,8 +9,8 @@ import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ConnectionPoolSingletonTest {
-	private ConnectionPoolSingleton pool = ConnectionPoolSingleton.INSTANCE;
+class ConnectionPoolTest {
+	private ConnectionPool pool = ConnectionPool.INSTANCE;
 
 	@BeforeEach
 	void setUp() throws ConnectionPoolException {
@@ -25,7 +25,7 @@ class ConnectionPoolSingletonTest {
 	@Test
 	void obtainConnection() {
 		pool.obtainConnection();
-		boolean actual = pool.getPoolSize() == 9 &&
+		boolean actual = pool.getPoolSize() == (pool.getStartPoolSize() - 1) &&
 				pool.getUsedConnectionSize() == 1;
 		assertTrue(actual);
 	}
@@ -34,7 +34,7 @@ class ConnectionPoolSingletonTest {
 	void releaseConnection() throws ConnectionPoolException {
 		Connection connection = pool.obtainConnection().orElse(null);
 		pool.releaseConnection(connection);
-		boolean actual = pool.getPoolSize() == 10 &&
+		boolean actual = pool.getPoolSize() == pool.getStartPoolSize() &&
 				pool.getUsedConnectionSize() == 0;
 		assertTrue(actual);
 	}
@@ -46,7 +46,12 @@ class ConnectionPoolSingletonTest {
 
 	@Test
 	void destroyPool() throws ConnectionPoolException {
+		pool.obtainConnection();
+		pool.obtainConnection();
+		pool.obtainConnection();
+		pool.releaseConnection(pool.obtainConnection().get());
 		pool.destroyPool();
-		assertTrue(pool.isClose());
+		assertTrue(pool.getPoolSize() == 0 &&
+				pool.getUsedConnectionSize() == 0);
 	}
 }
