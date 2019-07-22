@@ -1,3 +1,7 @@
+/*  By Pavel Kisliuk, 19.07.2019
+ *  This is class for education and nothing rights don't reserved.
+ */
+
 package com.pavelkisliuk.fth.pool;
 
 import com.pavelkisliuk.fth.exception.ConnectionPoolException;
@@ -7,13 +11,37 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+/**
+ * The {@code ConnectionProxy} is proxy pattern for wrapping {@code Connection} element to prevent effort's
+ * to close it not only from {@code ConnectionPool}.
+ * <p>
+ *
+ * @author Kisliuk Pavel Sergeevich
+ * @see ConnectionPool
+ * @since 12.0
+ */
 class ConnectionProxy implements Connection {
+	/**
+	 * Wrapped element.
+	 */
 	private Connection connection;
 
+	/**
+	 * Constructor for {@code connection} initialization.
+	 * <p>
+	 *
+	 * @param connection is value for {@code connection} initialization.
+	 */
 	ConnectionProxy(Connection connection) {
 		this.connection = connection;
 	}
 
+	/**
+	 * Close {@code connection}. Method package-private to access only from connection package.
+	 * <p>
+	 *
+	 * @throws ConnectionPoolException if {@code SQLException} occurred.
+	 */
 	void closeProxy() throws ConnectionPoolException {
 		try {
 			connection.close();
@@ -22,6 +50,12 @@ class ConnectionProxy implements Connection {
 		}
 	}
 
+	/**
+	 * Abort {@code connection}. Method package-private to access only from connection package.
+	 * <p>
+	 *
+	 * @throws ConnectionPoolException if {@code SQLException} occurred.
+	 */
 	void abortProxy(Executor executor) throws ConnectionPoolException {
 		try {
 			connection.abort(executor);
@@ -30,16 +64,23 @@ class ConnectionProxy implements Connection {
 		}
 	}
 
+	/**
+	 * Release {@code connection}, not close.
+	 */
 	@Override
-	public void close() throws SQLException { //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		throw new SQLException("Effort to close Connection.");
+	public void close() {
+		ConnectionPool.INSTANCE.releaseConnection(connection);
 	}
 
+	/**
+	 * Release {@code connection}, not abort.
+	 */
 	@Override
-	public void abort(Executor executor) throws SQLException {
-		throw new SQLException("Effort abort connection.");
+	public void abort(Executor executor) {
+		ConnectionPool.INSTANCE.releaseConnection(connection);
 	}
 
+	/*Methods below just overrided methods of {@code Connection} interface to invocation.*/
 	@Override
 	public Statement createStatement() throws SQLException {
 		return connection.createStatement();
