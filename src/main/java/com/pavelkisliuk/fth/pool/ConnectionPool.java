@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -33,33 +34,32 @@ public enum ConnectionPool {
 	 */
 	INSTANCE(16);
 
-	private static final Logger LOGGER = LogManager.getLogger();
+	private final Logger LOGGER;
 
 	/**
 	 * Lock for multithreading realization.
 	 */
-	private static final ReentrantLock LOCK = new ReentrantLock();
+	private final ReentrantLock LOCK;
 
 	/**
 	 * Path to database.
 	 */
-	private static final String DATABASE_URL =
-			"jdbc:derby:F:\\JavaSE\\Projects\\FTH\\src\\test\\resources\\database\\testdb";
+	private final String DATABASE_URL;
 
 	/**
 	 * Database login.
 	 */
-	private static final String DATABASE_LOGIN = "inProjectWithoutLaba";
+	private final String DATABASE_LOGIN;
 
 	/**
 	 * Database password.
 	 */
-	private static final String DATABASE_PASSWORD = "vProektBezLabyi";
+	private final String DATABASE_PASSWORD;
 
 	/**
 	 * Time out for {@code Connection.isValid(int timeOut)}. Duration in seconds.
 	 */
-	private static final int TIME_OUT = 3;
+	private final int TIME_OUT;
 
 	/**
 	 * Default pool size.
@@ -69,7 +69,7 @@ public enum ConnectionPool {
 	/**
 	 * Flag for point if pool create.
 	 */
-	private boolean isCreated;
+	private AtomicBoolean isCreated;
 
 	/**
 	 * Pool for connection receiving.
@@ -88,7 +88,24 @@ public enum ConnectionPool {
 	 * @param startPoolSize for default pool size.
 	 */
 	ConnectionPool(int startPoolSize) {
+		LOGGER = LogManager.getLogger();
+		LOCK = new ReentrantLock();
+		DATABASE_URL =
+				"jdbc:derby:F:\\JavaSE\\Projects\\FTH\\src\\test\\resources\\database\\testdb";
+		DATABASE_LOGIN = "inProjectWithoutLaba";
+		DATABASE_PASSWORD = "vProektBezLabyi";
+		TIME_OUT = 3;
+
 		this.poolSize = startPoolSize;
+		isCreated = new AtomicBoolean();
+		try {
+			createPool();
+		} catch (ConnectionPoolException e) {
+			LogManager.getLogger().log(Level.FATAL,
+					"ConnectionPoolException in ConnectionPool constructor!!!");
+			throw new ExceptionInInitializerError(
+					"ConnectionPoolException in ConnectionPool constructor.");
+		}
 	}
 
 	/**
@@ -129,16 +146,22 @@ public enum ConnectionPool {
 	 * return this connection, otherwise return {@code null}.
 	 */
 	public Optional<Connection> obtainConnection() throws ConnectionPoolException {
-		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> obtainConnection().");
+		LOGGER.log(Level.DEBUG,
+				"Start ConnectionPool -> obtainConnection().");
 		try {
 			LOCK.lock();
-			ConnectionProxy connection = connectionPool.poll(); //take first Connection, return null if deck empty
+			ConnectionProxy connection = connectionPool.poll(); //take first Connection and remove it, return null if deck empty
 			if (connection != null) {
 				connection = validate(connection);
-				usedConnectionGroup.add(connection);
-				LOGGER.log(Level.INFO, "Connection obtained.");
+				if(!usedConnectionGroup.add(connection)) {
+					LOGGER.log(Level.WARN,
+							"Connection already became in usedConnectionGroup!");
+				}
+				LOGGER.log(Level.INFO,
+						"Connection obtained.");
 			}
-			LOGGER.log(Level.DEBUG, "Finish ConnectionPool -> obtainConnection().");
+			LOGGER.log(Level.DEBUG,
+					"Finish ConnectionPool -> obtainConnection().");
 			return Optional.ofNullable(connection);
 		} finally {
 			LOCK.unlock();
@@ -176,9 +199,9 @@ public enum ConnectionPool {
 	 *
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */
-	public void createPool() throws ConnectionPoolException {
+	private void createPool() throws ConnectionPoolException {
 		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> createPool().");
-		if (isCreated) {
+		if (isCreated.get()) {
 			LOGGER.log(Level.INFO, "Pool is already created.");
 			return;
 		}
@@ -196,7 +219,7 @@ public enum ConnectionPool {
 			throw new ConnectionPoolException(
 					"SQL exception in ConnectionPool -> createPool().", e);
 		}
-		isCreated = true;
+		isCreated.set(true);
 		LOGGER.log(Level.DEBUG, "Finish ConnectionPool -> createPool().");
 	}
 
@@ -208,7 +231,7 @@ public enum ConnectionPool {
 	 */
 	public void destroyPool() throws ConnectionPoolException {
 		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> destroyPool().");
-		if (!isCreated) {
+		if (!isCreated.get()) {
 			LOGGER.log(Level.INFO, "Pool is not created.");
 			return;
 		}
@@ -225,7 +248,7 @@ public enum ConnectionPool {
 			if (isClose()) {
 				connectionPool.clear();
 				usedConnectionGroup.clear();
-				isCreated = false;
+				isCreated.set(false);
 				LOGGER.log(Level.INFO, "Finish destroying.");
 			} else {
 				throw new ConnectionPoolException(
