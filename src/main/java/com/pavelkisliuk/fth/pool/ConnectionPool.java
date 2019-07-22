@@ -17,8 +17,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
-//boolean isValid(int timeout) throws SQLException;
-
 /**
  * The {@code ConnectionPool} class is thread-safety enum singleton class-wrapper
  * for {@code List} of {@code Connection}. Class realize system of obtaining connections to database
@@ -26,6 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
+ * @see ConnectionProxy
  * @since 12.0
  */
 public enum ConnectionPool {
@@ -56,6 +55,11 @@ public enum ConnectionPool {
 	 * Database password.
 	 */
 	private static final String DATABASE_PASSWORD = "vProektBezLabyi";
+
+	/**
+	 * Time out for {@code Connection.isValid(int timeOut)}. Duration in seconds.
+	 */
+	private static final int TIME_OUT = 3;
 
 	/**
 	 * Default pool size.
@@ -124,13 +128,16 @@ public enum ConnectionPool {
 	 * @return {@code Optional} of {@code Connection}. If connection is available in {@code connectionPool}
 	 * return this connection, otherwise return {@code null}.
 	 */
-	public Optional<Connection> obtainConnection() {
+	public Optional<Connection> obtainConnection() throws ConnectionPoolException {
 		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> obtainConnection().");
 		try {
 			LOCK.lock();
 			ConnectionProxy connection = connectionPool.poll(); //take first Connection, return null if deck empty
-			//можно ли тут сделать connection.isValid(), и если Connection не Valid закрыть и пересоздать
-			usedConnectionGroup.add(connection);
+			if (connection != null) {
+				connection = validate(connection);
+				usedConnectionGroup.add(connection);
+				LOGGER.log(Level.INFO, "Connection obtained.");
+			}
 			LOGGER.log(Level.DEBUG, "Finish ConnectionPool -> obtainConnection().");
 			return Optional.ofNullable(connection);
 		} finally {
@@ -143,14 +150,12 @@ public enum ConnectionPool {
 	 * <p>
 	 *
 	 * @param connection is returning connection.
-	 * @throws ConnectionPoolException if @param connection is {@code null} or closed.
 	 */
-	public void releaseConnection(Connection connection) throws ConnectionPoolException { //можно ли при null аргументе просто ничего не делать
+	public void releaseConnection(Connection connection) {
 		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> releaseConnection().");
 		if (connection == null ||
 				connection.getClass() != ConnectionProxy.class) {
-			throw new ConnectionPoolException(
-					"Invalid argument in ConnectionPool -> releaseConnection().");
+			LOGGER.log(Level.WARN, "Incorrect connection retrieved!");
 		}
 
 		ConnectionProxy connectionProxy = (ConnectionProxy) connection;
@@ -177,6 +182,7 @@ public enum ConnectionPool {
 			LOGGER.log(Level.INFO, "Pool is already created.");
 			return;
 		}
+
 		connectionPool = new ArrayDeque<>();
 		usedConnectionGroup = new HashSet<>();
 		try {
@@ -187,7 +193,8 @@ public enum ConnectionPool {
 			}
 			LOGGER.log(Level.INFO, "Finish creation.");
 		} catch (SQLException e) {
-			throw new ConnectionPoolException("SQL exception in ConnectionPool -> createPool().", e);
+			throw new ConnectionPoolException(
+					"SQL exception in ConnectionPool -> createPool().", e);
 		}
 		isCreated = true;
 		LOGGER.log(Level.DEBUG, "Finish ConnectionPool -> createPool().");
@@ -205,8 +212,9 @@ public enum ConnectionPool {
 			LOGGER.log(Level.INFO, "Pool is not created.");
 			return;
 		}
+
 		try {
-			LOCK.lock(); //нужно ли проверять, не лочил ли он что-либо? Если выдаётся соединение, то тут будет ждать, чтобы войти?
+			LOCK.lock();
 			LOGGER.log(Level.INFO, "Start destroying.");
 			for (ConnectionProxy connection : connectionPool) {
 				connection.closeProxy();
@@ -214,15 +222,15 @@ public enum ConnectionPool {
 			for (ConnectionProxy connection : usedConnectionGroup) {
 				connection.closeProxy();
 			}
-			if(isClose()) {
+			if (isClose()) {
 				connectionPool.clear();
 				usedConnectionGroup.clear();
 				isCreated = false;
+				LOGGER.log(Level.INFO, "Finish destroying.");
 			} else {
-				throw new ConnectionPoolException("Not closed connections in pool after " +
-						"ConnectionPool -> destroyPool().");
+				throw new ConnectionPoolException(
+						"Not closed connections in pool after ConnectionPool -> destroyPool().");
 			}
-			LOGGER.log(Level.INFO, "Finish destroying.");
 		} finally {
 			LOCK.unlock();
 		}
@@ -230,7 +238,7 @@ public enum ConnectionPool {
 	}
 
 	/**
-	 * Check if close all connections in {@code ConnectionPool}.
+	 * Check if closed all connections in {@code ConnectionPool}.
 	 * <p>
 	 *
 	 * @return {@code true} if all connections close, otherwise return {@code false}.
@@ -241,10 +249,10 @@ public enum ConnectionPool {
 		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> isClose().");
 		boolean flag = true;
 		try {
-			int i = 1;
+			int i = 0;
 			for (ConnectionProxy connection : connectionPool) {
 				if (!connection.isClosed()) {
-					LOGGER.log(Level.WARN, "Unclosed connection in connectionPool #" + i + ".");
+					LOGGER.log(Level.WARN, "Unclosed connection in connectionPool #" + i + "(count from 0)!");
 					flag = false;
 				}
 				i++;
@@ -252,13 +260,14 @@ public enum ConnectionPool {
 			i = 0;
 			for (ConnectionProxy connection : usedConnectionGroup) {
 				if (!connection.isClosed()) {
-					LOGGER.log(Level.WARN, "Unclosed connection in usedConnectionGroup #" + i + ".");
+					LOGGER.log(Level.WARN, "Unclosed connection in usedConnectionGroup #" + i + "(count from 0)!");
 					flag = false;
 				}
 				i++;
 			}
 		} catch (SQLException e) {
-			throw new ConnectionPoolException("SQL exception in ConnectionPool -> isClose().", e);
+			throw new ConnectionPoolException(
+					"SQL exception in ConnectionPool -> isClose().", e);
 		} finally {
 			LOCK.unlock();
 		}
@@ -267,7 +276,7 @@ public enum ConnectionPool {
 	}
 
 	/**
-	 * Check if open all connections in {@code ConnectionPool}.
+	 * Check if opened all connections in {@code ConnectionPool}.
 	 * <p>
 	 *
 	 * @return {@code true} if all connections open, otherwise return {@code false}.
@@ -275,32 +284,51 @@ public enum ConnectionPool {
 	 */
 	public boolean isOpen() throws ConnectionPoolException {
 		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> isOpen().");
-		int waitingTime = 30; //time in seconds
 		boolean flag = true;
 		try {
 			LOCK.lock();
-			int i = 1;
+			int i = 0;
 			for (ConnectionProxy connection : connectionPool) {
-				if (!connection.isValid(waitingTime)) {
-					LOGGER.log(Level.WARN, "Invalid connection in connectionPool #" + i + ".");
+				if (!connection.isValid(TIME_OUT)) {
+					LOGGER.log(Level.WARN, "Invalid connection in connectionPool #" + i + "(count from 0).");
 					flag = false;
 				}
 				i++;
 			}
-			i = 1;
+			i = 0;
 			for (ConnectionProxy connection : usedConnectionGroup) {
-				if (!connection.isValid(waitingTime)) {
-					LOGGER.log(Level.WARN, "Invalid connection in connectionPool #" + i + ".");
+				if (!connection.isValid(TIME_OUT)) {
+					LOGGER.log(Level.WARN, "Invalid connection in connectionPool #" + i + "(count from 0).");
 					flag = false;
 				}
 				i++;
 			}
 		} catch (SQLException e) {
-			throw new ConnectionPoolException("SQL exception in ConnectionPool -> isOpen().", e);
+			throw new ConnectionPoolException(
+					"SQL exception in ConnectionPool -> isOpen().", e);
 		} finally {
 			LOCK.unlock();
 		}
 		LOGGER.log(Level.DEBUG, "Finish ConnectionPool -> isOpen().");
 		return flag;
+	}
+
+	/**
+	 * Check {@code ConnectionProxy} for validity. Return {@param connectionProxy} if connection valid,
+	 * otherwise return new {@code ConnectionProxy}.
+	 * <p>
+	 *
+	 * @param connectionProxy for validation.
+	 * @return valid {@code ConnectionProxy}.
+	 * @throws ConnectionPoolException if {@code SQLException} occurred.
+	 */
+	private ConnectionProxy validate(ConnectionProxy connectionProxy) throws ConnectionPoolException {
+		try {
+			return connectionProxy.isValid(TIME_OUT) ? connectionProxy : new ConnectionProxy(
+					DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD));
+		} catch (SQLException e) {
+			throw new ConnectionPoolException(
+					"SQL exception in ConnectionPool -> validate(ConnectionProxy).", e);
+		}
 	}
 }
