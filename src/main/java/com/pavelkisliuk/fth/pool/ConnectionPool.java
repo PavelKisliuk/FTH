@@ -90,8 +90,9 @@ public enum ConnectionPool {
 	ConnectionPool(int startPoolSize) {
 		LOGGER = LogManager.getLogger();
 		LOCK = new ReentrantLock();
-		DATABASE_URL =
-				"jdbc:derby:F:\\JavaSE\\Projects\\FTH\\src\\test\\resources\\database\\testdb";
+		DATABASE_URL = "jdbc:derby://localhost:1527/testdb";
+//		DATABASE_URL =
+//				"jdbc:derby:F:\\JavaSE\\Projects\\FTH\\src\\test\\resources\\database\\testdb";
 		DATABASE_LOGIN = "inProjectWithoutLaba";
 		DATABASE_PASSWORD = "vProektBezLabyi";
 		TIME_OUT = 3;
@@ -175,10 +176,12 @@ public enum ConnectionPool {
 	 * @param connection is returning connection.
 	 */
 	public void releaseConnection(Connection connection) {
-		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> releaseConnection().");
+		LOGGER.log(Level.DEBUG,
+				"Start ConnectionPool -> releaseConnection(Connection).");
 		if (connection == null ||
 				connection.getClass() != ConnectionProxy.class) {
-			LOGGER.log(Level.WARN, "Incorrect connection retrieved!");
+			LOGGER.log(Level.WARN,
+					"Incorrect connection retrieved!");
 		}
 
 		ConnectionProxy connectionProxy = (ConnectionProxy) connection;
@@ -186,11 +189,13 @@ public enum ConnectionPool {
 			LOCK.lock();
 			connectionPool.offer(connectionProxy);
 			usedConnectionGroup.remove(connectionProxy);
-			LOGGER.log(Level.DEBUG, "Connection released.");
+			LOGGER.log(Level.DEBUG,
+					"Connection released.");
 		} finally {
 			LOCK.unlock();
 		}
-		LOGGER.log(Level.DEBUG, "Finish ConnectionPool -> releaseConnection().");
+		LOGGER.log(Level.DEBUG,
+				"Finish ConnectionPool -> releaseConnection(Connection).");
 	}
 
 	/**
@@ -200,27 +205,33 @@ public enum ConnectionPool {
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */
 	private void createPool() throws ConnectionPoolException {
-		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> createPool().");
+		LOGGER.log(Level.DEBUG,
+				"Start ConnectionPool -> createPool().");
 		if (isCreated.get()) {
-			LOGGER.log(Level.INFO, "Pool is already created.");
+			LOGGER.log(Level.INFO,
+					"Pool is already created.");
 			return;
 		}
 
 		connectionPool = new ArrayDeque<>();
 		usedConnectionGroup = new HashSet<>();
 		try {
-			LOGGER.log(Level.INFO, "Start creation.");
+			LOGGER.log(Level.INFO,
+					"Start creation.");
+			DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
 			for (int i = 0; i < poolSize; i++) {
 				connectionPool.add(new ConnectionProxy(
 						DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD)));
 			}
-			LOGGER.log(Level.INFO, "Finish creation.");
+			LOGGER.log(Level.INFO,
+					"Finish creation.");
 		} catch (SQLException e) {
 			throw new ConnectionPoolException(
 					"SQL exception in ConnectionPool -> createPool().", e);
 		}
 		isCreated.set(true);
-		LOGGER.log(Level.DEBUG, "Finish ConnectionPool -> createPool().");
+		LOGGER.log(Level.DEBUG,
+				"Finish ConnectionPool -> createPool().");
 	}
 
 	/**
@@ -230,15 +241,18 @@ public enum ConnectionPool {
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */
 	public void destroyPool() throws ConnectionPoolException {
-		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> destroyPool().");
+		LOGGER.log(Level.DEBUG,
+				"Start ConnectionPool -> destroyPool().");
 		if (!isCreated.get()) {
-			LOGGER.log(Level.INFO, "Pool is not created.");
+			LOGGER.log(Level.INFO,
+					"Pool is not created.");
 			return;
 		}
 
 		try {
+			LOGGER.log(Level.INFO,
+					"Start destroying.");
 			LOCK.lock();
-			LOGGER.log(Level.INFO, "Start destroying.");
 			for (ConnectionProxy connection : connectionPool) {
 				connection.closeProxy();
 			}
@@ -249,7 +263,8 @@ public enum ConnectionPool {
 				connectionPool.clear();
 				usedConnectionGroup.clear();
 				isCreated.set(false);
-				LOGGER.log(Level.INFO, "Finish destroying.");
+				LOGGER.log(Level.INFO,
+						"Finish destroying.");
 			} else {
 				throw new ConnectionPoolException(
 						"Not closed connections in pool after ConnectionPool -> destroyPool().");
@@ -257,7 +272,8 @@ public enum ConnectionPool {
 		} finally {
 			LOCK.unlock();
 		}
-		LOGGER.log(Level.DEBUG, "Finish ConnectionPool -> destroyPool().");
+		LOGGER.log(Level.DEBUG,
+				"Finish ConnectionPool -> destroyPool().");
 	}
 
 	/**
@@ -268,14 +284,16 @@ public enum ConnectionPool {
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */
 	public boolean isClose() throws ConnectionPoolException {
-		LOCK.lock();
-		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> isClose().");
+		LOGGER.log(Level.DEBUG,
+				"Start ConnectionPool -> isClose().");
 		boolean flag = true;
 		try {
+			LOCK.lock();
 			int i = 0;
 			for (ConnectionProxy connection : connectionPool) {
 				if (!connection.isClosed()) {
-					LOGGER.log(Level.WARN, "Unclosed connection in connectionPool #" + i + "(count from 0)!");
+					LOGGER.log(Level.WARN,
+							"Unclosed connection in connectionPool #" + i + "(count from 0)!");
 					flag = false;
 				}
 				i++;
@@ -283,7 +301,8 @@ public enum ConnectionPool {
 			i = 0;
 			for (ConnectionProxy connection : usedConnectionGroup) {
 				if (!connection.isClosed()) {
-					LOGGER.log(Level.WARN, "Unclosed connection in usedConnectionGroup #" + i + "(count from 0)!");
+					LOGGER.log(Level.WARN,
+							"Unclosed connection in usedConnectionGroup #" + i + "(count from 0)!");
 					flag = false;
 				}
 				i++;
@@ -294,7 +313,8 @@ public enum ConnectionPool {
 		} finally {
 			LOCK.unlock();
 		}
-		LOGGER.log(Level.DEBUG, "Finish ConnectionPool -> isClose().");
+		LOGGER.log(Level.DEBUG,
+				"Finish ConnectionPool -> isClose().");
 		return flag;
 	}
 
@@ -306,14 +326,16 @@ public enum ConnectionPool {
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */
 	public boolean isOpen() throws ConnectionPoolException {
-		LOGGER.log(Level.DEBUG, "Start ConnectionPool -> isOpen().");
+		LOGGER.log(Level.DEBUG,
+				"Start ConnectionPool -> isOpen().");
 		boolean flag = true;
 		try {
 			LOCK.lock();
 			int i = 0;
 			for (ConnectionProxy connection : connectionPool) {
 				if (!connection.isValid(TIME_OUT)) {
-					LOGGER.log(Level.WARN, "Invalid connection in connectionPool #" + i + "(count from 0).");
+					LOGGER.log(Level.WARN,
+							"Invalid connection in connectionPool #" + i + "(count from 0).");
 					flag = false;
 				}
 				i++;
@@ -321,7 +343,8 @@ public enum ConnectionPool {
 			i = 0;
 			for (ConnectionProxy connection : usedConnectionGroup) {
 				if (!connection.isValid(TIME_OUT)) {
-					LOGGER.log(Level.WARN, "Invalid connection in connectionPool #" + i + "(count from 0).");
+					LOGGER.log(Level.WARN,
+							"Invalid connection in connectionPool #" + i + "(count from 0).");
 					flag = false;
 				}
 				i++;
@@ -332,7 +355,8 @@ public enum ConnectionPool {
 		} finally {
 			LOCK.unlock();
 		}
-		LOGGER.log(Level.DEBUG, "Finish ConnectionPool -> isOpen().");
+		LOGGER.log(Level.DEBUG,
+				"Finish ConnectionPool -> isOpen().");
 		return flag;
 	}
 
