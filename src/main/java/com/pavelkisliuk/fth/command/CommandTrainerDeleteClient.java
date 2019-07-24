@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * The {@code CommandTrainerDeleteClient} is {@code FthServletCommand} realization to unchain
- * conjunction between trainer and client.
+ * conjunction between trainer and client and retrieve new list of trainer's client's.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
@@ -23,11 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 public class CommandTrainerDeleteClient implements FthServletCommand {
 	/**
 	 * Delete conjunction between trainer and client in database and return new
-	 * list of trainer client's.
+	 * list of trainer's client's.
 	 * <p>
 	 *
 	 * @param request is {@code HttpServletRequest} from client.
-	 * @return list of trainer client's.
+	 * @return list of trainer's client's.
 	 * @throws FthCommandException if {@code FthControllerException} occurred.
 	 */
 	@Override
