@@ -33,6 +33,7 @@ public class TrainerRemoveClientService implements FthService {
 	public String serve(FthData data) throws FthControllerException {
 		FthLong clientId = (FthLong) data;
 		try {
+			//Unchain.
 			FthRepository.INSTANCE.replace(new TrainerRemoveClientSpecifier(clientId));
 		} catch (FthRepositoryException e) {
 			throw new FthControllerException(
