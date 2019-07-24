@@ -4,7 +4,7 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.controller.pageservice.TrainerPageService;
+import com.pavelkisliuk.fth.controller.obtainmentservice.ClientGroupByTrainerService;
 import com.pavelkisliuk.fth.controller.removeservice.TrainerRemoveClientService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.exception.FthControllerException;
@@ -60,7 +60,7 @@ public class CommandTrainerDeleteClient implements FthServletCommand {
 			new TrainerRemoveClientService().serve(clientId);
 			FthLong trainerId = (FthLong) request.getSession().getAttribute(FthServletCommand.TRAINER_ID_ATTRIBUTE);
 			//Retrieve list of trainer clients.
-			message = new TrainerPageService().serve(trainerId);
+			message = new ClientGroupByTrainerService().serve(trainerId);
 			LOGGER.log(Level.INFO,
 					"Conjunction unchained, data retrieved.");
 		} catch (FthControllerException e) {
