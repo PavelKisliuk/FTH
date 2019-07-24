@@ -5,30 +5,31 @@
 package com.pavelkisliuk.fth.specifier.select;
 
 import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
-import com.pavelkisliuk.fth.repository.FthRepository;
 import com.pavelkisliuk.fth.specifier.FthSelectSpecifier;
 
 import java.sql.PreparedStatement;
 
 /**
- * The class {@code AllRegistrationEmailSelectSpecifier} is realization of {@code FthSelectSpecifier} for
+ * The {@code AllRegistrationEmailSelectSpecifier} class is {@code FthSelectSpecifier} realization for
  * selection all e-mail from table RegistrationData in database.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see FthRepository
- * @see FthDataByResultSetFactory
- * @see FthSelectSpecifier
- * @see AllClientEmailSelectSpecifier
- * @see CreatorString
  * @since 12.0
  */
 public class AllRegistrationEmailSelectSpecifier implements FthSelectSpecifier {
 	/**
-	 * Return {@code CreatorString} for creation data from database.
+	 * Select request to database.
+	 */
+	private static final String REQUEST = "SELECT " +
+			"eMail " +
+			"FROM RegistrationData";
+
+	/**
+	 * Return factory for {@code FthString} creation.
 	 * <p>
 	 *
-	 * @return {@code CreatorString} for creation data from database by {@code FthRepository}.
+	 * @return factory for {@code FthString} creation.
 	 */
 	@Override
 	public FthDataByResultSetFactory createFactory() {
@@ -36,9 +37,10 @@ public class AllRegistrationEmailSelectSpecifier implements FthSelectSpecifier {
 	}
 
 	/**
-	 * Return {@param statement}.
+	 * Paste metadata in {@param statement} and return it.
 	 * <p>
 	 *
+	 * @param statement for pasting metadata into.
 	 * @return {@param statement}.
 	 */
 	@Override
@@ -47,13 +49,13 @@ public class AllRegistrationEmailSelectSpecifier implements FthSelectSpecifier {
 	}
 
 	/**
-	 * Return SQL request as String.
+	 * Return {@code REQUEST}.
 	 * <p>
 	 *
-	 * @return SQL request for {@code PreparedStatement} as String.
+	 * @return {@code REQUEST}.
 	 */
 	@Override
 	public String deriveSequelRequest() {
-		return "SELECT eMail FROM RegistrationData";
+		return REQUEST;
 	}
 }
