@@ -11,6 +11,9 @@ import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.repository.FthRepository;
 import com.pavelkisliuk.fth.specifier.update.TrainerRemoveClientSpecifier;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The {@code TrainerRemoveClientService} is {@code FthService} realization to unchain
@@ -21,6 +24,8 @@ import com.pavelkisliuk.fth.specifier.update.TrainerRemoveClientSpecifier;
  * @since 12.0
  */
 public class TrainerRemoveClientService implements FthService {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	/**
 	 * Constrain database unchain conjunction between trainer and client.
 	 * <p>
@@ -31,14 +36,29 @@ public class TrainerRemoveClientService implements FthService {
 	 */
 	@Override
 	public String serve(FthData data) throws FthControllerException {
+		LOGGER.log(Level.DEBUG,
+				"Start TrainerRemoveClientService -> serve(FthData).");
+		if (data == null ||
+				data.getClass() != FthLong.class) {
+			LOGGER.log(Level.ERROR,
+					"Incorrect parameter in TrainerRemoveClientService -> serve(FthData)!!!");
+			return "";
+		}
+
 		FthLong clientId = (FthLong) data;
 		try {
+			LOGGER.log(Level.INFO,
+					"Start unchaining.");
 			//Unchain.
 			FthRepository.INSTANCE.replace(new TrainerRemoveClientSpecifier(clientId));
+			LOGGER.log(Level.INFO,
+					"Unchained.");
 		} catch (FthRepositoryException e) {
 			throw new FthControllerException(
 					"FthRepositoryException in TrainerRemoveClientService -> serve(FthData).", e);
 		}
+		LOGGER.log(Level.DEBUG,
+				"Finish TrainerRemoveClientService -> serve(FthData).");
 		return "";
 	}
 }
