@@ -38,6 +38,7 @@ public class AllAuthenticationEmailSelectSpecifier implements FthSelectSpecifier
 
 	/**
 	 * Paste metadata in {@param statement} and return it.
+	 * <p>
 	 *
 	 * @param statement for pasting metadata into.
 	 * @return {@param statement}.
