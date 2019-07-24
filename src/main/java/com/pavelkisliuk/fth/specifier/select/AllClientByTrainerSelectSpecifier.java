@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * The {@code AllClientByTrainerSelectSpecifier} is {@code FthUpdateSpecifier} realization to update
+ * The {@code AllClientByTrainerSelectSpecifier} class is {@code FthUpdateSpecifier} realization to update
  * trainerId column in ClientPublicData table to -1 value.
  * <p>
  *
