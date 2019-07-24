@@ -12,14 +12,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * The {@code TrainerRemoveClientSpecifier} is {@code FthUpdateSpecifier} realization to update
+ * The {@code TrainerRemoveClientUpdateSpecifier} class is {@code FthUpdateSpecifier} realization to update
  * trainerId column in ClientPublicData table to -1 value.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class TrainerRemoveClientSpecifier implements FthUpdateSpecifier {
+public class TrainerRemoveClientUpdateSpecifier implements FthUpdateSpecifier {
 	/**
 	 * Update request to database.
 	 */
@@ -39,12 +39,12 @@ public class TrainerRemoveClientSpecifier implements FthUpdateSpecifier {
 	 *
 	 * @param clientId for {@code clientId} initialization.
 	 */
-	public TrainerRemoveClientSpecifier(FthLong clientId) {
+	public TrainerRemoveClientUpdateSpecifier(FthLong clientId) {
 		this.clientId = clientId;
 	}
 
 	/**
-	 * Paste metadata in statement and update it(statement).
+	 * Paste metadata in {@param statement} and update it(statement).
 	 * <p>
 	 *
 	 * @param statement is precompiled SQL statement.
@@ -57,7 +57,7 @@ public class TrainerRemoveClientSpecifier implements FthUpdateSpecifier {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
-					"SQL exception in TrainerRemoveClientSpecifier -> update(PreparedStatement).", e);
+					"SQL exception in TrainerRemoveClientUpdateSpecifier -> update(PreparedStatement).", e);
 		}
 	}
 
