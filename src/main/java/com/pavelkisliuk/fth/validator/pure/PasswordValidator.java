@@ -30,8 +30,8 @@ public class PasswordValidator implements FthValidator {
 	private static final String PASSWORD_EMPTY = "Field \"password\" empty.\n";
 	private static final String LONG_PASSWORD = "Password has to be less then " + PASSWORD_LENGTH + " symbols!\n";
 	private static final String SHORT_PASSWORD = "Password has to be more then " + PASSWORD_MIN_LENGTH + " symbols!\n";
-	private static final String INCORRECT_PASSWORD = "Password has to consist of letters(big or small) " +
-			"and digits!\n";
+	private static final String INCORRECT_PASSWORD = "Password has to consist of letters(A-Z a-z) " +
+			"and digits(0-9)!\n";
 
 	/**
 	 * Messages about incorrect data.
@@ -73,7 +73,7 @@ public class PasswordValidator implements FthValidator {
 			flag = false;
 			messageGroup.add(SHORT_PASSWORD);
 		}
-		if (!password.get().matches("\\p{Alnum}+")) {
+		if (!password.get().matches("[a-zA-Z0-9]+")) {
 			LOGGER.log(Level.WARN, "Incorrect password!");
 			flag = false;
 			messageGroup.add(INCORRECT_PASSWORD);
