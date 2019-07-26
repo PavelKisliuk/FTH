@@ -25,7 +25,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see ConnectionProxy
  * @since 12.0
  */
 public enum ConnectionPool {
@@ -104,7 +103,7 @@ public enum ConnectionPool {
 		} catch (ConnectionPoolException e) {
 			LogManager.getLogger().log(Level.FATAL,
 					"ConnectionPoolException in ConnectionPool constructor!!!");
-			throw new ExceptionInInitializerError(
+			throw new RuntimeException(
 					"ConnectionPoolException in ConnectionPool constructor.");
 		}
 	}
@@ -182,6 +181,7 @@ public enum ConnectionPool {
 				connection.getClass() != ConnectionProxy.class) {
 			LOGGER.log(Level.WARN,
 					"Incorrect connection retrieved!");
+			return;
 		}
 
 		ConnectionProxy connectionProxy = (ConnectionProxy) connection;
@@ -335,7 +335,7 @@ public enum ConnectionPool {
 			for (ConnectionProxy connection : connectionPool) {
 				if (!connection.isValid(TIME_OUT)) {
 					LOGGER.log(Level.WARN,
-							"Invalid connection in connectionPool #" + i + "(count from 0).");
+							"Invalid connection in connectionPool #" + i + "(count from 0)!");
 					flag = false;
 				}
 				i++;
@@ -344,7 +344,7 @@ public enum ConnectionPool {
 			for (ConnectionProxy connection : usedConnectionGroup) {
 				if (!connection.isValid(TIME_OUT)) {
 					LOGGER.log(Level.WARN,
-							"Invalid connection in connectionPool #" + i + "(count from 0).");
+							"Invalid connection in connectionPool #" + i + "(count from 0)!");
 					flag = false;
 				}
 				i++;
@@ -371,8 +371,13 @@ public enum ConnectionPool {
 	 */
 	private ConnectionProxy validate(ConnectionProxy connectionProxy) throws ConnectionPoolException {
 		try {
-			return connectionProxy.isValid(TIME_OUT) ? connectionProxy : new ConnectionProxy(
-					DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD));
+			if(connectionProxy.isValid(TIME_OUT)) {
+				return connectionProxy;
+			} else {
+				connectionProxy.closeProxy();
+				return new ConnectionProxy(
+						DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD));
+			}
 		} catch (SQLException e) {
 			throw new ConnectionPoolException(
 					"SQL exception in ConnectionPool -> validate(ConnectionProxy).", e);
