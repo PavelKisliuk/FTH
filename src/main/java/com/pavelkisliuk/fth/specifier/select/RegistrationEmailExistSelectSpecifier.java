@@ -13,20 +13,20 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * The {@code EmailExistSelectSpecifier} class is {@code FthSelectSpecifier} realization
- * for checking of existence concrete e-mail in AuthenticationData table in database.
+ * The {@code RegistrationEmailExistSelectSpecifier} class is {@code FthSelectSpecifier} realization
+ * for checking of existence concrete e-mail in RegistrationData table in database.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class EmailExistSelectSpecifier implements FthSelectSpecifier {
+public class RegistrationEmailExistSelectSpecifier implements FthSelectSpecifier {
 	/**
 	 * Select request to database.
 	 */
 	private static final String REQUEST = "SELECT " +
 			"COUNT(*) " +
-			"FROM AuthenticationData WHERE eMail = ?";
+			"FROM RegistrationData WHERE eMail = ?";
 
 	/**
 	 * Searching e-mail.
@@ -39,7 +39,7 @@ public class EmailExistSelectSpecifier implements FthSelectSpecifier {
 	 *
 	 * @param eMail for {@code eMail} initialization.
 	 */
-	public EmailExistSelectSpecifier(FthString eMail) {
+	public RegistrationEmailExistSelectSpecifier(FthString eMail) {
 		this.eMail = eMail;
 	}
 
