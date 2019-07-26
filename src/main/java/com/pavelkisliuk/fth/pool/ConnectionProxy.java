@@ -12,7 +12,7 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 /**
- * The {@code ConnectionProxy} is proxy pattern for wrapping {@code Connection} element to prevent effort's
+ * The {@code ConnectionProxy} class is proxy pattern for wrapping {@code Connection} element to prevent effort's
  * to close it not only from {@code ConnectionPool}.
  * <p>
  *
