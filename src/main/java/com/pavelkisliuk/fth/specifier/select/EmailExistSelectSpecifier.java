@@ -1,45 +1,46 @@
-/*  By Pavel Kisliuk, 24.07.2019
+/*  By Pavel Kisliuk, 26.07.2019
  *  This is class for education and nothing rights don't reserved.
  */
 
 package com.pavelkisliuk.fth.specifier.select;
 
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
-import com.pavelkisliuk.fth.model.FthAuthenticationData;
+import com.pavelkisliuk.fth.model.FthString;
+import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 import com.pavelkisliuk.fth.specifier.FthSelectSpecifier;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * The {@code AuthenticateSelectSpecifier} class is {@code FthSelectSpecifier} realization
- * for checking of existence concrete person in AuthenticationData table in database.
+ * The {@code EmailExistSelectSpecifier} class is {@code FthSelectSpecifier} realization
+ * for checking of existence concrete e-mail in AuthenticationData table in database.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class AuthenticateSelectSpecifier implements FthSelectSpecifier {
+public class EmailExistSelectSpecifier implements FthSelectSpecifier {
 	/**
 	 * Select request to database.
 	 */
 	private static final String REQUEST = "SELECT " +
 			"COUNT(*) " +
-			"FROM AuthenticationData WHERE eMail = ? AND password = ?";
+			"FROM AuthenticationData WHERE eMail = ?";
 
 	/**
-	 * Class with e-mail and password fields.
+	 * Searching e-mail.
 	 */
-	private FthAuthenticationData authenticationData;
+	private FthString eMail;
 
 	/**
 	 * Constructor for fields initialization.
 	 * <p>
 	 *
-	 * @param authenticationData for {@code authenticationData} initialization.
+	 * @param eMail for {@code eMail} initialization.
 	 */
-	public AuthenticateSelectSpecifier(FthAuthenticationData authenticationData) {
-		this.authenticationData = authenticationData;
+	public EmailExistSelectSpecifier(FthString eMail) {
+		this.eMail = eMail;
 	}
 
 	/**
@@ -49,7 +50,7 @@ public class AuthenticateSelectSpecifier implements FthSelectSpecifier {
 	 * @return factory for {@code FthInt} creation.
 	 */
 	@Override
-	public CreatorInteger createFactory() {
+	public FthDataByResultSetFactory createFactory() {
 		return new CreatorInteger();
 	}
 
@@ -63,11 +64,10 @@ public class AuthenticateSelectSpecifier implements FthSelectSpecifier {
 	@Override
 	public PreparedStatement pasteMeta(PreparedStatement statement) throws FthRepositoryException {
 		try {
-			statement.setString(1, authenticationData.getEmail());
-			statement.setString(2, authenticationData.getPassword());
+			statement.setString(1, eMail.get());
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
-					"SQLException in AuthenticateSelectSpecifier -> pasteMeta(PreparedStatement).", e);
+					"SQLException in EmailExistSelectSpecifier -> pasteMeta(PreparedStatement).", e);
 		}
 		return statement;
 	}
