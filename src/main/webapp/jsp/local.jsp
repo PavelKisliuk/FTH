@@ -12,25 +12,21 @@
 <fmt:setLocale value="${language}" />
 <fmt:setBundle basename="text" /> <%--!!!имя resourcebundle в папке properties--%>
 <%@ page pageEncoding="UTF-8" %>
-<html lang="${language}">
-<%--Всё что выше нужно чтобы локализаций работала--%>
+<!DOCTYPE HTML>
+<html>
 <head>
-    <title>Title</title>
+    <meta charset="utf-8">
+    <title>jQuery File Upload Example</title>
 
+    <h1>This is &lt/h1></h1>
 </head>
 <body>
-<%--Хрень ниже вставляешь на страничке там появится выскакивающая штучка для смены языка--%>
-<form>
-    <select id="language" name="language" onchange="submit()">
-        <option value="en" ${language == 'en' ? 'selected' : ''}>English</option>
-        <option value="ru" ${language == 'ru' ? 'selected' : ''}>Русский</option>
-    </select>
+<form action="http://localhost:8080/FTH/start" method="POST" enctype="multipart/form-data">
+    <form action="upload" method="post" enctype="multipart/form-data">
+        <input type="text" name="description" />
+        <input type="file" name="file" />
+        <input type="submit" name="ss"/>
+    </form>
 </form>
-
-<form>
-    <label for="nameSingUp"><fmt:message key="singup.label.nameSingUp" /></label>
-    <input class="form-styling" type="text" name="name" id="nameSingUp" placeholder=""/>
-</form>
-
 </body>
 </html>

@@ -11,26 +11,27 @@ $(function () {
 });
 
 $(function () {
+    var host = "/FTH/start";
     $(".btn-signup").click(function () {
         // $(".nav").toggleClass("nav-up");
         // $(".form-signup-left").toggleClass("form-signup-down");
         // $(".success").toggleClass("success-left");
         // $(".frame").toggleClass("frame-short");
 
-        $.post("http://localhost:8080/FTH/start",
+        $.post(host,
             {
                 "command": "SING_UP",
-                "nameSingUp": $("#nameSingUp").val(),
-                "surnameSingUp": $("#surnameSingUp").val(),
-                "emailSingUp": $("#emailSingUp").val(),
-                "passwordSingUp": $("#passwordSingUp").val(),
-                "confirmPasswordSingUp": $("#confirmPasswordSingUp").val()
+                "name": $("#nameSingUp").val(),
+                "surname": $("#surnameSingUp").val(),
+                "email": $("#emailSingUp").val(),
+                "password": $("#passwordSingUp").val(),
+                "confirmPassword": $("#confirmPasswordSingUp").val()
             }, request);
 
         function request(response) {
             alert(response.message);
             if (response.redirect) {
-                window.location.replace(response.redirect);
+                window.location.href = response.redirect;
             }
         }
     });

@@ -18,10 +18,10 @@
     <title>Log in/Sign up</title>
 
 
-<%--    <link href="../css/style.css" rel="stylesheet" type="text/css">--%>
-    <style>
-        <%@include file="../css/ClientAuth.css" %>
-    </style>
+    <link href="../css/ClientAuth.css" rel="stylesheet" type="text/css">
+<%--    <style>--%>
+<%--        <%@include file="../css/ClientAuth.css" %>--%>
+<%--    </style>--%>
 </head>
 <body>
 <form>
@@ -119,8 +119,8 @@
 <script src='http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
 
 <%--<script src="js/index.js"></script>--%>
-<%--<script type="text/javascript" src="../js/index.js"></script>--%>
-<script><%@include file="../js/ClientAuth.js" %></script>
+<script type="text/javascript" src="../js/ClientAuth.js"></script>
+<%--<script><%@include file="../js/ClientAuth.js" %></script>--%>
 </body>
 </html>
 

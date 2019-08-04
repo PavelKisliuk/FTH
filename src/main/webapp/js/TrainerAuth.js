@@ -1,6 +1,7 @@
 $(function () {
+    var host = "/FTH/start";
     $(".wrapper").ready(function () {
-        $.get("http://localhost:8080/FTH/start",
+        $.get(host,
             {
                 "command" : "IN_SYSTEM",
                 "str": "TRAINER_PAGE",
@@ -17,13 +18,13 @@ $(function () {
 
 
     $(".login-button").click(function () {
-        $.post("http://localhost:8080/FTH/start",
+        $.post(host,
             {
                 "command": "TRAINER_SING_IN",
                 "emailSingIn": $("#login").val(),
                 "passwordSingIn": $("#password").val()
             }, request).fail(function(xhr, status, error) {
-            alert("Error")
+            alert("Error");
         });
 
         function request(response) {
