@@ -1,6 +1,7 @@
 /*  By Pavel Kisliuk, 07.07.2019
  *  This is class for education and nothing rights don't reserved.
  */
+
 package com.pavelkisliuk.fth.controller.pageservice;
 
 import com.pavelkisliuk.fth.controller.FthService;
