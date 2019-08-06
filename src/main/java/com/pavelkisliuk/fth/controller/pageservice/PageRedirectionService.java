@@ -32,7 +32,7 @@ public class PageRedirectionService implements FthService<FthString> {
 	 *
 	 * @param redirectionPage is name of redirection page.
 	 * @return redirection page as JSON string.
-	 * @throws FthControllerException if retrieve null; {@code IllegalArgumentException} occurred.
+	 * @throws FthControllerException if {@param redirectionPage} null; {@code IllegalArgumentException} occurred.
 	 */
 	@Override
 	public String serve(FthString redirectionPage) throws FthControllerException {
