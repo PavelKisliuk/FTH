@@ -9,32 +9,35 @@ DROP TABLE ClientPersonalData;
 DROP TABLE TrainerData;
 DROP TABLE RegistrationData;
 
-CREATE TABLE TrainerData (
-   trainerId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-   firstName varchar (30) NOT NULL,
-   lastName varchar (40) NOT NULL,
-   photoPath varchar (255) NOT NULL,
-   PRIMARY KEY (trainerId)
+CREATE TABLE TrainerData
+(
+    trainerId BIGINT       NOT NULL GENERATED ALWAYS AS IDENTITY,
+    firstName varchar(30)  NOT NULL,
+    lastName  varchar(40)  NOT NULL,
+    photoPath varchar(255) NOT NULL,
+    PRIMARY KEY (trainerId)
 );
 
 INSERT INTO TrainerData (firstName, lastName, photoPath)
 VALUES ('Павел', 'Кислюк', '../avatars/1ПавелКислюк123.jpg');
 
-CREATE TABLE RegistrationData (
-   firstName varchar (30) NOT NULL,
-   lastName varchar (40) NOT NULL,
-   eMail varchar(255) NOT NULL,
-   password varchar (30) NOT NULL,
-   registrationKey varchar (30) NOT NULL
+CREATE TABLE RegistrationData
+(
+    firstName       varchar(30)  NOT NULL,
+    lastName        varchar(40)  NOT NULL,
+    eMail           varchar(255) NOT NULL,
+    password        varchar(30)  NOT NULL,
+    registrationKey varchar(30)  NOT NULL
 );
 
-CREATE TABLE ClientPersonalData (
-                                    clientId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-                                    firstName varchar (30) NOT NULL,
-                                    lastName varchar (40) NOT NULL,
-                                    photoPath varchar (255) NOT NULL,
-                                    registrationKey varchar (30) NOT NULL,
-                                    PRIMARY KEY (clientId)
+CREATE TABLE ClientPersonalData
+(
+    clientId        BIGINT       NOT NULL GENERATED ALWAYS AS IDENTITY,
+    firstName       varchar(30)  NOT NULL,
+    lastName        varchar(40)  NOT NULL,
+    photoPath       varchar(255) NOT NULL,
+    registrationKey varchar(30)  NOT NULL,
+    PRIMARY KEY (clientId)
 );
 
 INSERT INTO ClientPersonalData (firstName, lastName, photoPath, registrationKey)
@@ -43,15 +46,16 @@ VALUES ('<script>alert("1");</script>', 'Kisliuk', '../avatars/1PavelKisliuk123.
        ('Ольга', 'Безрукова', '../avatars/3ОльгаБезрукова123.jpg', ''),
        ('Новый', 'Клиент', '', '');
 
-CREATE TABLE ClientPublicData (
-                                  clientId                BIGINT         NOT NULL,
-                                  unavailableTrainerGroup varchar(32672) NOT NULL,
-                                  exerciseRequest         BOOLEAN        NOT NULL,
-                                  expiredDay              BIGINT         NOT NULL,
-                                  restVisitation          INT            NOT NULL,
-                                  trainerId               BIGINT         NOT NULL,
-                                  FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId),
-                                  FOREIGN KEY (trainerId) REFERENCES TrainerData (trainerId)
+CREATE TABLE ClientPublicData
+(
+    clientId                BIGINT         NOT NULL,
+    unavailableTrainerGroup varchar(32672) NOT NULL,
+    exerciseRequest         BOOLEAN        NOT NULL,
+    expiredDay              BIGINT         NOT NULL,
+    restVisitation          INT            NOT NULL,
+    trainerId               BIGINT         NOT NULL,
+    FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId),
+    FOREIGN KEY (trainerId) REFERENCES TrainerData (trainerId)
 );
 
 INSERT INTO ClientPublicData (clientId, unavailableTrainerGroup, exerciseRequest, expiredDay, restVisitation, trainerId)
@@ -60,12 +64,13 @@ VALUES (1, '[]', true, '1567900800000', -1, 1),
        (3, '[]', false, '1565049600000', 4, 1),
        (4, '[]', false, '', 0, -1);
 
-CREATE TABLE AuthenticationData (
-   personalId BIGINT NOT NULL,
-   eMail varchar (255) NOT NULL,
-   password varchar (30) NOT NULL,
-   FOREIGN KEY (personalId) REFERENCES ClientPersonalData (clientId),
-   FOREIGN KEY (personalId) REFERENCES TrainerData (trainerId)
+CREATE TABLE AuthenticationData
+(
+    personalId BIGINT       NOT NULL,
+    eMail      varchar(255) NOT NULL,
+    password   varchar(30)  NOT NULL,
+    FOREIGN KEY (personalId) REFERENCES ClientPersonalData (clientId),
+    FOREIGN KEY (personalId) REFERENCES TrainerData (trainerId)
 );
 
 INSERT INTO AuthenticationData (personalId, eMail, password)
@@ -75,10 +80,11 @@ VALUES (1, 'pavel_trainer@mail.ru', '210194'),
        (3, 'olga_client@mail.ru', '210194'),
        (4, 'newbie_client@mail.ru', '210194');
 
-CREATE TABLE DrillMuscleGroup (
-                                  muscleGroupId   BIGINT      NOT NULL GENERATED ALWAYS AS IDENTITY,
-                                  muscleGroupName varchar(16) NOT NULL,
-                                  PRIMARY KEY (muscleGroupId)
+CREATE TABLE DrillMuscleGroup
+(
+    muscleGroupId   BIGINT      NOT NULL GENERATED ALWAYS AS IDENTITY,
+    muscleGroupName varchar(16) NOT NULL,
+    PRIMARY KEY (muscleGroupId)
 );
 
 INSERT INTO DrillMuscleGroup (muscleGroupName)
@@ -90,14 +96,15 @@ VALUES ('Breast'),
        ('Legs'),
        ('Stomach');
 
-CREATE TABLE DrillBase (
-                           drillBaseId   BIGINT         NOT NULL GENERATED ALWAYS AS IDENTITY,
-                           muscleGroupId BIGINT         NOT NULL,
-                           drillName     varchar(32672) NOT NULL,
-                           trainerId     BIGINT         NOT NULL,
-                           PRIMARY KEY (drillBaseId),
-                           FOREIGN KEY (muscleGroupId) REFERENCES DrillMuscleGroup (muscleGroupId),
-                           FOREIGN KEY (trainerId) REFERENCES TrainerData (trainerId)
+CREATE TABLE DrillBase
+(
+    drillBaseId   BIGINT         NOT NULL GENERATED ALWAYS AS IDENTITY,
+    muscleGroupId BIGINT         NOT NULL,
+    drillName     varchar(32672) NOT NULL,
+    trainerId     BIGINT         NOT NULL,
+    PRIMARY KEY (drillBaseId),
+    FOREIGN KEY (muscleGroupId) REFERENCES DrillMuscleGroup (muscleGroupId),
+    FOREIGN KEY (trainerId) REFERENCES TrainerData (trainerId)
 );
 
 INSERT INTO DrillBase (muscleGroupId, trainerId, drillName)
@@ -137,10 +144,10 @@ VALUES (1, 1, 'Жим штанги лёжа'),
 
 CREATE TABLE ExerciseGroup
 (
-    exerciseId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-    exerciseNumber INT NOT NULL,
-    exerciseDate DATE,
-    clientId BIGINT NOT NULL,
+    exerciseId     BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+    exerciseNumber INT    NOT NULL,
+    exerciseDate   DATE,
+    clientId       BIGINT NOT NULL,
     PRIMARY KEY (exerciseId),
     FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId)
 );
@@ -160,15 +167,15 @@ CREATE TABLE DrillGroup
 
 CREATE TABLE SetGroup
 (
-    setId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-    setNumber INT NOT NULL,
-    necessaryReps INT NOT NULL,
-    selfConsistent INT NOT NULL,
-    helpConsistent INT NOT NULL,
-    weightTool FLOAT NOT NULL,
-    restTime TIME,
-    exerciseId BIGINT NOT NULL,
-    drillId BIGINT NOT NULL,
+    setId          BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+    setNumber      INT    NOT NULL,
+    necessaryReps  INT    NOT NULL,
+    selfConsistent INT    NOT NULL,
+    helpConsistent INT    NOT NULL,
+    weightTool     FLOAT  NOT NULL,
+    restTime       TIME,
+    exerciseId     BIGINT NOT NULL,
+    drillId        BIGINT NOT NULL,
     FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId),
     FOREIGN KEY (drillId) REFERENCES Drills (drillId)
 );
