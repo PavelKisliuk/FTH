@@ -17,6 +17,9 @@ CREATE TABLE TrainerData (
    PRIMARY KEY (trainerId)
 );
 
+INSERT INTO TrainerData (firstName, lastName, photoPath)
+VALUES ('Павел', 'Кислюк', '../avatars/1ПавелКислюк123.jpg');
+
 CREATE TABLE RegistrationData (
    firstName varchar (30) NOT NULL,
    lastName varchar (40) NOT NULL,
@@ -26,22 +29,36 @@ CREATE TABLE RegistrationData (
 );
 
 CREATE TABLE ClientPersonalData (
-   clientId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-   firstName varchar (30) NOT NULL,
-   lastName varchar (40) NOT NULL,
-   photoPath varchar (255) NOT NULL,
-   registrationKey varchar (30) NOT NULL,
-   trainerId BIGINT NOT NULL,
-   PRIMARY KEY (clientId),
-   FOREIGN KEY (trainerId) REFERENCES TrainerData (trainerId)
+                                    clientId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+                                    firstName varchar (30) NOT NULL,
+                                    lastName varchar (40) NOT NULL,
+                                    photoPath varchar (255) NOT NULL,
+                                    registrationKey varchar (30) NOT NULL,
+                                    PRIMARY KEY (clientId)
 );
 
+INSERT INTO ClientPersonalData (firstName, lastName, photoPath, registrationKey)
+VALUES ('<script>alert("1");</script>', 'Kisliuk', '../avatars/1PavelKisliuk123.jpg', ''),
+       ('Роман', 'Жминько', '../avatars/2РоманЖминько123.jpg', ''),
+       ('Ольга', 'Безрукова', '../avatars/3ОльгаБезрукова123.jpg', ''),
+       ('Новый', 'Клиент', '', '');
+
 CREATE TABLE ClientPublicData (
-   clientId BIGINT NOT NULL,
-   expiredDay DATE,
-   restVisitation INT,
-   FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId)
+                                  clientId                BIGINT         NOT NULL,
+                                  unavailableTrainerGroup varchar(32672) NOT NULL,
+                                  exerciseRequest         BOOLEAN        NOT NULL,
+                                  expiredDay              BIGINT         NOT NULL,
+                                  restVisitation          INT            NOT NULL,
+                                  trainerId               BIGINT         NOT NULL,
+                                  FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId),
+                                  FOREIGN KEY (trainerId) REFERENCES TrainerData (trainerId)
 );
+
+INSERT INTO ClientPublicData (clientId, unavailableTrainerGroup, exerciseRequest, expiredDay, restVisitation, trainerId)
+VALUES (1, '[]', true, '1567900800000', -1, 1),
+       (2, '[]', true, '1567900800000', 0, 1),
+       (3, '[]', false, '1565049600000', 4, 1),
+       (4, '[]', false, '', 0, -1);
 
 CREATE TABLE AuthenticationData (
    personalId BIGINT NOT NULL,
@@ -51,42 +68,98 @@ CREATE TABLE AuthenticationData (
    FOREIGN KEY (personalId) REFERENCES TrainerData (trainerId)
 );
 
+INSERT INTO AuthenticationData (personalId, eMail, password)
+VALUES (1, 'pavel_trainer@mail.ru', '210194'),
+       (1, 'pavel_client@mail.ru', '210194'),
+       (2, 'roman_client@mail.ru', '210194'),
+       (3, 'olga_client@mail.ru', '210194'),
+       (4, 'newbie_client@mail.ru', '210194');
+
 CREATE TABLE DrillMuscleGroup (
-   muscleGroupId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-   muscleGroupName varchar (255) NOT NULL,
-   PRIMARY KEY (muscleGroupId)
+                                  muscleGroupId   BIGINT      NOT NULL GENERATED ALWAYS AS IDENTITY,
+                                  muscleGroupName varchar(16) NOT NULL,
+                                  PRIMARY KEY (muscleGroupId)
 );
+
+INSERT INTO DrillMuscleGroup (muscleGroupName)
+VALUES ('Breast'),
+       ('Back'),
+       ('Shoulders'),
+       ('Biceps'),
+       ('Triceps'),
+       ('Legs'),
+       ('Stomach');
 
 CREATE TABLE DrillBase (
-   drillBaseId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-   muscleGroupId BIGINT NOT NULL,
-   drillName varchar (255) NOT NULL,
-   PRIMARY KEY (drillBaseId),
-   FOREIGN KEY (muscleGroupId) REFERENCES DrillMuscleGroup (muscleGroupId)
+                           drillBaseId   BIGINT         NOT NULL GENERATED ALWAYS AS IDENTITY,
+                           muscleGroupId BIGINT         NOT NULL,
+                           drillName     varchar(32672) NOT NULL,
+                           trainerId     BIGINT         NOT NULL,
+                           PRIMARY KEY (drillBaseId),
+                           FOREIGN KEY (muscleGroupId) REFERENCES DrillMuscleGroup (muscleGroupId),
+                           FOREIGN KEY (trainerId) REFERENCES TrainerData (trainerId)
 );
 
-CREATE TABLE Exercises (
+INSERT INTO DrillBase (muscleGroupId, trainerId, drillName)
+VALUES (1, 1, 'Жим штанги лёжа'),
+       (1, 1, 'Бабочка'),
+       (1, 1, 'Жим штанги лёжа на наклонной скамье в Смитте(угол 30°)'),
+       (1, 1, 'Жим в Хаммере лёжа'),
+       (1, 1, 'Разводка гантелей на наклонной скамье(угол 30°)'),
+       (2, 1, 'Верхняя тяга за голову'),
+       (2, 1, 'Тяга Т-грифа'),
+       (2, 1, 'Верхняя тяга узким хватом к груди'),
+       (2, 1, 'Нижняя тяга на тренажёре'),
+       (2, 1, 'Тяга гантели в наклоне'),
+       (3, 1, 'Сведение-равзведение рук с гантелями в стороны'),
+       (3, 1, 'Жим в Хаммере сидя'),
+       (3, 1, 'Жим в Смитте из-за головы'),
+       (3, 1, 'Протяжка до подбородка узким хватом'),
+       (3, 1, 'Протяжка до подбородка широким хватом'),
+       (4, 1, 'Сгибание-разгибание рук с классическим грифом'),
+       (4, 1, 'Сгибание-разгибание рук с S-образным грифом(хват широкий)'),
+       (4, 1, 'Сгибание-разгибание рук с S-образным грифом(хват узкий)'),
+       (4, 1, 'Сгибание-разгибание руки с упором на колено'),
+       (4, 1, 'Сгибание-разгибание рук пронированным хватом'),
+       (5, 1, 'Жим лёжа узким хватом'),
+       (5, 1, 'Французский жим лёжа широким хватом'),
+       (5, 1, 'Французский жим лёжа узким хватом'),
+       (5, 1, 'Трицепс на блочном тренажёре с цепью'),
+       (5, 1, 'Трицепс на блочном тренажёре с балкой'),
+       (6, 1, 'Приседания со штангой в Смитте'),
+       (6, 1, 'Приседания в "ножницах"'),
+       (6, 1, 'Бицепс бедра'),
+       (6, 1, 'Тренажёр на икроножные мышцы сидя'),
+       (6, 1, 'Квадрицепсы на тренажёре'),
+       (7, 1, 'Пресс на блочном тренажёре'),
+       (7, 1, 'Римский стул'),
+       (7, 1, 'Скручивания');
+
+CREATE TABLE ExerciseGroup
+(
     exerciseId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     exerciseNumber INT NOT NULL,
     exerciseDate DATE,
-    muscleGroupId BIGINT NOT NULL,
     clientId BIGINT NOT NULL,
     PRIMARY KEY (exerciseId),
-    FOREIGN KEY (muscleGroupId) REFERENCES DrillMuscleGroup (muscleGroupId),
     FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId)
 );
 
-CREATE TABLE Drills (
-    drillId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-    drillNumber INT NOT NULL,
-    exerciseId BIGINT NOT NULL,
-    drillBaseId BIGINT NOT NULL,
+CREATE TABLE DrillGroup
+(
+    drillId       BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+    drillNumber   INT    NOT NULL,
+    exerciseId    BIGINT NOT NULL,
+    drillBaseId   BIGINT NOT NULL,
+    muscleGroupId BIGINT NOT NULL,
     PRIMARY KEY (drillId),
     FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId),
-    FOREIGN KEY (drillBaseId) REFERENCES DrillBase (drillBaseId)
+    FOREIGN KEY (drillBaseId) REFERENCES DrillBase (drillBaseId),
+    FOREIGN KEY (muscleGroupId) REFERENCES DrillMuscleGroup (muscleGroupId)
 );
 
-CREATE TABLE DrillSets (
+CREATE TABLE SetGroup
+(
     setId BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     setNumber INT NOT NULL,
     necessaryReps INT NOT NULL,
@@ -99,67 +172,3 @@ CREATE TABLE DrillSets (
     FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId),
     FOREIGN KEY (drillId) REFERENCES Drills (drillId)
 );
-
-INSERT INTO TrainerData (firstName, lastName, photoPath)
-VALUES
-   ('Павел','Кислюк', 'https://pp.userapi.com/c637229/v637229874/21fa5/v6r_UTH_uCw.jpg');
-
-INSERT INTO ClientPersonalData (firstName, lastName, photoPath, registrationKey, trainerId)
-VALUES
-   ('Pavel','Kisliuk', 'https://pp.userapi.com/c638330/v638330874/419bb/AzS3PYR_kf0.jpg', '-', 1);
-
-INSERT INTO ClientPublicData (clientId, expiredDay, restVisitation)
-VALUES
-   (1,'2019-09-08', -1);
-
-INSERT INTO AuthenticationData (personalId, eMail, password)
-VALUES
-   (1,'pavelsergeevichkisliuk2015@mail.ru', '210194'),
-   (1, 'pavel-2008.94@mail.ru', '210194');
-
-INSERT INTO DrillMuscleGroup (muscleGroupName)
-VALUES
-   ('Breast'),
-   ('Back'),
-   ('Shoulders'),
-   ('Biceps'),
-   ('Triceps'),
-   ('Legs'),
-   ('Stomach');
-
-INSERT INTO DrillBase (muscleGroupId, drillName)
-VALUES
-   (1,'Bench press'),
-   (1,'Pectoral machine (Butterfly)'),
-   (1,'Incline bench press (30*)'),
-   (1,'Hammer strength flat bench press');
-
-INSERT INTO Exercises (exerciseNumber, exerciseDate, muscleGroupId, clientId)
-VALUES
-   (1,'2019-06-21', 1, 1);
-
-INSERT INTO Drills (drillNumber, exerciseId, drillBaseId)
-VALUES
-   (1, 1, 1),
-   (2, 1, 2),
-   (3, 1, 3),
-   (4, 1, 4);
-
-INSERT INTO DrillSets (setNumber, necessaryReps, selfConsistent, helpConsistent, weightTool, restTime, exerciseId, drillId)
-VALUES
-   (1, 10, 9, 1, 100, '00:01:20', 1, 1),
-   (2, 10, 8, 2, 95, '00:01:20', 1, 1),
-   (3, 10, 7, 2, 90, '00:01:20', 1, 1),
-   (4, 10, 7, 2, 85, '00:01:20', 1, 1),
-   (1, 12, 12, 0, 45, '00:01:00', 1, 2),
-   (2, 12, 10, 0, 40, '00:01:00', 1, 2),
-   (3, 12, 9, 0, 35, '00:01:00', 1, 2),
-   (4, 12, 8, 0, 30, '00:01:00', 1, 2),
-   (1, 8, 8, 0, 70, '00:01:00', 1, 3),
-   (2, 8, 7, 1, 65, '00:01:00', 1, 3),
-   (3, 8, 7, 1, 60, '00:01:00', 1, 3),
-   (4, 8, 6, 1, 55, '00:01:00', 1, 3),
-   (1, 12, 12, 0, 60, '00:01:00', 1, 4),
-   (2, 12, 10, 0, 55, '00:01:00', 1, 4),
-   (3, 12, 10, 0, 50, '00:01:00', 1, 4),
-   (4, 12, 9, 0, 45, '00:01:00', 1, 4);
