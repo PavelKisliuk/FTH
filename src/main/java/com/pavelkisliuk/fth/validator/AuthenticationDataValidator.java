@@ -7,7 +7,6 @@ package com.pavelkisliuk.fth.validator;
 import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
 import com.pavelkisliuk.fth.model.FthAuthenticationData;
-import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthInt;
 import com.pavelkisliuk.fth.repository.FthRepository;
 import com.pavelkisliuk.fth.specifier.select.AuthenticateSelectSpecifier;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class AuthenticationDataValidator implements FthValidator {
+public class AuthenticationDataValidator implements FthValidator<FthAuthenticationData> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String EMAIL_EMPTY = "Field \"email\" empty.\n";
@@ -42,22 +41,20 @@ public class AuthenticationDataValidator implements FthValidator {
 	 * Inspect {@code FthAuthenticationData} instance for correct data.
 	 * <p>
 	 *
-	 * @param data is data for validation.
-	 * @return {@code true} if {@param data} valid, else return {@code false}.
+	 * @param authenticationData is data for validation.
+	 * @return {@code true} if {@param authenticationData} valid, else return {@code false}.
 	 */
 	@Override
-	public boolean isCorrect(FthData data) throws FthControllerException {
+	public boolean isCorrect(FthAuthenticationData authenticationData) throws FthControllerException {
 		LOGGER.log(Level.DEBUG,
-				"Start AuthenticationDataValidator -> isCorrect(FthData).");
-		if (data == null ||
-				data.getClass() != FthAuthenticationData.class) {
+				"Start AuthenticationDataValidator -> isCorrect(FthAuthenticationData).");
+		if (authenticationData == null) {
 			LOGGER.log(Level.ERROR,
-					"Incorrect parameter in AuthenticationDataValidator -> isCorrect(FthData)!!!");
+					"Incorrect parameter in AuthenticationDataValidator -> isCorrect(FthAuthenticationData)!!!");
 			return false;
 		}
 
 		messageGroup = new ArrayList<>();
-		FthAuthenticationData authenticationData = (FthAuthenticationData) data;
 		return isBlank(authenticationData) && isExist(authenticationData);
 	}
 
@@ -83,7 +80,7 @@ public class AuthenticationDataValidator implements FthValidator {
 		try {
 			FthInt fthInt = (FthInt) FthRepository.INSTANCE.query(
 					new AuthenticateSelectSpecifier(authenticationData)).get(0);
-			if(fthInt.get() != 1) {
+			if (fthInt.get() != 1) {
 				LOGGER.log(Level.WARN,
 						"Trainer not exist in system!");
 				messageGroup.add(INCORRECT);

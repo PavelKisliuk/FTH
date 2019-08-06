@@ -5,7 +5,6 @@
 package com.pavelkisliuk.fth.validator;
 
 import com.pavelkisliuk.fth.exception.FthControllerException;
-import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthRegistrationData;
 import com.pavelkisliuk.fth.model.FthString;
 import com.pavelkisliuk.fth.validator.pure.EmailValidator;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class RegistrationDataValidator implements FthValidator {
+public class RegistrationDataValidator implements FthValidator<FthRegistrationData> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String DIFFERENT_PASSWORDS = "Different passwords!";
@@ -40,56 +39,48 @@ public class RegistrationDataValidator implements FthValidator {
 	 * Inspect {@code FthRegistrationData} instance for correct data.
 	 * <p>
 	 *
-	 * @param data is data for validation.
-	 * @return {@code true} if {@param data} valid, else return {@code false}.
+	 * @param registrationData is data for validation.
+	 * @return {@code true} if {@param registrationData} valid, else return {@code false}.
 	 */
 	@Override
-	public boolean isCorrect(FthData data) throws FthControllerException {
+	public boolean isCorrect(FthRegistrationData registrationData) throws FthControllerException {
 		LOGGER.log(Level.DEBUG,
-				"Start RegistrationDataValidator -> isCorrect(FthData).");
-		if (data == null ||
-				data.getClass() != FthRegistrationData.class) {
+				"Start RegistrationDataValidator -> isCorrect(FthRegistrationData).");
+		if (registrationData == null) {
 			LOGGER.log(Level.ERROR,
-					"Incorrect parameter in RegistrationDataValidator -> isCorrect(FthData)!!!");
+					"Incorrect parameter in RegistrationDataValidator -> isCorrect(FthRegistrationData)!!!");
 			return false;
 		}
 
 		messageGroup = new ArrayList<>();
-		FthRegistrationData registrationData = (FthRegistrationData) data;
-		return isCorrect(registrationData);
+		return isCorrectSyntax(registrationData);
 	}
 
-	private boolean isCorrect(FthRegistrationData registrationData) throws FthControllerException {
+	private boolean isCorrectSyntax(FthRegistrationData registrationData) throws FthControllerException {
 		boolean flag = true;
-		FthValidator validator = new PersonalNameValidator();
-		if (!validator.isCorrect(new FthString(registrationData.getName()))) {
+		FthValidator<FthString> validator = new PersonalNameValidator();
+		if (validator.isCorrect(new FthString(registrationData.getName()))) {
 			LOGGER.log(Level.WARN,
 					"Invalid name!");
 			flag = false;
 			messageGroup.add(validator.toString());
 		}
 		validator = new PersonalSurnameValidator();
-		if (!validator.isCorrect(new FthString(registrationData.getSurname()))) {
+		if (validator.isCorrect(new FthString(registrationData.getSurname()))) {
 			LOGGER.log(Level.WARN,
 					"Invalid surname!");
 			flag = false;
 			messageGroup.add(validator.toString());
 		}
 		validator = new PasswordValidator();
-		if (!validator.isCorrect(new FthString(registrationData.getPassword()))) {
+		if (validator.isCorrect(new FthString(registrationData.getPassword()))) {
 			LOGGER.log(Level.WARN,
 					"Invalid password!");
 			flag = false;
 			messageGroup.add(validator.toString());
 		}
-		if (!validator.isCorrect(new FthString(registrationData.getConfirmPassword()))) {
-			LOGGER.log(Level.WARN,
-					"Invalid confirm password!");
-			flag = false;
-			messageGroup.add(validator.toString());
-		}
 		validator = new EmailValidator();
-		if (!validator.isCorrect(new FthString(registrationData.getEmail()))) {
+		if (validator.isCorrect(new FthString(registrationData.getEmail()))) {
 			LOGGER.log(Level.WARN,
 					"Invalid e-mail!");
 			flag = false;
@@ -109,6 +100,8 @@ public class RegistrationDataValidator implements FthValidator {
 		return messageGroup.toString().replace("[", "- ").
 				replace(']', ' ').
 				replace(',', '-').
+				replace("- -", "\n-").
+				replace(".-", ".\n-").
 				strip();
 	}
 }

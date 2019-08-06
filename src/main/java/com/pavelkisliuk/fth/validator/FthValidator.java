@@ -16,7 +16,7 @@ import com.pavelkisliuk.fth.model.FthData;
  * @see RegistrationDataValidator
  * @since 12.0
  */
-public interface FthValidator {
+public interface FthValidator<T extends FthData> {
 	/**
 	 * Inspect {@code FthData} instance for correct data.
 	 * <p>
@@ -24,5 +24,5 @@ public interface FthValidator {
 	 * @param data is data for validation.
 	 * @return {@code true} if {@param data} valid, else return {@code false}.
 	 */
-	boolean isCorrect(FthData data) throws FthControllerException;
+	boolean isCorrect(T data) throws FthControllerException;
 }

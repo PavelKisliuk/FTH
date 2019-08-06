@@ -4,7 +4,6 @@
 
 package com.pavelkisliuk.fth.validator.pure;
 
-import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthString;
 import com.pavelkisliuk.fth.validator.FthValidator;
 import org.apache.logging.log4j.Level;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class PersonalSurnameValidator implements FthValidator {
+public class PersonalSurnameValidator implements FthValidator<FthString> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final int SURNAME_LENGTH = 30;
@@ -39,34 +38,34 @@ public class PersonalSurnameValidator implements FthValidator {
 	 * Inspect {@code FthString} instance for correct data.
 	 * <p>
 	 *
-	 * @param data is data for validation.
-	 * @return {@code true} if {@param data} valid, else return {@code false}.
+	 * @param surname is data for validation.
+	 * @return {@code true} if {@param surname} valid, else return {@code false}.
 	 */
 	@Override
-	public boolean isCorrect(FthData data) {
+	public boolean isCorrect(FthString surname) {
 		LOGGER.log(Level.DEBUG,
-				"Start PersonalSurnameValidator -> isCorrect(FthData).");
-		if (data == null ||
-				data.getClass() != FthString.class) {
+				"Start PersonalSurnameValidator -> isCorrect(FthString).");
+		if (surname == null) {
 			LOGGER.log(Level.ERROR,
-					"Incorrect parameter in PersonalSurnameValidator -> isCorrect(FthData)!!!");
+					"Incorrect parameter in PersonalSurnameValidator -> isCorrect(FthString)!!!");
 			return false;
 		}
 
 		messageGroup = new ArrayList<>();
-		FthString surname = (FthString) data;
-		return isBlank(surname) && isCorrect(surname);
+		return isBlank(surname) && isCorrectSyntax(surname);
 	}
 
-	private boolean isCorrect(FthString surname) {
+	private boolean isCorrectSyntax(FthString surname) {
 		boolean flag = true;
 		if (surname.get().length() > SURNAME_LENGTH) {
-			LOGGER.log(Level.WARN, "Long surname!");
+			LOGGER.log(Level.WARN,
+					"Long surname!");
 			flag = false;
 			messageGroup.add(LONG_SURNAME);
 		}
-		if (!surname.get().matches("\\p{Alpha}+")) {
-			LOGGER.log(Level.WARN, "Incorrect surname!");
+		if (!surname.get().matches("\\p{IsAlphabetic}+")) {
+			LOGGER.log(Level.WARN,
+					"Incorrect surname!");
 			flag = false;
 			messageGroup.add(INCORRECT_SURNAME);
 		}
@@ -76,7 +75,8 @@ public class PersonalSurnameValidator implements FthValidator {
 	private boolean isBlank(FthString surname) {
 		boolean flag = true;
 		if (surname.get().isBlank()) {
-			LOGGER.log(Level.WARN, "Surname is blank!");
+			LOGGER.log(Level.WARN,
+					"Surname is blank!");
 			flag = false;
 			messageGroup.add(SURNAME_EMPTY);
 		}

@@ -4,7 +4,6 @@
 
 package com.pavelkisliuk.fth.validator.pure;
 
-import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthString;
 import com.pavelkisliuk.fth.validator.FthValidator;
 import org.apache.logging.log4j.Level;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class PasswordValidator implements FthValidator {
+public class PasswordValidator implements FthValidator<FthString> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final int PASSWORD_LENGTH = 30;
@@ -42,39 +41,40 @@ public class PasswordValidator implements FthValidator {
 	 * Inspect {@code FthString} instance for correct data.
 	 * <p>
 	 *
-	 * @param data is data for validation.
-	 * @return {@code true} if {@param data} valid, else return {@code false}.
+	 * @param password is data for validation.
+	 * @return {@code true} if {@param password} valid, else return {@code false}.
 	 */
 	@Override
-	public boolean isCorrect(FthData data) {
+	public boolean isCorrect(FthString password) {
 		LOGGER.log(Level.DEBUG,
-				"Start PasswordValidator -> isCorrect(FthData).");
-		if (data == null ||
-				data.getClass() != FthString.class) {
+				"Start PasswordValidator -> isCorrect(FthString).");
+		if (password == null) {
 			LOGGER.log(Level.ERROR,
-					"Incorrect parameter in PasswordValidator -> isCorrect(FthData)!!!");
+					"Incorrect parameter in PasswordValidator -> isCorrect(FthString)!!!");
 			return false;
 		}
 
 		messageGroup = new ArrayList<>();
-		FthString password = (FthString) data;
-		return isBlank(password) && isCorrect(password);
+		return isBlank(password) && isCorrectSyntax(password);
 	}
 
-	private boolean isCorrect(FthString password) {
+	private boolean isCorrectSyntax(FthString password) {
 		boolean flag = true;
 		if (password.get().length() > PASSWORD_LENGTH) {
-			LOGGER.log(Level.WARN, "Long password!");
+			LOGGER.log(Level.WARN,
+					"Long password!");
 			flag = false;
 			messageGroup.add(LONG_PASSWORD);
 		}
 		if (password.get().length() < PASSWORD_MIN_LENGTH) {
-			LOGGER.log(Level.WARN, "Short password!");
+			LOGGER.log(Level.WARN,
+					"Short password!");
 			flag = false;
 			messageGroup.add(SHORT_PASSWORD);
 		}
-		if (!password.get().matches("[a-zA-Z0-9]+")) {
-			LOGGER.log(Level.WARN, "Incorrect password!");
+		if (!password.get().matches("\\p{Alnum}+")) {
+			LOGGER.log(Level.WARN,
+					"Incorrect password!");
 			flag = false;
 			messageGroup.add(INCORRECT_PASSWORD);
 		}
@@ -84,7 +84,8 @@ public class PasswordValidator implements FthValidator {
 	private boolean isBlank(FthString password) {
 		boolean flag = true;
 		if (password.get().isBlank()) {
-			LOGGER.log(Level.WARN, "Password is blank!");
+			LOGGER.log(Level.WARN,
+					"Password is blank!");
 			flag = false;
 			messageGroup.add(PASSWORD_EMPTY);
 		}

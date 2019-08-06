@@ -4,7 +4,6 @@
 
 package com.pavelkisliuk.fth.validator.pure;
 
-import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthString;
 import com.pavelkisliuk.fth.validator.FthValidator;
 import org.apache.logging.log4j.Level;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class PersonalNameValidator implements FthValidator {
+public class PersonalNameValidator implements FthValidator<FthString> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final int NAME_LENGTH = 20;
@@ -39,34 +38,34 @@ public class PersonalNameValidator implements FthValidator {
 	 * Inspect {@code FthString} instance for correct data.
 	 * <p>
 	 *
-	 * @param data is data for validation.
-	 * @return {@code true} if {@param data} valid, else return {@code false}.
+	 * @param name is data for validation.
+	 * @return {@code true} if {@param name} valid, else return {@code false}.
 	 */
 	@Override
-	public boolean isCorrect(FthData data) {
+	public boolean isCorrect(FthString name) {
 		LOGGER.log(Level.DEBUG,
-				"Start PersonalNameValidator -> isCorrect(FthData).");
-		if (data == null ||
-				data.getClass() != FthString.class) {
+				"Start PersonalNameValidator -> isCorrect(FthString).");
+		if (name == null) {
 			LOGGER.log(Level.ERROR,
-					"Incorrect parameter in PersonalNameValidator -> isCorrect(FthData)!!!");
+					"Incorrect parameter in PersonalNameValidator -> isCorrect(FthString)!!!");
 			return false;
 		}
 
 		messageGroup = new ArrayList<>();
-		FthString name = (FthString) data;
-		return isBlank(name) && isCorrect(name);
+		return isBlank(name) && isCorrectSyntax(name);
 	}
 
-	private boolean isCorrect(FthString name) {
+	private boolean isCorrectSyntax(FthString name) {
 		boolean flag = true;
 		if (name.get().length() > NAME_LENGTH) {
-			LOGGER.log(Level.WARN, "Long name!");
+			LOGGER.log(Level.WARN,
+					"Long name!");
 			flag = false;
 			messageGroup.add(LONG_NAME);
 		}
-		if (!name.get().matches("\\p{Alpha}+")) {
-			LOGGER.log(Level.WARN, "Incorrect name!");
+		if (!name.get().matches("\\p{IsAlphabetic}+")) {
+			LOGGER.log(Level.WARN,
+					"Incorrect name!");
 			flag = false;
 			messageGroup.add(INCORRECT_NAME);
 		}
@@ -76,7 +75,8 @@ public class PersonalNameValidator implements FthValidator {
 	private boolean isBlank(FthString name) {
 		boolean flag = true;
 		if (name.get().isBlank()) {
-			LOGGER.log(Level.WARN, "Name is blank!");
+			LOGGER.log(Level.WARN,
+					"Name is blank!");
 			flag = false;
 			messageGroup.add(NAME_EMPTY);
 		}
