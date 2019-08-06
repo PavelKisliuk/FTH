@@ -41,21 +41,6 @@ public enum ConnectionPool {
 	private final ReentrantLock LOCK;
 
 	/**
-	 * Path to database.
-	 */
-	private final String DATABASE_URL;
-
-	/**
-	 * Database login.
-	 */
-	private final String DATABASE_LOGIN;
-
-	/**
-	 * Database password.
-	 */
-	private final String DATABASE_PASSWORD;
-
-	/**
 	 * Time out for {@code Connection.isValid(int timeOut)}. Duration in seconds.
 	 */
 	private final int TIME_OUT;
@@ -89,11 +74,6 @@ public enum ConnectionPool {
 	ConnectionPool(int startPoolSize) {
 		LOGGER = LogManager.getLogger();
 		LOCK = new ReentrantLock();
-		DATABASE_URL = "jdbc:derby://localhost:1527/testdb";
-//		DATABASE_URL =
-//				"jdbc:derby:F:\\JavaSE\\Projects\\FTH\\src\\test\\resources\\database\\testdb";
-		DATABASE_LOGIN = "inProjectWithoutLaba";
-		DATABASE_PASSWORD = "vProektBezLabyi";
 		TIME_OUT = 3;
 
 		this.poolSize = startPoolSize;
@@ -102,9 +82,9 @@ public enum ConnectionPool {
 			createPool();
 		} catch (ConnectionPoolException e) {
 			LogManager.getLogger().log(Level.FATAL,
-					"ConnectionPoolException in ConnectionPool constructor!!!");
+					"ConnectionPoolException IN ConnectionPool CONSTRUCTOR!!!", e);
 			throw new RuntimeException(
-					"ConnectionPoolException in ConnectionPool constructor.");
+					"ConnectionPoolException in ConnectionPool constructor.", e);
 		}
 	}
 
@@ -152,13 +132,16 @@ public enum ConnectionPool {
 			LOCK.lock();
 			ConnectionProxy connection = connectionPool.poll(); //take first Connection and remove it, return null if deck empty
 			if (connection != null) {
-				connection = validate(connection);
-				if(!usedConnectionGroup.add(connection)) {
-					LOGGER.log(Level.WARN,
-							"Connection already became in usedConnectionGroup!");
+				connection = validateOut(connection);
+				if (usedConnectionGroup.add(connection)) {
+					LOGGER.log(Level.INFO,
+							"Connection obtained.");
+				} else {
+					LOGGER.log(Level.ERROR,
+							"Connection already became in usedConnectionGroup!!!");
+					connection.closeProxy();
+					connection = null;
 				}
-				LOGGER.log(Level.INFO,
-						"Connection obtained.");
 			}
 			LOGGER.log(Level.DEBUG,
 					"Finish ConnectionPool -> obtainConnection().");
@@ -174,23 +157,29 @@ public enum ConnectionPool {
 	 *
 	 * @param connection is returning connection.
 	 */
-	public void releaseConnection(Connection connection) {
+	public void releaseConnection(Connection connection){
 		LOGGER.log(Level.DEBUG,
 				"Start ConnectionPool -> releaseConnection(Connection).");
 		if (connection == null ||
 				connection.getClass() != ConnectionProxy.class) {
-			LOGGER.log(Level.WARN,
-					"Incorrect connection retrieved!");
+			LOGGER.log(Level.ERROR,
+					"Incorrect connection retrieved!!!");
 			return;
 		}
 
 		ConnectionProxy connectionProxy = (ConnectionProxy) connection;
 		try {
 			LOCK.lock();
-			connectionPool.offer(connectionProxy);
-			usedConnectionGroup.remove(connectionProxy);
-			LOGGER.log(Level.DEBUG,
-					"Connection released.");
+			if (usedConnectionGroup.remove(connectionProxy)) {
+				connectionProxy = validateIn(connectionProxy);
+				connectionPool.offer(connectionProxy);
+				LOGGER.log(Level.DEBUG,
+						"Connection released.");
+			} else {
+				// FIXME: 06.08.2019 пришедшего connection нет в используемых
+				LOGGER.log(Level.ERROR,
+						"Connection is out of usedConnectionGroup!!!");
+			}
 		} finally {
 			LOCK.unlock();
 		}
@@ -221,15 +210,21 @@ public enum ConnectionPool {
 			DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
 			for (int i = 0; i < poolSize; i++) {
 				connectionPool.add(new ConnectionProxy(
-						DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD)));
+						DriverManager.getConnection(PoolPropertyInitializer.getDatabaseUrl(),
+								PoolPropertyInitializer.getDataBaseProperties())));
 			}
-			LOGGER.log(Level.INFO,
-					"Finish creation.");
+			if (isOpen()) {
+				isCreated.set(true);
+				LOGGER.log(Level.INFO,
+						"Finish creation.");
+			} else {
+				throw new ConnectionPoolException(
+						"Invalid connection in ConnectionPool -> createPool().");
+			}
 		} catch (SQLException e) {
 			throw new ConnectionPoolException(
 					"SQL exception in ConnectionPool -> createPool().", e);
 		}
-		isCreated.set(true);
 		LOGGER.log(Level.DEBUG,
 				"Finish ConnectionPool -> createPool().");
 	}
@@ -267,7 +262,7 @@ public enum ConnectionPool {
 						"Finish destroying.");
 			} else {
 				throw new ConnectionPoolException(
-						"Not closed connections in pool after ConnectionPool -> destroyPool().");
+						"Not closed connections in ConnectionPool -> destroyPool().");
 			}
 		} finally {
 			LOCK.unlock();
@@ -369,18 +364,51 @@ public enum ConnectionPool {
 	 * @return valid {@code ConnectionProxy}.
 	 * @throws ConnectionPoolException if {@code SQLException} occurred.
 	 */
-	private ConnectionProxy validate(ConnectionProxy connectionProxy) throws ConnectionPoolException {
+	private ConnectionProxy validateOut(ConnectionProxy connectionProxy) throws ConnectionPoolException {
 		try {
-			if(connectionProxy.isValid(TIME_OUT)) {
+			if (connectionProxy.isValid(TIME_OUT)) {
 				return connectionProxy;
 			} else {
+				LOGGER.log(Level.ERROR,
+						"Invalid connection in pool. Recreate connection!!!");
 				connectionProxy.closeProxy();
-				return new ConnectionProxy(
-						DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD));
+				return new ConnectionProxy(DriverManager.getConnection(PoolPropertyInitializer.getDatabaseUrl(),
+						PoolPropertyInitializer.getDataBaseProperties()));
 			}
 		} catch (SQLException e) {
 			throw new ConnectionPoolException(
 					"SQL exception in ConnectionPool -> validate(ConnectionProxy).", e);
 		}
+	}
+
+	/**
+	 * Check {@code ConnectionProxy} for validity(auto commit). Return {@param connectionProxy} if connection valid,
+	 * otherwise return new {@code ConnectionProxy}.
+	 * <p>
+	 *
+	 * @param connectionProxy for validation.
+	 * @return valid {@code ConnectionProxy}.
+	 */
+	private ConnectionProxy validateIn(ConnectionProxy connectionProxy){
+		try {
+			if (!connectionProxy.getAutoCommit()) {
+				LOGGER.log(Level.ERROR,
+						"Not autocommit. Recreate connection!!!");
+				connectionProxy.setAutoCommit(true);
+			}
+		} catch (SQLException e) {
+			try {
+				connectionProxy.closeProxy();
+				connectionProxy = new ConnectionProxy(DriverManager.getConnection(PoolPropertyInitializer.getDatabaseUrl(),
+						PoolPropertyInitializer.getDataBaseProperties()));
+			} catch (SQLException | ConnectionPoolException ex) {
+				LOGGER.log(Level.FATAL,
+						"POSSIBLE CONNECTION LEAK IN CONNECTION POOL!!!");
+				throw new RuntimeException(
+						"POSSIBLE CONNECTION LEAK IN CONNECTION POOL!!!", ex);
+				// FIXME: 06.08.2019 отправить письмо админу
+			}
+		}
+		return connectionProxy;
 	}
 }
