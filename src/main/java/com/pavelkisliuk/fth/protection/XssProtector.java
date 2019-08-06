@@ -20,9 +20,24 @@ import java.util.regex.Pattern;
 public class XssProtector {
 	private static final Logger LOGGER = LogManager.getLogger();
 
+	/**
+	 * Pattern for < symbol or it's UTF-8 representation.
+	 */
 	private static final Pattern OPEN_GUILLEMET = Pattern.compile("\\\\u003c|<");
+
+	/**
+	 * < as html symbol
+	 */
 	private static final String OPEN_GUILLEMET_HTML_SYMBOL = "&lt;";
+
+	/**
+	 * Pattern for > symbol or it's UTF-8 representation.
+	 */
 	private static final Pattern CLOSE_GUILLEMET = Pattern.compile("\\\\u003e|>");
+
+	/**
+	 * > as html symbol
+	 */
 	private static final String CLOSE_GUILLEMET_HTML_SYMBOL = "&gt;";
 
 	/**
