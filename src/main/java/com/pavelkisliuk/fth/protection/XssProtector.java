@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.regex.Pattern;
+
 /**
  * The {@code XssProtector} is special class for protection client from XSS attack.
  * <p>
@@ -17,6 +19,11 @@ import org.apache.logging.log4j.Logger;
  */
 public class XssProtector {
 	private static final Logger LOGGER = LogManager.getLogger();
+
+	private static final Pattern OPEN_GUILLEMET = Pattern.compile("\\\\u003c|<");
+	private static final String OPEN_GUILLEMET_HTML_SYMBOL = "&lt;";
+	private static final Pattern CLOSE_GUILLEMET = Pattern.compile("\\\\u003e|>");
+	private static final String CLOSE_GUILLEMET_HTML_SYMBOL = "&gt;";
 
 	/**
 	 * Replace dangerous symbols to comparable html special symbols.
@@ -28,7 +35,7 @@ public class XssProtector {
 	public String protect(String unprotectData) {
 		LOGGER.log(Level.DEBUG,
 				"Start XssProtector -> protect(String).");
-		if(unprotectData == null) {
+		if (unprotectData == null) {
 			LOGGER.log(Level.ERROR,
 					"null parameter in XssProtector -> protect(String)!!!");
 			return "";
@@ -36,8 +43,8 @@ public class XssProtector {
 
 		LOGGER.log(Level.INFO,
 				"Replace dangerous symbols.");
-		String protectData = unprotectData.replaceAll("\\\\u003c|<", "&lt;").
-				replaceAll("\\\\u003e|>", "&gt;");
+		String protectData = unprotectData.replaceAll(OPEN_GUILLEMET.pattern(), OPEN_GUILLEMET_HTML_SYMBOL).
+				replaceAll(CLOSE_GUILLEMET.pattern(), CLOSE_GUILLEMET_HTML_SYMBOL);
 		LOGGER.log(Level.INFO,
 				"Dangerous symbols replaced.");
 		LOGGER.log(Level.DEBUG,
