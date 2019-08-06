@@ -28,10 +28,21 @@ import java.util.ArrayList;
 public class AuthenticationDataValidator implements FthValidator<FthAuthenticationData> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
+	/**
+	 * Message for e-mail field empty.
+	 */
 	private static final String EMAIL_EMPTY = "Field \"email\" empty.\n";
+
+	/**
+	 * Message for password field empty.
+	 */
 	private static final String PASSWORD_EMPTY = "Field \"password\" empty.\n";
 
+	/**
+	 * Message for incorrect password or e-mail..
+	 */
 	private static final String INCORRECT = "Incorrect e-mail or password.";
+
 	/**
 	 * Messages about incorrect data.
 	 */
@@ -58,6 +69,7 @@ public class AuthenticationDataValidator implements FthValidator<FthAuthenticati
 		return isBlank(authenticationData) && isExist(authenticationData);
 	}
 
+
 	private boolean isBlank(FthAuthenticationData authenticationData) {
 		boolean flag = true;
 		if (authenticationData.getEmail() == null || authenticationData.getEmail().isBlank()) {
@@ -75,6 +87,13 @@ public class AuthenticationDataValidator implements FthValidator<FthAuthenticati
 		return flag;
 	}
 
+	/**
+	 * Inspect data for existing in database..
+	 * <p>
+	 *
+	 * @param authenticationData is data for validation.
+	 * @return {@code true} if data exist in database, otherwise {@code false}.
+	 */
 	private boolean isExist(FthAuthenticationData authenticationData) throws FthControllerException {
 		boolean flag = true;
 		try {

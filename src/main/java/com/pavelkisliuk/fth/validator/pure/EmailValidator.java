@@ -93,7 +93,7 @@ public class EmailValidator implements FthValidator<FthString> {
 	}
 
 	/**
-	 * Check is e-mail in {@param email} don't exist in database.
+	 * Inspect whether e-mail in {@param email} don't exist in database.
 	 * <p>
 	 *
 	 * @param email is data for validation.
