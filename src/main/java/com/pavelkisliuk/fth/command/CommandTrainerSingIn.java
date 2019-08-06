@@ -5,39 +5,43 @@
 package com.pavelkisliuk.fth.command;
 
 import com.pavelkisliuk.fth.controller.sessionservice.ObtainmentIdService;
-import com.pavelkisliuk.fth.controller.signinservice.FthTrainerSingInService;
+import com.pavelkisliuk.fth.controller.signinservice.TrainerSingInService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.exception.FthControllerException;
-import com.pavelkisliuk.fth.exception.FthServletException;
 import com.pavelkisliuk.fth.model.FthAuthenticationData;
 import com.pavelkisliuk.fth.model.FthLong;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * The {@code CommandTrainerSingIn} class is realization of {@code FthServletCommand} for
- * process data from client from registration page.
+ * The {@code CommandTrainerSingIn} class is {@code FthServletCommand} realization for
+ * processing trainer entrance in system.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see FthServletCommand
- * @see com.pavelkisliuk.fth.model.FthRegistrationData
  * @since 12.0
  */
 class CommandTrainerSingIn implements FthServletCommand {
 	/**
-	 * @throws FthCommandException
+	 * Determine existence of trainer in system. If trainer exist return trainer page, otherwise return
+	 * error message.
+	 * <p>
+	 *
+	 * @param request is request from user.
+	 * @return redirect page if necessary, or return empty JSON string.
+	 * @throws FthCommandException if {@code FthControllerException} occurred.
 	 */
 	@Override
 	public String execute(HttpServletRequest request) throws FthCommandException {
 		FthAuthenticationData authenticationData = new CreatorAuthenticationData().create(request);
-		FthTrainerSingInService trainerSingInService = new FthTrainerSingInService();
+		TrainerSingInService trainerSingInService = new TrainerSingInService();
+
 		String message;
 		try {
 			message = trainerSingInService.serve(authenticationData);
 		} catch (FthControllerException e) {
 			throw new FthCommandException(
-					"FthControllerException in CommandTrainerSingIn -> execute()", e);
+					"FthControllerException in CommandTrainerSingIn -> execute(HttpServletRequest)", e);
 		}
 		if (trainerSingInService.isTrainerExist()) {
 			manipulateSession(request, authenticationData);
@@ -45,16 +49,24 @@ class CommandTrainerSingIn implements FthServletCommand {
 		return message;
 	}
 
+	/**
+	 * Specify trainer {@code ID_ATTRIBUTE} in session.
+	 * <p>
+	 *
+	 * @param request            is request from user.
+	 * @param authenticationData is e-mail and password of trainer.
+	 * @throws FthCommandException if {@code FthControllerException} occurred.
+	 */
 	private void manipulateSession(HttpServletRequest request, FthAuthenticationData authenticationData)
 			throws FthCommandException {
 		FthLong fthLong;
 		try {
 			String stringLong = new ObtainmentIdService().serve(authenticationData);
-			fthLong = new FthLong(Long.valueOf(stringLong));
+			fthLong = new FthLong(Long.parseLong(stringLong));
 		} catch (FthControllerException e) {
 			throw new FthCommandException(
-					"FthControllerException in CommandTrainerSingIn -> execute()", e);
+					"FthControllerException in CommandTrainerSingIn -> execute(HttpServletRequest)", e);
 		}
-		request.getSession().setAttribute(FthServletCommand.TRAINER_ID_ATTRIBUTE, fthLong);
+		request.getSession().setAttribute(ID_ATTRIBUTE, fthLong);
 	}
 }

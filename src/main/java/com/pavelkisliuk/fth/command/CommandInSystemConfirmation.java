@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class CommandInSystemConfirmation implements FthServletCommand {
+class CommandInSystemConfirmation implements FthServletCommand {
 	/**
 	 * Expected condition of session for further actions.
 	 * We can redirect to another page if already in system, or if not in system,
