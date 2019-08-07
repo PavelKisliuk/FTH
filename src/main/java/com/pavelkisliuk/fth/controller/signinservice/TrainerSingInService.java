@@ -9,6 +9,7 @@ import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.model.FthAuthenticationData;
 import com.pavelkisliuk.fth.servlet.PageType;
 import com.pavelkisliuk.fth.validator.AuthenticationDataValidator;
+import com.pavelkisliuk.fth.validator.TrainerExistValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,13 +53,15 @@ public class TrainerSingInService implements FthService<FthAuthenticationData> {
 
 		Map<String, String> responseJson = new HashMap<>();
 		AuthenticationDataValidator validator = new AuthenticationDataValidator();
-		if (validator.isCorrect(authenticationData)) {
+		TrainerExistValidator trainerExistValidator = new TrainerExistValidator();
+		if (validator.isCorrect(authenticationData) &&
+				trainerExistValidator.isCorrect(authenticationData)) {
 			responseJson.put(KEY_REDIRECT, PageType.TRAINER_PAGE.get());
 			trainerExist = true;
 			LOGGER.log(Level.INFO,
 					"Trainer exist. Put page for redirection in responseJson.");
 		} else {
-			responseJson.put(KEY_MESSAGE, validator.toString());
+			responseJson.put(KEY_MESSAGE, validator.toString() + trainerExistValidator.toString());
 			LOGGER.log(Level.INFO,
 					"Trainer doesn't exist. Put warn information in responseJson.");
 		}
