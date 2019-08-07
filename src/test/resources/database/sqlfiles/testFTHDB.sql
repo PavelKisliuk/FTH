@@ -1,6 +1,6 @@
-DROP TABLE DrillSets;
-DROP TABLE Drills;
-DROP TABLE Exercises;
+DROP TABLE SetGroup;
+DROP TABLE DrillGroup;
+DROP TABLE ExerciseGroup;
 DROP TABLE DrillBase;
 DROP TABLE DrillMuscleGroup;
 DROP TABLE AuthenticationData;
@@ -44,7 +44,7 @@ INSERT INTO ClientPersonalData (firstName, lastName, photoPath, registrationKey)
 VALUES ('<script>alert("1");</script>', 'Kisliuk', '../avatars/1PavelKisliuk123.jpg', ''),
        ('Роман', 'Жминько', '../avatars/2РоманЖминько123.jpg', ''),
        ('Ольга', 'Безрукова', '../avatars/3ОльгаБезрукова123.jpg', ''),
-       ('Новый', 'Клиент', '', '');
+       ('Новый', 'Клиент', '../avatars/default.jpg', '');
 
 CREATE TABLE ClientPublicData
 (
@@ -53,32 +53,33 @@ CREATE TABLE ClientPublicData
     exerciseRequest         BOOLEAN        NOT NULL,
     expiredDay              BIGINT         NOT NULL,
     restVisitation          INT            NOT NULL,
-    trainerId               BIGINT         NOT NULL,
+    trainerId               BIGINT,
     FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId),
     FOREIGN KEY (trainerId) REFERENCES TrainerData (trainerId)
 );
 
 INSERT INTO ClientPublicData (clientId, unavailableTrainerGroup, exerciseRequest, expiredDay, restVisitation, trainerId)
-VALUES (1, '[]', true, '1567900800000', -1, 1),
-       (2, '[]', true, '1567900800000', 0, 1),
-       (3, '[]', false, '1565049600000', 4, 1),
-       (4, '[]', false, '', 0, -1);
+VALUES (1, '[]', true, 1567900800000, -1, 1),
+       (2, '[]', true, 1567900800000, 0, 1),
+       (3, '[]', false, 1565049600000, 4, 1),
+       (4, '[]', false, -1, 0, null);
 
 CREATE TABLE AuthenticationData
 (
-    personalId BIGINT       NOT NULL,
-    eMail      varchar(255) NOT NULL,
-    password   varchar(30)  NOT NULL,
-    FOREIGN KEY (personalId) REFERENCES ClientPersonalData (clientId),
-    FOREIGN KEY (personalId) REFERENCES TrainerData (trainerId)
+    trainerId BIGINT,
+    clientId  BIGINT,
+    eMail     varchar(255) NOT NULL,
+    password  varchar(30)  NOT NULL,
+    FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId),
+    FOREIGN KEY (trainerId) REFERENCES TrainerData (trainerId)
 );
 
-INSERT INTO AuthenticationData (personalId, eMail, password)
-VALUES (1, 'pavel_trainer@mail.ru', '210194'),
-       (1, 'pavel_client@mail.ru', '210194'),
-       (2, 'roman_client@mail.ru', '210194'),
-       (3, 'olga_client@mail.ru', '210194'),
-       (4, 'newbie_client@mail.ru', '210194');
+INSERT INTO AuthenticationData (trainerId, clientId, eMail, password)
+VALUES (1, null, 'pavel_trainer@mail.ru', '210194'),
+       (null, 1, 'pavel_client@mail.ru', '210194'),
+       (null, 2, 'roman_client@mail.ru', '210194'),
+       (null, 3, 'olga_client@mail.ru', '210194'),
+       (null, 4, 'newbie_client@mail.ru', '210194');
 
 CREATE TABLE DrillMuscleGroup
 (
@@ -160,7 +161,7 @@ CREATE TABLE DrillGroup
     drillBaseId   BIGINT NOT NULL,
     muscleGroupId BIGINT NOT NULL,
     PRIMARY KEY (drillId),
-    FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId),
+    FOREIGN KEY (exerciseId) REFERENCES ExerciseGroup (exerciseId),
     FOREIGN KEY (drillBaseId) REFERENCES DrillBase (drillBaseId),
     FOREIGN KEY (muscleGroupId) REFERENCES DrillMuscleGroup (muscleGroupId)
 );
@@ -176,6 +177,6 @@ CREATE TABLE SetGroup
     restTime       TIME,
     exerciseId     BIGINT NOT NULL,
     drillId        BIGINT NOT NULL,
-    FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId),
-    FOREIGN KEY (drillId) REFERENCES Drills (drillId)
+    FOREIGN KEY (exerciseId) REFERENCES ExerciseGroup (exerciseId),
+    FOREIGN KEY (drillId) REFERENCES DrillGroup (drillId)
 );
