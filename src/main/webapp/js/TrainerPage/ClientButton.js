@@ -1,5 +1,5 @@
 ﻿$(function () {
-    $(".client-base__list").on("click", ".client-base__actual", function () {
+    $(".client-base__list").on("click", ".client-base__actual", function () {//при нажатии на клиента
         const element = this.getElementsByTagName("ul").item(0); //получаем элемент на который нажали
         if (element.classList.contains("active--flex")) { //если элемент уже нажат ничего не делаем
             return;
