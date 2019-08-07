@@ -1,31 +1,66 @@
+/*  By Pavel Kisliuk, 24.07.2019
+ *  This is class for education and nothing rights don't reserved.
+ */
+
 package com.pavelkisliuk.fth.specifier.select;
 
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
-import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthLong;
-import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 import com.pavelkisliuk.fth.specifier.FthSelectSpecifier;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * The {@code TrainerByIdSpecifier} class is {@code FthUpdateSpecifier} realization for retrieving trainer
+ * main information by id.
+ * <p>
+ *
+ * @author Kisliuk Pavel Sergeevich
+ * @since 12.0
+ */
 public class TrainerByIdSpecifier implements FthSelectSpecifier {
-	private static final String  REQUEST = "SELECT " +
+	/**
+	 * Select request to database.
+	 */
+	private static final String REQUEST = "SELECT " +
 			"trainerId, firstName, lastName, photoPath " +
 			"FROM TrainerData " +
 			"WHERE trainerId = ?";
 
+	/**
+	 * Trainer ID.
+	 */
 	private FthLong trainerId;
 
+	/**
+	 * Constructor for fields initialization.
+	 * <p>
+	 *
+	 * @param trainerId for {@code trainerId} initialization.
+	 */
 	public TrainerByIdSpecifier(FthLong trainerId) {
 		this.trainerId = trainerId;
 	}
 
+	/**
+	 * Return factory for {@code FthTrainerData} creation.
+	 * <p>
+	 *
+	 * @return factory for {@code FthTrainerData} creation.
+	 */
 	@Override
 	public CreatorTrainerData createFactory() {
 		return new CreatorTrainerData();
 	}
 
+	/**
+	 * Paste metadata in {@param statement} and return it.
+	 * <p>
+	 *
+	 * @param statement for pasting metadata into.
+	 * @return {@param statement}.
+	 */
 	@Override
 	public PreparedStatement pasteMeta(PreparedStatement statement) throws FthRepositoryException {
 		try {
@@ -37,6 +72,12 @@ public class TrainerByIdSpecifier implements FthSelectSpecifier {
 		return statement;
 	}
 
+	/**
+	 * Return {@code REQUEST}.
+	 * <p>
+	 *
+	 * @return {@code REQUEST}.
+	 */
 	@Override
 	public String deriveSequelRequest() {
 		return REQUEST;
