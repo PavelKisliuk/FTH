@@ -1,48 +1,71 @@
+/*  By Pavel Kisliuk, 07.07.2019
+ *  This is class for education and nothing rights don't reserved.
+ */
+
 package com.pavelkisliuk.fth.controller.pageservice;
 
-import com.google.gson.Gson;
 import com.pavelkisliuk.fth.controller.FthService;
 import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
-import com.pavelkisliuk.fth.model.FthClientPersonalData;
 import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthLong;
-import com.pavelkisliuk.fth.model.FthTrainerData;
 import com.pavelkisliuk.fth.repository.FthRepository;
-import com.pavelkisliuk.fth.specifier.select.ClientGroupByTrainerSpecifier;
+import com.pavelkisliuk.fth.specifier.select.AllClientByTrainerSelectSpecifier;
 import com.pavelkisliuk.fth.specifier.select.TrainerByIdSpecifier;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TrainerPageService implements FthService {
-	@Override
-	public String serve(FthData data) throws FthControllerException {
-		Map<String, List<FthData>> responseJson = new HashMap<>();
-		FthLong trainerId = (FthLong) data;
+/**
+ * The {@code TrainerPageService} class is {@code FthService} realization for
+ * data for trainer page obtainment.
+ * <p>
+ *
+ * @author Kisliuk Pavel Sergeevich
+ * @since 12.0
+ */
+public class TrainerPageService implements FthService<FthLong> {
+	private static final Logger LOGGER = LogManager.getLogger();
 
+	/**
+	 * Retrieve trainer and his client's main information from database
+	 * and return it as JSON string.
+	 * <p>
+	 *
+	 * @param trainerId is id of trainer.
+	 * @return trainer and his client's main information as JSON string.
+	 * @throws FthControllerException if {@param trainerId} null; {@code FthRepositoryException} occurred.
+	 */
+	@Override
+	public String serve(FthLong trainerId) throws FthControllerException {
+		LOGGER.log(Level.DEBUG,
+				"Start TrainerPageService -> serve(FthLong).");
+		if (trainerId == null) {
+			throw new FthControllerException(
+					"null parameter in TrainerPageService -> serve(FthLong).");
+		}
+
+		Map<String, List<FthData>> responseJson = new HashMap<>();
 		try {
 			List<FthData> trainerData = FthRepository.INSTANCE.query(new TrainerByIdSpecifier(trainerId));
 			responseJson.put("trainer", trainerData);
+			LOGGER.log(Level.INFO,
+					"trainerData obtained.");
 
-			List<FthData> clientGroup = FthRepository.INSTANCE.query(new ClientGroupByTrainerSpecifier(trainerId));
+			List<FthData> clientGroup = FthRepository.INSTANCE.query(new AllClientByTrainerSelectSpecifier(trainerId));
 			responseJson.put("client", clientGroup);
+			LOGGER.log(Level.INFO,
+					"clientGroup obtained.");
 		} catch (FthRepositoryException e) {
 			throw new FthControllerException(
 					"FthRepositoryException in TrainerPageService -> serve(FthData).", e);
 		}
-		String s = new Gson().toJson(responseJson);
-		return new Gson().toJson(responseJson);
+		LOGGER.log(Level.DEBUG,
+				"Finish TrainerSingInService -> serve(FthAuthenticationData).");
+		return GSON.toJson(responseJson);
 	}
 }
-/*{
-"trainer":
-		[{"trainerId":1,"name":"Павел","surname":"Кислюк","photoPath":"https://pp.userapi.com/c637229/v637229874/21fa5/v6r_UTH_uCw.jpg"}],
-"client":
-		[
-			{"clientID":1,"firstName":"Pavel","lastName":"Kisliuk","photoPath":"https://pp.userapi.com/c638330/v638330874/419bb/AzS3PYR_kf0.jpg","trainerId":0},
-			{"clientID":1,"firstName":"Роман","lastName":"Жминько","photoPath":"https://pp.userapi.com/c855216/v855216470/94258/dYssd2RWmhQ.jpg","trainerId":0},
-			{"clientID":1,"firstName":"Ольга","lastName":"Безрукова","photoPath":"https://pp.userapi.com/c855520/v855520748/7fffb/b6Dn2JrI00I.jpg","trainerId":0}
-		]
-}*/

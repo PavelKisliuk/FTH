@@ -48,7 +48,7 @@ public class TrainerSingInService implements FthService<FthAuthenticationData> {
 				"Start TrainerSingInService -> serve(FthAuthenticationData).");
 		if (authenticationData == null) {
 			throw new FthControllerException(
-					"null parameter in TrainerSingInService -> serve(FthAuthenticationData)");
+					"null parameter in TrainerSingInService -> serve(FthAuthenticationData).");
 		}
 
 		Map<String, String> responseJson = new HashMap<>();
