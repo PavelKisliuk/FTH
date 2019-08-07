@@ -24,8 +24,12 @@ public class AllClientByTrainerSelectSpecifier implements FthSelectSpecifier {
 	 * Select request to database.
 	 */
 	private static final String REQUEST = "SELECT " +
-			"clientID, firstName, lastName, photoPath, trainerId " +
-			"FROM ClientPersonalData " +
+			"ClientPersonalData.clientId, " +
+			"ClientPersonalData.firstName, " +
+			"ClientPersonalData.lastName, " +
+			"ClientPersonalData.photoPath " +
+			"FROM ClientPersonalData INNER JOIN ClientPublicData " +
+			"ON ClientPersonalData.clientId = ClientPublicData.clientId " +
 			"WHERE trainerId = ?";
 
 	/**
@@ -37,7 +41,7 @@ public class AllClientByTrainerSelectSpecifier implements FthSelectSpecifier {
 	 * Constructor for fields initialization.
 	 * <p>
 	 *
-	 * @param trainerId for {@code clientId} initialization.
+	 * @param trainerId for {@code trainerId} initialization.
 	 */
 	public AllClientByTrainerSelectSpecifier(FthLong trainerId) {
 		this.trainerId = trainerId;
