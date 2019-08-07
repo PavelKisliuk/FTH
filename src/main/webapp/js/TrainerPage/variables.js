@@ -160,3 +160,20 @@ window.addEventListener("keydown", function(event) {
     }
   }
 });
+
+$(function () {
+  $(".client-base__list").on("click", ".extend-sub", function () {
+    popupExtend.classList.add("modal-content-show--flex");
+    overlay.classList.add("modal-overlay-show");
+  });
+
+  $(".client-base__list").on("click", ".give-train", function () {
+    popupGive.classList.add("modal-content-show--flex");
+    overlay.classList.add("modal-overlay-show");
+  });
+
+  $(".client-base__list").on("click", ".delete-user", function () {
+    popupDelete.classList.add("modal-content-show");
+    overlay.classList.add("modal-overlay-show");
+  });
+});

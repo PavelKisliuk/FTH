@@ -1,4 +1,4 @@
-$(function () {
+﻿$(function () {
     $(".client-base__list").on("click", ".extend-sub", function () {//при нажатии на продлить абонемент
         setDate(); //устанавливаем сегодняшнюю дату и завтрашнюю дату(продлять можно только на день вперёд)
         $(".extend-checkbox").prop("checked", false); //убираем галочку
