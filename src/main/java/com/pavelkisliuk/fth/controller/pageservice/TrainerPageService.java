@@ -52,12 +52,12 @@ public class TrainerPageService implements FthService<FthLong> {
 		Map<String, List<FthData>> responseJson = new HashMap<>();
 		try {
 			List<FthData> trainerData = FthRepository.INSTANCE.query(new TrainerByIdSpecifier(trainerId));
-			responseJson.put("trainer", trainerData);
+			responseJson.put(KEY_TRAINER, trainerData);
 			LOGGER.log(Level.INFO,
 					"trainerData obtained.");
 
 			List<FthData> clientGroup = FthRepository.INSTANCE.query(new AllClientByTrainerSelectSpecifier(trainerId));
-			responseJson.put("client", clientGroup);
+			responseJson.put(KEY_CLIENT, clientGroup);
 			LOGGER.log(Level.INFO,
 					"clientGroup obtained.");
 		} catch (FthRepositoryException e) {
