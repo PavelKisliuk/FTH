@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class CommandDrillBase implements FthServletCommand {
 	/**
-	 * Obtain list of drills created by concrete trainer. Drills include only name and muscle group information.
+	 * Obtain list of drills created by concrete trainer.
 	 * <p>
 	 *
 	 * @param request is request from user.

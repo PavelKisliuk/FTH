@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 /**
  * The {@code DrillBaseByTrainerSelectSpecifier} class is {@code FthSelectSpecifier} realization
- * for obtainment from DrillBase table muscleGroupId, drillName.
+ * for obtainment from DrillBase table muscleGroupId, drillName, drillBaseId.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
@@ -21,8 +21,8 @@ import java.sql.SQLException;
  */
 public class DrillBaseByTrainerSelectSpecifier implements FthSelectSpecifier {
 	private static final String REQUEST = "SELECT " +
-			"muscleGroupId, drillName " +
-			"FROM DrillBase WHERE trainerId = ? ORDER BY muscleGroupId";
+			"drillBaseId, muscleGroupId, drillName " +
+			"FROM DrillBase WHERE trainerId = ? ORDER BY muscleGroupId, drillName";
 
 	/**
 	 * ID of trainer.
@@ -40,14 +40,14 @@ public class DrillBaseByTrainerSelectSpecifier implements FthSelectSpecifier {
 	}
 
 	/**
-	 * Return factory for {@code FthPureDrillBase} creation.
+	 * Return factory for {@code FthDrillBase} creation.
 	 * <p>
 	 *
-	 * @return factory for {@code FthPureDrillBase} creation.
+	 * @return factory for {@code FthDrillBase} creation.
 	 */
 	@Override
-	public CreatorPureDrillBase createFactory() {
-		return new CreatorPureDrillBase();
+	public CreatorDrillBase createFactory() {
+		return new CreatorDrillBase();
 	}
 
 	/**

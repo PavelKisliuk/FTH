@@ -21,7 +21,7 @@ import java.util.Map;
 
 /**
  * The {@code DrillBaseByTrainerService} class is {@code FthService} realization for
- * obtainment all names of drill's concrete trainer.
+ * obtainment all drill's concrete trainer.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
@@ -31,11 +31,11 @@ public class DrillBaseByTrainerService implements FthService<FthLong> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
-	 * Retrieve names of drill's and it muscles id group and return it as JSON string.
+	 * Retrieve drill's and return it as JSON string.
 	 * <p>
 	 *
 	 * @param trainerId is id of trainer.
-	 * @return names of drill's and it muscles id group as JSON string.
+	 * @return drill's group as JSON string.
 	 * @throws FthControllerException if {@param trainerId} null; {@code FthRepositoryException} occurred.
 	 */
 	@Override
