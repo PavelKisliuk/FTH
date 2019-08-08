@@ -12,45 +12,42 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * The {@code ClientRequestExpiredByIdSelectSpecifier} class is {@code FthSelectSpecifier} realization
- * for obtainment from ClientPublicData table exerciseRequest, expiredDay, restVisitation.
+ * The {@code DrillBaseByTrainerSelectSpecifier} class is {@code FthSelectSpecifier} realization
+ * for obtainment from DrillBase table muscleGroupId, drillName.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class ClientRequestExpiredByIdSelectSpecifier implements FthSelectSpecifier {
-	/**
-	 * Select request to database.
-	 */
+public class DrillBaseByTrainerSelectSpecifier implements FthSelectSpecifier {
 	private static final String REQUEST = "SELECT " +
-			"exerciseRequest, expiredDay, restVisitation " +
-			"FROM ClientPublicData WHERE clientId = ?";
+			"muscleGroupId, drillName " +
+			"FROM DrillBase WHERE trainerId = ? ORDER BY muscleGroupId";
 
 	/**
-	 * ID of client.
+	 * ID of trainer.
 	 */
-	private FthLong clientId;
+	private FthLong trainerId;
 
 	/**
 	 * Constructor for fields initialization.
 	 * <p>
 	 *
-	 * @param clientId for {@code clientId} initialization.
+	 * @param trainerId for {@code trainerId} initialization.
 	 */
-	public ClientRequestExpiredByIdSelectSpecifier(FthLong clientId) {
-		this.clientId = clientId;
+	public DrillBaseByTrainerSelectSpecifier(FthLong trainerId) {
+		this.trainerId = trainerId;
 	}
 
 	/**
-	 * Return factory for {@code FthClientPublicData} creation.
+	 * Return factory for {@code FthPureDrillBase} creation.
 	 * <p>
 	 *
-	 * @return factory for {@code FthClientPublicData} creation.
+	 * @return factory for {@code FthPureDrillBase} creation.
 	 */
 	@Override
-	public CreatorClientRequestAndExpired createFactory() {
-		return new CreatorClientRequestAndExpired();
+	public CreatorPureDrillBase createFactory() {
+		return new CreatorPureDrillBase();
 	}
 
 	/**
@@ -63,10 +60,10 @@ public class ClientRequestExpiredByIdSelectSpecifier implements FthSelectSpecifi
 	@Override
 	public PreparedStatement pasteMeta(PreparedStatement statement) throws FthRepositoryException {
 		try {
-			statement.setLong(1, clientId.get());
+			statement.setLong(1, trainerId.get());
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
-					"SQLException in ClientRequestExpiredByIdSelectSpecifier -> pasteMeta(PreparedStatement).", e);
+					"SQLException in DrillBaseByTrainerSelectSpecifier -> pasteMeta(PreparedStatement).", e);
 		}
 		return statement;
 	}
