@@ -4,7 +4,7 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.controller.obtainmentservice.ClientRequestAndExpiredService;
+import com.pavelkisliuk.fth.controller.obtainmentservice.DrillBaseByTrainerService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.model.FthLong;
@@ -12,30 +12,30 @@ import com.pavelkisliuk.fth.model.FthLong;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * The {@code CommandClientRequestAndExpired} class is {@code FthServletCommand} realization for
- * retrieving conditions of client's season's and exercises request's.
+ * The {@code CommandDrillBase} class is {@code FthServletCommand} realization for
+ * retrieving list of drills of trainer.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class CommandClientRequestAndExpired implements FthServletCommand {
+public class CommandDrillBase implements FthServletCommand {
 	/**
-	 * Obtain conditions of client's season's and exercises request's.
+	 * Obtain list of drills created by concrete trainer. Drills include only name and muscle group information.
 	 * <p>
 	 *
 	 * @param request is request from user.
-	 * @return data about conditions of client's season's and exercises request's.
+	 * @return list of drills created by concrete trainer.
 	 * @throws FthCommandException if {@code FthControllerException} occurred.
 	 */
 	@Override
 	public String execute(HttpServletRequest request) throws FthCommandException {
-		FthLong clientId = new CreatorLong().create(request);
+		FthLong trainerId = (FthLong) request.getSession().getAttribute(ID_ATTRIBUTE);
 		try {
-			return new ClientRequestAndExpiredService().serve(clientId);
+			return new DrillBaseByTrainerService().serve(trainerId);
 		} catch (FthControllerException e) {
 			throw new FthCommandException(
-					"FthControllerException in CommandClientRequestAndExpired -> execute(HttpServletRequest)", e);
+					"FthControllerException in CommandDrillBase -> execute(HttpServletRequest)", e);
 		}
 	}
 }
