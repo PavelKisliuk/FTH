@@ -1,4 +1,4 @@
-/*  By Pavel Kisliuk, 16.07.2019
+/*  By Pavel Kisliuk, 08.08.2019
  *  This is class for education and nothing rights don't reserved.
  */
 
