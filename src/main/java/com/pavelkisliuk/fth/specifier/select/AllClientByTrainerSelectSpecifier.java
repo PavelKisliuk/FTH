@@ -12,8 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * The {@code AllClientByTrainerSelectSpecifier} class is {@code FthUpdateSpecifier} realization to update
- * trainerId column in ClientPublicData table to -1 value.
+ * The {@code AllClientByTrainerSelectSpecifier} class is {@code FthSelectSpecifier} realization
+ * for obtainment from ClientPersonalData, ClientPublicData table clientId, firstName, lastName,
+ * photoPath, exerciseRequest.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
@@ -27,10 +28,11 @@ public class AllClientByTrainerSelectSpecifier implements FthSelectSpecifier {
 			"ClientPersonalData.clientId, " +
 			"ClientPersonalData.firstName, " +
 			"ClientPersonalData.lastName, " +
-			"ClientPersonalData.photoPath " +
+			"ClientPersonalData.photoPath, " +
+			"ClientPublicData.exerciseRequest " +
 			"FROM ClientPersonalData INNER JOIN ClientPublicData " +
 			"ON ClientPersonalData.clientId = ClientPublicData.clientId " +
-			"WHERE trainerId = ?";
+			"WHERE trainerId = ? ORDER BY ClientPersonalData.lastName, ClientPersonalData.firstName";
 
 	/**
 	 * ID of trainer.
