@@ -5,7 +5,6 @@
 package com.pavelkisliuk.fth.specifier.select;
 
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
-import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 
@@ -16,10 +15,6 @@ import java.sql.SQLException;
  *
  */
 class CreatorLong implements FthDataByResultSetFactory {
-	/**
-	 * Define {@code ResultSet} {@code columnLabel} first element.
-	 */
-	private static final int FIRST_ELEMENT = 1;
 
 	/**
 	 * Return first element in {@code ResultSet}, where long expected.
@@ -30,7 +25,7 @@ class CreatorLong implements FthDataByResultSetFactory {
 	 * @throws FthRepositoryException if {@code SQLException} occurred.
 	 */
 	@Override
-	public FthData create(ResultSet resultSet) throws FthRepositoryException {
+	public FthLong create(ResultSet resultSet) throws FthRepositoryException {
 		try {
 			return new FthLong(resultSet.getLong(FIRST_ELEMENT));
 		} catch (SQLException e) {

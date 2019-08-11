@@ -1,7 +1,7 @@
 package com.pavelkisliuk.fth.specifier.select;
 
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
-import com.pavelkisliuk.fth.model.FthClientPersonalData;
+import com.pavelkisliuk.fth.model.FthPersonalData;
 import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 
 import java.sql.ResultSet;
@@ -12,17 +12,17 @@ public class CreatorClientPersonalData implements FthDataByResultSetFactory {
 	private static final String NAME = "firstName";
 	private static final String SURNAME = "lastName";
 	private static final String PHOTO_PATH = "photoPath";
-	private static final String TRAINER_ID = "trainerId";
+	private static final String EXERCISE_REQUEST = "exerciseRequest";
 
 	@Override
-	public FthClientPersonalData create(ResultSet resultSet) throws FthRepositoryException {
-		FthClientPersonalData clientPersonalData = new FthClientPersonalData();
+	public FthPersonalData create(ResultSet resultSet) throws FthRepositoryException {
+		FthPersonalData clientPersonalData = new FthPersonalData();
 		try {
-			clientPersonalData.setClientID(resultSet.getLong(CLIENT_ID));
+			clientPersonalData.setClientId(resultSet.getLong(CLIENT_ID));
 			clientPersonalData.setFirstName(resultSet.getString(NAME));
 			clientPersonalData.setLastName(resultSet.getString(SURNAME));
 			clientPersonalData.setPhotoPath(resultSet.getString(PHOTO_PATH));
-			clientPersonalData.setClientID(resultSet.getLong(TRAINER_ID));
+			clientPersonalData.setExerciseRequest(resultSet.getBoolean(EXERCISE_REQUEST));
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
 					"SQLException in CreatorClientPersonalData -> create(ResultSet).", e);

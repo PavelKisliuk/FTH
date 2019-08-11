@@ -18,7 +18,8 @@ public class CreatorId implements FthDataByResultSetFactory {
 			long clientId = resultSet.getLong(CLIENT_ID);
 			return (trainerId != 0) ? new FthLong(trainerId) : new FthLong(clientId);
 		} catch (SQLException e) {
-			throw new FthRepositoryException("SQLException in CreatorLong -> create(ResultSet).", e);
+			throw new FthRepositoryException(
+					"SQLException in CreatorId -> create(ResultSet).", e);
 		}
 	}
 }

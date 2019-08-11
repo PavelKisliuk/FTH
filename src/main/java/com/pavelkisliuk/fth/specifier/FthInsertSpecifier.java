@@ -26,8 +26,8 @@ public interface FthInsertSpecifier extends FthSpecifier {
 	 * Paste metadata in {@code PreparedStatement} to insert this data to database.
 	 * <p>
 	 *
-	 * @param preparedStatement for pasting metadata into.
+	 * @param statement for pasting metadata into.
 	 * @throws FthRepositoryException if {@code SQLException} occurred.
 	 */
-	void insert(PreparedStatement preparedStatement) throws FthRepositoryException;
+	void insert(PreparedStatement statement) throws FthRepositoryException;
 }

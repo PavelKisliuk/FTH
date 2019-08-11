@@ -26,6 +26,13 @@ import java.sql.SQLException;
  */
 public class RegistrationDataInsertSpecifier implements FthInsertSpecifier {
 	/**
+	 * Insert request to database.
+	 */
+	private static final String REQUEST = "INSERT INTO RegistrationData " +
+			"(firstName, lastName, eMail, password, registrationKey) " +
+			"VALUES (?, ?, ?, ?, ?)";
+
+	/**
 	 * The {@code FthRegistrationData} instance for SQL insertion.
 	 */
 	private FthRegistrationData data;
@@ -69,8 +76,6 @@ public class RegistrationDataInsertSpecifier implements FthInsertSpecifier {
 	 */
 	@Override
 	public String deriveSequelRequest() {
-		return "INSERT INTO RegistrationData " +
-				"(firstName, lastName, eMail, password, registrationKey) " +
-				"VALUES (?, ?, ?, ?, ?)";
+		return REQUEST;
 	}
 }

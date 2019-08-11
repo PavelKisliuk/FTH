@@ -18,6 +18,7 @@ import java.sql.SQLException;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
+// FIXME: 11.08.2019 тренировки могут идти не по порядку, нужо смотреть по дате
 public class LastNumberClientExerciseSelectSpecifier implements FthSelectSpecifier {
 	/**
 	 * Select request to database.

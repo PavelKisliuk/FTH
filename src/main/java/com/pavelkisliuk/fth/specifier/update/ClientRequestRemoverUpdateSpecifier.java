@@ -5,6 +5,7 @@
 package com.pavelkisliuk.fth.specifier.update;
 
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
+import com.pavelkisliuk.fth.model.FthBoolean;
 import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.specifier.FthUpdateSpecifier;
 
@@ -25,7 +26,7 @@ public class ClientRequestRemoverUpdateSpecifier implements FthUpdateSpecifier {
 	 */
 	private static final String REQUEST = "UPDATE " +
 			"ClientPublicData " +
-			"SET exerciseRequest = false " +
+			"SET exerciseRequest = ? " +
 			"WHERE clientId = ?";
 
 	/**
@@ -34,13 +35,20 @@ public class ClientRequestRemoverUpdateSpecifier implements FthUpdateSpecifier {
 	private FthLong clientId;
 
 	/**
+	 * New condition of client request to exercise.
+	 */
+	private FthBoolean condition;
+
+	/**
 	 * Constructor for fields initialization.
 	 * <p>
 	 *
 	 * @param clientId for {@code clientId} initialization.
+	 * @param condition for {@code condition} initialization.
 	 */
-	public ClientRequestRemoverUpdateSpecifier(FthLong clientId) {
+	public ClientRequestRemoverUpdateSpecifier(FthLong clientId, FthBoolean condition) {
 		this.clientId = clientId;
+		this.condition = condition;
 	}
 
 	/**
@@ -53,6 +61,7 @@ public class ClientRequestRemoverUpdateSpecifier implements FthUpdateSpecifier {
 	@Override
 	public void update(PreparedStatement statement) throws FthRepositoryException {
 		try {
+			statement.setBoolean(1, condition.get());
 			statement.setLong(1, clientId.get());
 			statement.executeUpdate();
 		} catch (SQLException e) {
