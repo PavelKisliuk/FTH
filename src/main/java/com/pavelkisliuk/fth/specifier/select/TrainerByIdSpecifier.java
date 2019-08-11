@@ -50,8 +50,8 @@ public class TrainerByIdSpecifier implements FthSelectSpecifier {
 	 * @return factory for {@code FthTrainerData} creation.
 	 */
 	@Override
-	public CreatorTrainerData createFactory() {
-		return new CreatorTrainerData();
+	public CreatorUserMainData createFactory() {
+		return new CreatorUserMainData();
 	}
 
 	/**

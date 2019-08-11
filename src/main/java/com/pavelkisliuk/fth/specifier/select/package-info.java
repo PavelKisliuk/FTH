@@ -7,8 +7,10 @@ package com.pavelkisliuk.fth.specifier.select;
  * AuthenticateClientSelectSpecifier - проверяет есть ли клиент в базе данных (по мэйлу и паролю)
  * !AuthenticateSelectSpecifier - вощврашает количество пользователей с таким емэйлом и паролем (если 1 - пользователь зарегестрирован, если 0 - не зарегистрирован)
  * AuthenticateTrainerSelectSpecifier - проверяет есть ли тренер в базе данных (по мэйлу и паролю).
+ * ClientByIdSelectSpecifier - возвращает основную информацию о клиенте по ID
  * ClientCorrespondWithTrainerSelectSpecifier - проверяет соответствует ли клиент тренеру.
  * ClientGroupByConditionSelectSpecifier - возвращает список клиентов удовлетворяющий определённым условиям.
+ * ClientRequestedSelectSpecifier - возвращает значения запроса тренировки у клиента.
  * ClientRequestExpiredByIdSelectSpecifier - получаем информацию о клиенте (дата истечения абонемента, оставшееся количество тренировок и есть ли запрос на тренировку)
  * DrillBaseByTrainerSelectSpecifier - Получает все упражнения конкретного тренера
  * <p>

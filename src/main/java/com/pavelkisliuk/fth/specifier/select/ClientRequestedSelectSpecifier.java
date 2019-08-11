@@ -1,7 +1,6 @@
 /*  By Pavel Kisliuk, 11.08.2019
  *  This is class for education and nothing rights don't reserved.
  */
-
 package com.pavelkisliuk.fth.specifier.select;
 
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
@@ -12,19 +11,19 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * The {@code ClientGroupByConditionSelectSpecifier} class is {@code FthSelectSpecifier} realization
- * for obtainment from ClientPublicData table trainerId.
+ * The {@code ClientRequestedSelectSpecifier} class is {@code FthUpdateSpecifier} realization
+ * for retrieving from ClientPublicData table exerciseRequest.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class TrainerIdByClientSelectSpecifier implements FthSelectSpecifier {
+public class ClientRequestedSelectSpecifier implements FthSelectSpecifier {
 	/**
 	 * Select request to database.
 	 */
 	private static final String REQUEST = "SELECT " +
-			"trainerId " +
+			"exerciseRequest " +
 			"FROM ClientPublicData " +
 			"WHERE clientId = ?";
 
@@ -39,19 +38,13 @@ public class TrainerIdByClientSelectSpecifier implements FthSelectSpecifier {
 	 *
 	 * @param clientId for {@code clientId} initialization.
 	 */
-	public TrainerIdByClientSelectSpecifier(FthLong clientId) {
+	public ClientRequestedSelectSpecifier(FthLong clientId) {
 		this.clientId = clientId;
 	}
 
-	/**
-	 * Return factory for {@code FthLong} creation.
-	 * <p>
-	 *
-	 * @return factory for {@code FthLong} creation.
-	 */
 	@Override
-	public CreatorLong createFactory() {
-		return new CreatorLong();
+	public CreatorBoolean createFactory() {
+		return new CreatorBoolean();
 	}
 
 	/**
@@ -67,7 +60,7 @@ public class TrainerIdByClientSelectSpecifier implements FthSelectSpecifier {
 			statement.setLong(1, clientId.get());
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
-					"SQLException in TrainerIdByClientSelectSpecifier -> pasteMeta(PreparedStatement).", e);
+					"SQLException in ClientRequestedSelectSpecifier -> pasteMeta(PreparedStatement).", e);
 		}
 		return statement;
 	}
