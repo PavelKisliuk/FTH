@@ -2,11 +2,11 @@
  *  This is class for education and nothing rights don't reserved.
  */
 
-package com.pavelkisliuk.fth.controller.signinservice;
+package com.pavelkisliuk.fth.service.signin;
 
-import com.pavelkisliuk.fth.controller.FthService;
-import com.pavelkisliuk.fth.exception.FthControllerException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthAuthenticationData;
+import com.pavelkisliuk.fth.service.FthService;
 import com.pavelkisliuk.fth.servlet.PageType;
 import com.pavelkisliuk.fth.validator.AuthenticationDataValidator;
 import com.pavelkisliuk.fth.validator.TrainerExistValidator;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * The {@code TrainerSingInService} class is {@code FthService} realization for
- * authentication user in system.
+ * authentication trainer in system.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
@@ -41,13 +41,13 @@ public class TrainerSingInService implements FthService<FthAuthenticationData> {
 	 * @param authenticationData is e-mail and password for processing.
 	 * @return redirection url as JSON string if {@code FthAuthenticationData} correct,
 	 * otherwise return message with incorrect data.
-	 * @throws FthControllerException if {@param authenticationData} null; {@code FthRepositoryException} occurred.
+	 * @throws FthServiceException if {@param authenticationData} null; {@code FthRepositoryException} occurred.
 	 */
-	public String serve(FthAuthenticationData authenticationData) throws FthControllerException {
+	public String serve(FthAuthenticationData authenticationData) throws FthServiceException {
 		LOGGER.log(Level.DEBUG,
 				"Start TrainerSingInService -> serve(FthAuthenticationData).");
 		if (authenticationData == null) {
-			throw new FthControllerException(
+			throw new FthServiceException(
 					"null parameter in TrainerSingInService -> serve(FthAuthenticationData).");
 		}
 
