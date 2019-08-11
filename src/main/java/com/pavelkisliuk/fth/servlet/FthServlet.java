@@ -1,33 +1,44 @@
 package com.pavelkisliuk.fth.servlet;
 
-import com.google.gson.Gson;
 import com.pavelkisliuk.fth.command.CommandType;
 import com.pavelkisliuk.fth.command.FthServletCommand;
 import com.pavelkisliuk.fth.exception.ConnectionPoolException;
 import com.pavelkisliuk.fth.exception.FthCommandException;
-import com.pavelkisliuk.fth.exception.FthServletException;
 import com.pavelkisliuk.fth.pool.ConnectionPool;
+import com.pavelkisliuk.fth.protection.XssProtector;
+import com.pavelkisliuk.fth.service.FthService;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 @WebServlet("/start")
+@MultipartConfig
 public class FthServlet extends HttpServlet {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private static final String COMMAND = "command";
+	private static final String TRY_AGAIN_MESSAGE = "Something wrong! Try again later.";
+	private static final XssProtector XSS_PROTECTOR = new XssProtector();
 
 	@Override
 	public void init() throws ServletException {
+		super.init();
 		try {
-			ConnectionPool.INSTANCE.createPool();
+			if (!ConnectionPool.INSTANCE.isOpen()) {
+				throw new ServletException();
+			}
 		} catch (ConnectionPoolException e) {
-			throw new RuntimeException("Can't create a pool of connections!");
+			throw new ServletException();
 		}
 	}
 
@@ -36,79 +47,56 @@ public class FthServlet extends HttpServlet {
 		try {
 			ConnectionPool.INSTANCE.destroyPool();
 		} catch (ConnectionPoolException e) {
-			throw new RuntimeException("Can't destroy a pool of connections!");
+			throw new RuntimeException(
+					"Can't destroy a pool of connections!");
 		}
+		super.destroy();
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//response.sendRedirect("http://localhost:63342/FTH/html/auth/index.html");
-
-		/*response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter writer = response.getWriter();
-		HashMap<String, String> mess1 = new HashMap<>();
-		String id = "1";
-		String name = "Pavel";
-		String surname = "Kisliuk";
-		String photo = "https://pp.userapi.com/c638330/v638330874/419bb/AzS3PYR_kf0.jpg";
-		String message1 = "{ id : " + id + ", " +
-				"name : " + name + ", " +
-				"surname : " + surname + ", " +
-				"photo : " + photo +
-				"}";
-		mess1.put("id", id);
-		mess1.put("name", name);
-		mess1.put("surname", surname);
-		mess1.put("photo", photo);
-		//------------
-		HashMap<String, String> mess2 = new HashMap<>();
-		id = "2";
-		name = "Роман";
-		surname = "Жминько";
-		photo = "https://pp.userapi.com/c855216/v855216470/94258/dYssd2RWmhQ.jpg";
-		String message2 = "{ id : " + id + ", " +
-				"name : " + name + ", " +
-				"surname : " + surname + ", " +
-				"photo : " + photo +
-				"}";
-		mess2.put("id", id);
-		mess2.put("name", name);
-		mess2.put("surname", surname);
-		mess2.put("photo", photo);
-		//-----------------
-		HashMap<String, HashMap<String, String>> mess = new HashMap<>();
-		mess.put("1", mess1);
-		mess.put("2", mess2);
-		String s = new Gson().toJson(mess);
-		writer.write(s);*/
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Map<String, String> messageJson = new HashMap<>();
-		String message;
+
 		String commandType = request.getParameter(COMMAND);
-		if(commandType != null) {
-			try {
-				FthServletCommand command = CommandType.valueOf(commandType).create();
-				message = command.execute(request);
-			} catch (IllegalArgumentException | NullPointerException e) {
-				messageJson.put("redirect", "http://localhost:8080/FTH/jsp/CustomErrorPage.jsp");
-				message = new Gson().toJson(messageJson);
-			} catch (FthCommandException e) {
-				messageJson.put("redirect", "http://localhost:8080/FTH/jsp/CustomErrorPage.jsp");
-				message = new Gson().toJson(messageJson);
-			}
-		} else {
-			messageJson.put("redirect", "http://localhost:8080/FTH/jsp/CustomErrorPage.jsp");
-			message = new Gson().toJson(messageJson);
+		FthServletCommand command;
+		try {
+			command = CommandType.valueOf(commandType).create();
+		} catch (Exception e) {
+			LOGGER.log(Level.FATAL,
+					"INCORRECT DATA FROM CLIENT!!!", e);
+			messageJson.put(FthService.KEY_ERROR, PageType.ERROR_400.get());
+			response.getWriter().write(FthService.GSON.toJson(messageJson));
+			return;
 		}
 
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(message);
+		String message;
+		try {
+			message = command.execute(request);
+		} catch (FthCommandException e) {
+			LOGGER.log(Level.FATAL,
+					"NOT CRITICAL ERROR OCCURRED!!!", e);
+			messageJson.put(FthService.KEY_MESSAGE, TRY_AGAIN_MESSAGE);
+			response.getWriter().write(FthService.GSON.toJson(messageJson));
+			return;
+		} catch (Exception e) {
+			LOGGER.log(Level.FATAL,
+					"SERVER ERROR OCCURRED!!!", e);
+			messageJson.put(FthService.KEY_ERROR, PageType.ERROR_500.get());
+			response.getWriter().write(FthService.GSON.toJson(messageJson));
+			return;
+		}
+		response.getWriter().write(XSS_PROTECTOR.protect(message));
 		request.changeSessionId();
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/*String description = request.getParameter("description"); // Retrieves <input type="text" name="description">
+		Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
+		String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
+		InputStream fileContent = filePart.getInputStream();*/
+
+
 		doGet(request, response);
 	}
 }
