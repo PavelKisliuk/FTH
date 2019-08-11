@@ -16,17 +16,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Log in</title>
-<%--    <style>--%>
-<%--        <%@include file="../css/TrainerAuth.css" %>--%>
-<%--    </style>--%>
     <link rel="stylesheet" href="../css/TrainerAuth.css" />
 </head>
 <body>
 <h1>Sign In Form</h1>
 <div id="wrapper">
     <form method="post"  action="" class="form" id="signIn" >
-        <input type="text" id="login" name="user" placeholder="e-mail" />
-        <input type="password" id="password" name="pass" placeholder="password" />
+        <input type="text" class="login" name="user" placeholder="e-mail"/>
+        <input type="password" class="password" name="pass" placeholder="password"/>
 
         <button class="login-button" type="button">&#xf0da;</button>
 
@@ -35,6 +32,5 @@
 </div>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script type="text/javascript" src="../js/TrainerAuth.js"></script>
-<%--<script><%@include file="../js/TrainerAuth.js" %></script>--%>
 </body>
 </html>

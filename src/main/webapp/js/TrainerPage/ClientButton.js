@@ -8,7 +8,7 @@
         const id = $(this.getElementsByClassName("client-base__name")).attr("id");
         //to cookie
         $.cookie("chosenOne", id);
-        actionsAdjustment(id); //настраиваем кнопки действий
+        actionsAdjustment(id, this); //настраиваем кнопки действий
     });
 
     function openClient(element) {
@@ -27,7 +27,7 @@
         $(".client-base__actual").removeClass("selected--dark"); //убираем тёмненькую подсветку
     }
 
-    function actionsAdjustment(id) {
+    function actionsAdjustment(id, chosenClient) {
         $.get(host,
             {
                 "command": "REQUEST_AND_EXPIRED",
@@ -45,7 +45,10 @@
                     $(".extend-sub").attr("disabled", false);//включаем кнопку выдачи абонемент
                 }
                 if (data.exerciseRequest) { //если есть запрос на тренировку
+                    $(chosenClient).addClass("requested");
                     $(".give-train").attr("disabled", false); //включаем кнопку выдачи тренировки
+                } else {
+                    $(chosenClient).removeClass("requested");
                 }
             }
         }

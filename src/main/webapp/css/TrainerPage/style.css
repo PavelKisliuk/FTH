@@ -216,13 +216,14 @@
   width: 25px;
   height: 25px;
 }
-.client-1 .client-base__notification {
-  background-image: url(../../img/TrainerPage/bell.svg);
+
+.requested .client-base__notification {
+    background-image: url(../../img/TrainerPage/bell.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  border-radius: 50%;
-  border: 1px solid #ffffff;
+    /*border-radius: 50%;*/
+    /*border: 1px solid #ffffff;*/
 }
 .client-base__photo {
   display: block;
@@ -541,6 +542,17 @@
   overflow: hidden;
   width: 220px;
 }
+
+.modal-give__list {
+    width: 200px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+    line-height: 16px;
+    overflow: scroll;
+}
+
 .modal-give__hide__menu {
   height: 100%;
   list-style: none;

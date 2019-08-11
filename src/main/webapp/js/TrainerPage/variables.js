@@ -173,6 +173,11 @@ $(function () {
   });
 
   $(".client-base__list").on("click", ".delete-user", function () {
+      $(".someButton").click(function () {
+          document.querySelector(".customModal").classList.add("modal-content-show");
+          document.querySelector(".modal-overlay").classList.add("modal-overlay-show");
+      });
+
     popupDelete.classList.add("modal-content-show");
     overlay.classList.add("modal-overlay-show");
   });

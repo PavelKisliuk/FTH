@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page pageEncoding="UTF-8" %>
+<%@ taglib uri="/WEB-INF/UserInfo.tld" prefix="ui" %>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -61,13 +63,13 @@
             </p>
             <div class="sort-wrapper__name">
                 <label class="sort-label">
-                    <input type="radio" name="sort-name"/>
+                    <input class="conditionRefresh name" id="name" type="radio" name="sort-name"/>
                     <div class="sort-div">
                         По имени
                     </div>
                 </label>
                 <label class="sort-label">
-                    <input type="radio" name="sort-name"/>
+                    <input class="conditionRefresh" id="surname" type="radio" name="sort-name"/>
                     <div class="sort-div">
                         По фамилии
                     </div>
@@ -75,25 +77,25 @@
             </div>
             <div class="sort-wrapper">
                 <label class="sort-label">
-                    <input type="radio" name="sort"/>
+                    <input class="conditionRefresh" id="expired" type="radio" name="sort"/>
                     <div class="sort-div">
                         Истекшие
                     </div>
                 </label>
                 <label class="sort-label">
-                    <input type="radio" name="sort"/>
+                    <input class="conditionRefresh" id="actual" type="radio" name="sort"/>
                     <div class="sort-div">
                         Действительные
                     </div>
                 </label>
                 <label class="sort-label">
-                    <input type="radio" name="sort"/>
+                    <input class="conditionRefresh" id="requested" type="radio" name="sort"/>
                     <div class="sort-div">
                         Запросившие
                     </div>
                 </label>
                 <label class="sort-label">
-                    <input type="radio" name="sort"/>
+                    <input class="conditionRefresh each_And_Every" id="each_And_Every" type="radio" name="sort"/>
                     <div class="sort-div">
                         Показать всех
                     </div>
@@ -160,6 +162,7 @@
     </p>
     <div class="delete-wrapper">
         <button class="modal-button delete-button" type="button">Удалить</button>
+        <button class="modal-button annul-button" type="button">Отвергнуть запрос</button>
         <button class="modal-button fire-button" type="button">Сжечь абонемент</button>
         <button class="modal-button bun-button" type="button">Забанить</button>
         <button class="modal-button cancel-button" type="button">Отмена</button>
@@ -187,121 +190,61 @@
                 </th>
             </tr>
             <tr class="exercises">
-                <td>
-                    Жим штанги лёжа
-                </td>
-                <td>
-                    4
-                </td>
-                <td>
-                    8
-                </td>
-                <td>
-                    1:20
-                </td>
-                <td>
-                    100
-                </td>
             </tr>
         </table>
         <div class="modal-give__buttons">
-            <button type="button" class="modal-button">Выдать</button>
-            <button type="reset" class="modal-button">Очистить</button>
+            <button type="button" class="modal-button outButton" disabled="disabled">Выдать</button>
+            <button type="reset" class="modal-button clearButton">Очистить</button>
         </div>
     </form>
     <div class="modal-give__wrapper">
         <ul class="modal-give__list">
-            <li class="modal-give__point">
+            <li class="modal-give__point muscleGroup" id="1">
                 Грудная мышечная группа
                 <div class="modal-give__menu">
-                    <ul class="modal-give__hide__menu">
-                        <li class="modal-give__hide__point">
-                            Жим штанги лёжа
-                        </li>
-                        <li class="modal-give__hide__point">
-                            Бабочка
-                        </li>
-                        <li class="modal-give__hide__point">
-                            Жим лёжа на наклонной скамье
-                        </li>
-                        <li class="modal-give__hide__point">
-                            Сведение-разведение рук
-                        </li>
+                    <ul class="modal-give__hide__menu group1">
                     </ul>
                 </div>
             </li>
-            <li class="modal-give__point">
+            <li class="modal-give__point muscleGroup" id="2">
                 Мышечная группа спины
                 <div class="modal-give__menu">
-                    <ul class="modal-give__hide__menu">
-                        <li class="modal-give__hide__point">
-                            Становая тяга
-                        </li>
-                        <li class="modal-give__hide__point">
-                            Подтягивания
-                        </li>
+                    <ul class="modal-give__hide__menu group2">
                     </ul>
                 </div>
             </li>
-            <li class="modal-give__point">
+            <li class="modal-give__point muscleGroup" id="3">
                 Плечевая мышечная группа
                 <div class="modal-give__menu">
-                    <ul class="modal-give__hide__menu">
-                        <li class="modal-give__hide__point">
-                            Подтягивания
-                        </li>
-                        <li class="modal-give__hide__point">
-                            Гири
-                        </li>
+                    <ul class="modal-give__hide__menu group3">
                     </ul>
                 </div>
             </li>
-            <li class="modal-give__point">
+            <li class="modal-give__point muscleGroup" id="4">
                 Бицепс
                 <div class="modal-give__menu">
-                    <ul class="modal-give__hide__menu">
-                        <li class="modal-give__hide__point">
-                            Гантели
-                        </li>
-                        <li class="modal-give__hide__point">
-                            Подъем штанги на бицепс
-                        </li>
-                        <li class="modal-give__hide__point">
-                            Отжимания
-                        </li>
+                    <ul class="modal-give__hide__menu group4">
                     </ul>
                 </div>
             </li>
-            <li class="modal-give__point">
+            <li class="modal-give__point muscleGroup" id="5">
                 Трицепс
                 <div class="modal-give__menu">
-                    <ul class="modal-give__hide__menu">
-                        <li class="modal-give__hide__point">
-                            Жим штанги лёжа
-                        </li>
+                    <ul class="modal-give__hide__menu group5">
                     </ul>
                 </div>
             </li>
-            <li class="modal-give__point">
+            <li class="modal-give__point muscleGroup" id="6">
                 Мышечная группа ног
                 <div class="modal-give__menu">
-                    <ul class="modal-give__hide__menu">
-                        <li class="modal-give__hide__point">
-                            Присед
-                        </li>
+                    <ul class="modal-give__hide__menu group6">
                     </ul>
                 </div>
             </li>
-            <li class="modal-give__point">
+            <li class="modal-give__point muscleGroup" id="7">
                 Брюшная мышечная группа
                 <div class="modal-give__menu">
-                    <ul class="modal-give__hide__menu">
-                        <li class="modal-give__hide__point">
-                            Пресс
-                        </li>
-                        <li class="modal-give__hide__point">
-                            Подъем ног
-                        </li>
+                    <ul class="modal-give__hide__menu group7">
                     </ul>
                 </div>
             </li>
@@ -683,34 +626,34 @@
                     </td>
                     <td>
                         <select class="modal-give__select restTime" disabled>
-                            <option>
+                            <option value="40">
                                 0:40
                             </option>
-                            <option>
+                            <option value="45">
                                 0:45
                             </option>
-                            <option>
+                            <option value="50">
                                 0:50
                             </option>
-                            <option>
+                            <option value="60">
                                 1:00
                             </option>
-                            <option>
+                            <option value="70">
                                 1:10
                             </option>
-                            <option>
+                            <option value="80">
                                 1:20
                             </option>
-                            <option>
+                            <option value="90">
                                 1:30
                             </option>
-                            <option>
+                            <option value="120">
                                 2:00
                             </option>
-                            <option>
+                            <option value="180">
                                 3:00
                             </option>
-                            <option>
+                            <option value="300">
                                 5:00
                             </option>
                         </select>
@@ -754,11 +697,11 @@
         </label>
         <label class="extend-label__date">
             <span class="extend-span">From</span>
-            <input class="extend-date" id="dateFrom" type="date" name="date" readonly>
+            <input class="extend-date dateFrom" type="date" name="date" readonly>
         </label>
         <label class="extend-label__date">
             <span class="extend-span">До</span>
-            <input class="extend-date" id="dateTill" type="date" name="extend-date"/>
+            <input class="extend-date dateTill" type="date" name="extend-date"/>
         </label>
         <button class="modal-button extend-button" type="button">Продлить</button>
     </form>
@@ -768,11 +711,8 @@
 <script type="text/javascript" src="../js/lib/cookie/jquery.cookie.js"></script>
 <script type="text/javascript" charset="utf-8" src="../js/TrainerPage/variables.js"></script>
 <script type="text/javascript" charset="utf-8" src="../js/TrainerPage/TrainerPage.js"></script>
-<script>
-
-
-
-
-</script>
+<script type="text/javascript" charset="utf-8" src="../js/TrainerPage/ClientButton.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/TrainerPage/SeasonExtensionButton.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/TrainerPage/ExerciseOut.js"></script>
 </body>
 </html>
