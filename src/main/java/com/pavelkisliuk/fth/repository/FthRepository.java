@@ -7,6 +7,7 @@ package com.pavelkisliuk.fth.repository;
 import com.pavelkisliuk.fth.exception.ConnectionPoolException;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
 import com.pavelkisliuk.fth.model.FthData;
+import com.pavelkisliuk.fth.model.exercise.ExerciseComponent;
 import com.pavelkisliuk.fth.pool.ConnectionPool;
 import com.pavelkisliuk.fth.specifier.FthDeleteSpecifier;
 import com.pavelkisliuk.fth.specifier.FthInsertSpecifier;
@@ -47,11 +48,13 @@ public enum FthRepository {
 	 */
 	private static final int CONNECTION_WAITING_INTERVAL = 5000;
 
+	private static final ExerciseInsert EXERCISE_INSERT = new ExerciseInsert();
+
 	/**
 	 * The {@code TransactionOperationType} class enum describing actions with database in transactions.
 	 */
 	public enum TransactionOperationType {
-		INSERT, UPDATE, DELETE
+		INSERT, UPDATE, DELETE, EXERCISE_INSERT
 	}
 
 	/**
@@ -200,7 +203,6 @@ public enum FthRepository {
 						remove((FthDeleteSpecifier) describer.specifier, connection);
 						break;
 					default:
-						// FIXME: 06.08.2019 правильно ли?
 						throw new EnumConstantNotPresentException(TransactionOperationType.class,
 								"Not correct enum element in " +
 										"FthRepository -> operateTransaction(List<TransactionDescriber>).");
@@ -220,6 +222,22 @@ public enum FthRepository {
 		} finally {
 			ConnectionPool.INSTANCE.releaseConnection(connection);
 		}
+	}
+
+	/**
+	 * Attachment information about exercise from trainer to client by transaction's.
+	 * <p>
+	 *
+	 * @param exerciseComponent is composition of exercise from trainer.
+	 * @throws FthRepositoryException if {@param exerciseComponent} is null.
+	 */
+	public void exerciseInsert(ExerciseComponent exerciseComponent) throws FthRepositoryException {
+		if (exerciseComponent == null) {
+			throw new FthRepositoryException(
+					"null parameter in FthRepository -> exerciseInsert(ExerciseComponent).");
+		}
+
+		EXERCISE_INSERT.insert(exerciseComponent, obtainConnection());
 	}
 
 	/**
