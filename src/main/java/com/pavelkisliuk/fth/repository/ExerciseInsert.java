@@ -18,6 +18,9 @@ import com.pavelkisliuk.fth.specifier.insert.DrillGroupFromTrainerInsertSpecifie
 import com.pavelkisliuk.fth.specifier.insert.SetGroupFromTrainerInsertSpecifier;
 import com.pavelkisliuk.fth.specifier.select.LastClientExerciseSelectSpecifier;
 import com.pavelkisliuk.fth.specifier.update.ClientRequestRemoverUpdateSpecifier;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,6 +37,8 @@ import java.sql.Statement;
  * @since 12.0
  */
 class ExerciseInsert implements FthSpecialTransactionOperator<ExerciseComponent> {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	/**
 	 * Insert exercise from trainer to database, and change client request condition.
 	 * <p>
@@ -44,6 +49,8 @@ class ExerciseInsert implements FthSpecialTransactionOperator<ExerciseComponent>
 	 */
 	@Override
 	public void insert(ExerciseComponent exerciseComponent, Connection connection) throws FthRepositoryException {
+		LOGGER.log(Level.DEBUG,
+				"Start ExerciseInsert -> insert(ExerciseComponent, Connection).");
 		try {
 			connection.setAutoCommit(false);
 
@@ -55,6 +62,8 @@ class ExerciseInsert implements FthSpecialTransactionOperator<ExerciseComponent>
 			DrillGroupFromTrainerInsertSpecifier drillInsertSpecifier;
 			SetGroupFromTrainerInsertSpecifier setInsertSpecifier;
 			ExerciseComponent exercise = exerciseComponent.get(0);
+			LOGGER.log(Level.INFO,
+					"Start inserting exercise data.");
 			for (int i = 0; i < exercise.size(); i++) {
 				ExerciseComponent drill = exercise.get(i);
 				FthDrillGroup drillGroup = createDrillGroup(drill, exerciseId);
@@ -67,7 +76,11 @@ class ExerciseInsert implements FthSpecialTransactionOperator<ExerciseComponent>
 					add(setInsertSpecifier, connection);
 				}
 			}
+			LOGGER.log(Level.INFO,
+					"Exercise data inserted.");
 			updateClientRequest(clientId, connection);
+			LOGGER.log(Level.INFO,
+					"Client request condition updated.");
 
 			connection.commit();
 		} catch (SQLException e) {
