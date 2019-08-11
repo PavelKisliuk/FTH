@@ -5,11 +5,15 @@
 package com.pavelkisliuk.fth.command;
 
 import com.pavelkisliuk.fth.exception.FthCommandException;
+import com.pavelkisliuk.fth.exception.FthRepositoryException;
 import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthAuthenticationData;
 import com.pavelkisliuk.fth.model.FthLong;
+import com.pavelkisliuk.fth.repository.FthRepository;
 import com.pavelkisliuk.fth.service.session.ObtainmentIdService;
 import com.pavelkisliuk.fth.service.signin.ClientSignInService;
+import com.pavelkisliuk.fth.specifier.FthSelectSpecifier;
+import com.pavelkisliuk.fth.specifier.select.TrainerIdByClientSelectSpecifier;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,15 +63,22 @@ public class CommandClientSignIn implements FthServletCommand {
 	 */
 	private void specifySession(HttpServletRequest request, FthAuthenticationData authenticationData)
 			throws FthCommandException {
-		FthLong id;
+		FthLong clientId;
+		FthLong trainerId;
 		try {
 			String stringLong = new ObtainmentIdService().serve(authenticationData);
-			id = new FthLong(Long.parseLong(stringLong));
+			clientId = new FthLong(Long.parseLong(stringLong));
+			FthSelectSpecifier selectSpecifier = new TrainerIdByClientSelectSpecifier(clientId);
+			trainerId = (FthLong) FthRepository.INSTANCE.query(selectSpecifier);
 		} catch (FthServiceException e) {
 			throw new FthCommandException(
 					"FthServiceException in CommandTrainerSingIn -> execute(HttpServletRequest)", e);
+		} catch (FthRepositoryException e) {
+			throw new FthCommandException(
+					"FthRepositoryException in CommandTrainerSingIn -> execute(HttpServletRequest)", e);
 		}
-		request.getSession().setAttribute(ID_ATTRIBUTE, id);
+		request.getSession().setAttribute(ID_ATTRIBUTE, clientId);
+		request.getSession().setAttribute(TRAINER_ID, trainerId);
 		request.getSession().setAttribute(ROLE_ATTRIBUTE, CLIENT_ROLE);
 	}
 }
