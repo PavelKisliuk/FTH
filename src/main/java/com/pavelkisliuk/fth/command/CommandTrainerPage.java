@@ -4,9 +4,9 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.controller.pageservice.TrainerPageService;
+import com.pavelkisliuk.fth.service.page.TrainerPageService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
-import com.pavelkisliuk.fth.exception.FthControllerException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthLong;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,16 +26,16 @@ class CommandTrainerPage implements FthServletCommand {
 	 *
 	 * @param request is request from user.
 	 * @return data for trainer page.
-	 * @throws FthCommandException if {@code FthControllerException} occurred.
+	 * @throws FthCommandException if {@code FthServiceException} occurred.
 	 */
 	@Override
 	public String execute(HttpServletRequest request) throws FthCommandException {
 		FthLong trainerId = (FthLong) request.getSession().getAttribute(ID_ATTRIBUTE);
 		try {
 			return new TrainerPageService().serve(trainerId);
-		} catch (FthControllerException e) {
+		} catch (FthServiceException e) {
 			throw new FthCommandException(
-					"FthControllerException in CommandTrainerPage -> execute(HttpServletRequest)", e);
+					"FthServiceException in CommandTrainerPage -> execute(HttpServletRequest)", e);
 		}
 	}
 }

@@ -4,9 +4,9 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.controller.obtainmentservice.ClientRequestAndExpiredService;
+import com.pavelkisliuk.fth.service.obtainment.ClientRequestAndExpiredService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
-import com.pavelkisliuk.fth.exception.FthControllerException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthLong;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,16 +26,16 @@ public class CommandClientRequestAndExpired implements FthServletCommand {
 	 *
 	 * @param request is request from user.
 	 * @return data about conditions of client's season's and exercises request's.
-	 * @throws FthCommandException if {@code FthControllerException} occurred.
+	 * @throws FthCommandException if {@code FthServiceException} occurred.
 	 */
 	@Override
 	public String execute(HttpServletRequest request) throws FthCommandException {
 		FthLong clientId = new CreatorLong().create(request);
 		try {
 			return new ClientRequestAndExpiredService().serve(clientId);
-		} catch (FthControllerException e) {
+		} catch (FthServiceException e) {
 			throw new FthCommandException(
-					"FthControllerException in CommandClientRequestAndExpired -> execute(HttpServletRequest)", e);
+					"FthServiceException in CommandClientRequestAndExpired -> execute(HttpServletRequest)", e);
 		}
 	}
 }

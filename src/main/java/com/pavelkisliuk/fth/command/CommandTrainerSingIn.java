@@ -4,10 +4,10 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.controller.sessionservice.ObtainmentIdService;
-import com.pavelkisliuk.fth.controller.signinservice.TrainerSingInService;
+import com.pavelkisliuk.fth.service.session.ObtainmentIdService;
+import com.pavelkisliuk.fth.service.signin.TrainerSingInService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
-import com.pavelkisliuk.fth.exception.FthControllerException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthAuthenticationData;
 import com.pavelkisliuk.fth.model.FthLong;
 
@@ -29,7 +29,7 @@ class CommandTrainerSingIn implements FthServletCommand {
 	 *
 	 * @param request is request from user.
 	 * @return redirect page if necessary, or return empty JSON string.
-	 * @throws FthCommandException if {@code FthControllerException} occurred.
+	 * @throws FthCommandException if {@code FthServiceException} occurred.
 	 */
 	@Override
 	public String execute(HttpServletRequest request) throws FthCommandException {
@@ -39,9 +39,9 @@ class CommandTrainerSingIn implements FthServletCommand {
 		String message;
 		try {
 			message = trainerSingInService.serve(authenticationData);
-		} catch (FthControllerException e) {
+		} catch (FthServiceException e) {
 			throw new FthCommandException(
-					"FthControllerException in CommandTrainerSingIn -> execute(HttpServletRequest)", e);
+					"FthServiceException in CommandTrainerSingIn -> execute(HttpServletRequest)", e);
 		}
 		if (trainerSingInService.isTrainerExist()) {
 			specifySession(request, authenticationData);
@@ -55,7 +55,7 @@ class CommandTrainerSingIn implements FthServletCommand {
 	 *
 	 * @param request            is request from user.
 	 * @param authenticationData is e-mail and password of trainer.
-	 * @throws FthCommandException if {@code FthControllerException} occurred.
+	 * @throws FthCommandException if {@code FthServiceException} occurred.
 	 */
 	private void specifySession(HttpServletRequest request, FthAuthenticationData authenticationData)
 			throws FthCommandException {
@@ -63,9 +63,9 @@ class CommandTrainerSingIn implements FthServletCommand {
 		try {
 			String stringLong = new ObtainmentIdService().serve(authenticationData);
 			id = new FthLong(Long.parseLong(stringLong));
-		} catch (FthControllerException e) {
+		} catch (FthServiceException e) {
 			throw new FthCommandException(
-					"FthControllerException in CommandTrainerSingIn -> execute(HttpServletRequest)", e);
+					"FthServiceException in CommandTrainerSingIn -> execute(HttpServletRequest)", e);
 		}
 		request.getSession().setAttribute(ID_ATTRIBUTE, id);
 		request.getSession().setAttribute(ROLE_ATTRIBUTE, TRAINER_ROLE);

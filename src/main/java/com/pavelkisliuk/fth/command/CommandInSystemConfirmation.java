@@ -4,9 +4,9 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.controller.pageservice.PageRedirectionService;
+import com.pavelkisliuk.fth.service.page.PageRedirectionService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
-import com.pavelkisliuk.fth.exception.FthControllerException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthString;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +36,7 @@ class CommandInSystemConfirmation implements FthServletCommand {
 	 *
 	 * @param request is request from user.
 	 * @return redirect page if necessary, or return empty JSON string.
-	 * @throws FthCommandException if {@code FthControllerException} occurred.
+	 * @throws FthCommandException if {@code FthServiceException} occurred.
 	 */
 	@Override
 	public String execute(HttpServletRequest request) throws FthCommandException {
@@ -49,9 +49,9 @@ class CommandInSystemConfirmation implements FthServletCommand {
 			if (inSystemFlag == condition) {
 				message = new PageRedirectionService().serve(redirectionPage);
 			}
-		} catch (FthControllerException e) {
+		} catch (FthServiceException e) {
 			throw new FthCommandException(
-					"FthControllerException in CommandInSystemConfirmation -> execute(HttpServletRequest)", e);
+					"FthServiceException in CommandInSystemConfirmation -> execute(HttpServletRequest)", e);
 		}
 		return message;
 	}

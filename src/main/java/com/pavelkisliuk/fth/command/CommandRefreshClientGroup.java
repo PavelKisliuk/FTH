@@ -4,9 +4,9 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.controller.obtainmentservice.ConditionClientGroupByTrainerService;
+import com.pavelkisliuk.fth.service.obtainment.ConditionClientGroupByTrainerService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
-import com.pavelkisliuk.fth.exception.FthControllerException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.model.FthRefreshCondition;
 
@@ -27,7 +27,7 @@ public class CommandRefreshClientGroup implements FthServletCommand {
 	 *
 	 * @param request is request from user.
 	 * @return specify list of client's.
-	 * @throws FthCommandException if {@code FthControllerException} occurred.
+	 * @throws FthCommandException if {@code FthServiceException} occurred.
 	 */
 	@Override
 	public String execute(HttpServletRequest request) throws FthCommandException {
@@ -35,9 +35,9 @@ public class CommandRefreshClientGroup implements FthServletCommand {
 		refreshCondition.setTrainerId(((FthLong) request.getSession().getAttribute(ID_ATTRIBUTE)).get());
 		try {
 			return new ConditionClientGroupByTrainerService().serve(refreshCondition);
-		} catch (FthControllerException e) {
+		} catch (FthServiceException e) {
 			throw new FthCommandException(
-					"FthControllerException in CommandRefreshClientGroup -> execute(HttpServletRequest)", e);
+					"FthServiceException in CommandRefreshClientGroup -> execute(HttpServletRequest)", e);
 		}
 	}
 }

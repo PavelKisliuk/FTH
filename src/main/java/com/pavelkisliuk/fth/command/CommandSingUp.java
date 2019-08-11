@@ -4,14 +4,12 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.controller.singupservice.FthSingUpService;
+import com.pavelkisliuk.fth.service.singup.FthSingUpService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
-import com.pavelkisliuk.fth.exception.FthControllerException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthRegistrationData;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * The {@code CommandSingUp} class is realization of {@code FthServletCommand} for
@@ -34,16 +32,13 @@ class CommandSingUp implements FthServletCommand {
 	@Override
 	public String  execute(HttpServletRequest request) throws FthCommandException {
 		FthRegistrationData registrationData = new CreatorRegistrationData().create(request);
-		/*response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
+		String message;
 		try {
-			response.getWriter().write(new FthSingUpService().serve(registrationData));
-			//request.getSession().invalidate();
-		} catch (IOException e) {
-			throw new FthCommandException("IOException in CommandSingUp -> execute().", e);
-		} catch (FthControllerException e) {
-			throw new FthCommandException("FthControllerException in CommandSingUp -> execute().", e);
-		}*/
-		return"";
+			message = new FthSingUpService().serve(registrationData);
+		} catch (FthServiceException e) {
+			throw new FthCommandException(
+					"FthServiceException in CommandSingUp -> execute(HttpServletRequest)", e);
+		}
+		return message;
 	}
 }
