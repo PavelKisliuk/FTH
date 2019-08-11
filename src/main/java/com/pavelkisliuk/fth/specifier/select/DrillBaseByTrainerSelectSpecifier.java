@@ -20,6 +20,9 @@ import java.sql.SQLException;
  * @since 12.0
  */
 public class DrillBaseByTrainerSelectSpecifier implements FthSelectSpecifier {
+	/**
+	 * Select request to database.
+	 */
 	private static final String REQUEST = "SELECT " +
 			"drillBaseId, muscleGroupId, drillName " +
 			"FROM DrillBase WHERE trainerId = ? ORDER BY muscleGroupId, drillName";
