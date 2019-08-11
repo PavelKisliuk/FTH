@@ -44,18 +44,18 @@ public class RegistrationDataInsertSpecifier implements FthInsertSpecifier {
 	 * Paste metadata in {@code PreparedStatement} to insert this data to database.
 	 * <p>
 	 *
-	 * @param preparedStatement for pasting metadata into.
+	 * @param statement for pasting metadata into.
 	 * @throws FthRepositoryException if {@code SQLException} occurred.
 	 */
 	@Override
-	public void insert(PreparedStatement preparedStatement) throws FthRepositoryException {
+	public void insert(PreparedStatement statement) throws FthRepositoryException {
 		try {
-			preparedStatement.setString(1, data.getName());
-			preparedStatement.setString(2, data.getSurname());
-			preparedStatement.setString(3, data.getEmail());
-			preparedStatement.setString(4, data.getPassword());
-			preparedStatement.setString(5, data.getKey());
-			preparedStatement.executeUpdate();
+			statement.setString(1, data.getName());
+			statement.setString(2, data.getSurname());
+			statement.setString(3, data.getEmail());
+			statement.setString(4, data.getPassword());
+			statement.setString(5, data.getKey());
+			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new FthRepositoryException("SQL exception in RegistrationDataInsertSpecifier -> insert().", e);
 		}

@@ -21,7 +21,7 @@ import java.sql.SQLException;
  */
 public class DrillGroupFromTrainerInsertSpecifier implements FthInsertSpecifier {
 	/**
-	 * Select request to database.
+	 * Insert request to database.
 	 */
 	private static final String REQUEST = "INSERT INTO DrillGroup " +
 			"(drillNumber, exerciseId, drillBaseId, muscleGroupId) " +
@@ -46,17 +46,17 @@ public class DrillGroupFromTrainerInsertSpecifier implements FthInsertSpecifier 
 	 * Paste metadata in {@code PreparedStatement} to insert this data to database.
 	 * <p>
 	 *
-	 * @param preparedStatement for pasting metadata into.
+	 * @param statement for pasting metadata into.
 	 * @throws FthRepositoryException if {@code SQLException} occurred.
 	 */
 	@Override
-	public void insert(PreparedStatement preparedStatement) throws FthRepositoryException {
+	public void insert(PreparedStatement statement) throws FthRepositoryException {
 		try {
-			preparedStatement.setInt(1, drillGroup.getDrillNumber());
-			preparedStatement.setLong(2, drillGroup.getExerciseId());
-			preparedStatement.setLong(3, drillGroup.getDrillBaseId());
-			preparedStatement.setLong(4, drillGroup.getMuscleGroupId());
-			preparedStatement.executeUpdate();
+			statement.setInt(1, drillGroup.getDrillNumber());
+			statement.setLong(2, drillGroup.getExerciseId());
+			statement.setLong(3, drillGroup.getDrillBaseId());
+			statement.setLong(4, drillGroup.getMuscleGroupId());
+			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
 					"SQL exception in DrillGroupFromTrainerInsertSpecifier -> insert().", e);
