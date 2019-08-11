@@ -9,7 +9,7 @@ import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthAuthenticationData;
 import com.pavelkisliuk.fth.model.FthInt;
 import com.pavelkisliuk.fth.repository.FthRepository;
-import com.pavelkisliuk.fth.specifier.select.AuthenticateTrainerSelectSpecifier;
+import com.pavelkisliuk.fth.specifier.select.AuthenticateClientSelectSpecifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,14 +17,14 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 
 /**
- * The {@code TrainerExistValidator} class is {@code FthValidator} realization for
- * verifying trainer in system.
+ * The {@code ClientExistValidator} class is {@code FthValidator} realization for
+ * verifying client in system.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class TrainerExistValidator implements FthValidator<FthAuthenticationData> {
+public class ClientExistValidator implements FthValidator<FthAuthenticationData> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
@@ -42,10 +42,10 @@ public class TrainerExistValidator implements FthValidator<FthAuthenticationData
 	@Override
 	public boolean isCorrect(FthAuthenticationData authenticationData) throws FthServiceException {
 		LOGGER.log(Level.DEBUG,
-				"Start TrainerExistValidator -> isCorrect(FthAuthenticationData).");
+				"Start ClientExistValidator -> isCorrect(FthAuthenticationData).");
 		if (authenticationData == null) {
 			LOGGER.log(Level.ERROR,
-					"Incorrect parameter in TrainerExistValidator -> isCorrect(FthAuthenticationData)!!!");
+					"null parameter in ClientExistValidator -> isCorrect(FthAuthenticationData)!!!");
 			return false;
 		}
 
@@ -53,26 +53,26 @@ public class TrainerExistValidator implements FthValidator<FthAuthenticationData
 	}
 
 	/**
-	 * Inspect trainer for existing in database.
+	 * Inspect client for existing in database.
 	 * <p>
 	 *
 	 * @param authenticationData is data for validation.
-	 * @return {@code true} if trainer exist in database, otherwise {@code false}.
+	 * @return {@code true} if client exist in database, otherwise {@code false}.
 	 */
 	private boolean isExist(FthAuthenticationData authenticationData) throws FthServiceException {
 		boolean flag = true;
 		try {
 			FthInt fthInt = (FthInt) FthRepository.INSTANCE.query(
-					new AuthenticateTrainerSelectSpecifier(authenticationData)).get(0);
+					new AuthenticateClientSelectSpecifier(authenticationData)).get(0);
 			if (fthInt.get() != 1) {
 				LOGGER.log(Level.WARN,
-						"Trainer not exist in system!");
+						"Client not exist in system!");
 				messageGroup.add(INCORRECT);
 				flag = false;
 			}
 		} catch (FthRepositoryException e) {
 			throw new FthServiceException(
-					"FthRepositoryException in TrainerExistValidator -> isExist(FthAuthenticationData).", e);
+					"FthRepositoryException in ClientExistValidator -> isExist(FthAuthenticationData).", e);
 		}
 		return flag;
 	}
