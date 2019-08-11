@@ -52,7 +52,6 @@ class CreatorExerciseFromTrainer implements FthDataByRequestFactory {
 		FthExerciseFromTrainer[] exerciseFromTrainer =
 				FthService.GSON.fromJson(jsonExercise, (Type) FthExerciseFromTrainer[].class);
 
-
 		ExerciseComponent exercise = new ExerciseUnitComposite();
 		ExerciseComponent drill = new ExerciseUnitComposite();
 		int orderDrill = 1;
