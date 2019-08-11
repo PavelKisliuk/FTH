@@ -3,7 +3,8 @@ package com.pavelkisliuk.fth.specifier.select;
 /**
  * AllAuthenticationEmailSelectSpecifier - возвращает все емэйлы использующиеся для аутентификации
  * AllClientByTrainerSelectSpecifier - возвращает всех клиентов тренера
- * 3llRegistrationEmailSelectSpecifier - возвращает все емэйлы пользователей, которые зарегестрировались, но не подтвердили регистрацию
+ * AllRegistrationEmailSelectSpecifier - возвращает все емэйлы пользователей, которые зарегестрировались, но не подтвердили регистрацию
+ * AuthenticateClientSelectSpecifier - проверяет есть ли клиент в базе данных (по мэйлу и паролю)
  * !AuthenticateSelectSpecifier - вощврашает количество пользователей с таким емэйлом и паролем (если 1 - пользователь зарегестрирован, если 0 - не зарегистрирован)
  * AuthenticateTrainerSelectSpecifier - проверяет есть ли тренер в базе данных (по мэйлу и паролю).
  * ClientCorrespondWithTrainerSelectSpecifier - проверяет соответствует ли клиент тренеру.
@@ -20,4 +21,5 @@ package com.pavelkisliuk.fth.specifier.select;
  * RegistrationEmailExistSelectSpecifier - возвращает количество пользователей с таким емэйлом (из таблицы регистрации).
  * <p>
  * TrainerByIdSpecifier - возвращает основную информацию о тренере по ID
+ * TrainerIdByClientSelectSpecifier - возвращает ID тренера по ID клиента
  */
