@@ -5,6 +5,7 @@
 package com.pavelkisliuk.fth.repository;
 
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
+import com.pavelkisliuk.fth.model.FthBoolean;
 import com.pavelkisliuk.fth.model.FthDrillGroup;
 import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.model.FthSetGroup;
@@ -16,7 +17,7 @@ import com.pavelkisliuk.fth.specifier.FthUpdateSpecifier;
 import com.pavelkisliuk.fth.specifier.insert.DrillGroupFromTrainerInsertSpecifier;
 import com.pavelkisliuk.fth.specifier.insert.SetGroupFromTrainerInsertSpecifier;
 import com.pavelkisliuk.fth.specifier.select.LastClientExerciseSelectSpecifier;
-import com.pavelkisliuk.fth.specifier.update.ClientRequestRemoverSpecifier;
+import com.pavelkisliuk.fth.specifier.update.ClientRequestRemoverUpdateSpecifier;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -157,7 +158,8 @@ class ExerciseInsert implements FthSpecialTransactionOperator<ExerciseComponent>
 	 * @throws FthRepositoryException if {@code SQLException} occurred.
 	 */
 	private void updateClientRequest(FthLong clientId, Connection connection) throws FthRepositoryException {
-		FthUpdateSpecifier updateSpecifier = new ClientRequestRemoverSpecifier(clientId);
+		FthBoolean falseCondition = new FthBoolean(false);
+		FthUpdateSpecifier updateSpecifier = new ClientRequestRemoverUpdateSpecifier(clientId, falseCondition);
 		try (PreparedStatement statement =
 					 connection.prepareStatement(updateSpecifier.deriveSequelRequest())) {
 			updateSpecifier.update(statement);
