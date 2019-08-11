@@ -146,12 +146,16 @@ VALUES (1, 1, 'Жим штанги лёжа'),
 CREATE TABLE ExerciseGroup
 (
     exerciseId     BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-    exerciseNumber INT    NOT NULL,
-    exerciseDate   DATE,
+    exerciseNumber INT,
+    exerciseDate   BIGINT,
     clientId       BIGINT NOT NULL,
     PRIMARY KEY (exerciseId),
     FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId)
 );
+
+INSERT INTO ExerciseGroup (exerciseNumber, exerciseDate, clientId)
+VALUES (1, null, 1),
+       (1, null, 2);
 
 CREATE TABLE DrillGroup
 (
@@ -171,12 +175,13 @@ CREATE TABLE SetGroup
     setId          BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     setNumber      INT    NOT NULL,
     necessaryReps  INT    NOT NULL,
-    selfConsistent INT    NOT NULL,
-    helpConsistent INT    NOT NULL,
-    weightTool     FLOAT  NOT NULL,
-    restTime       TIME,
+    selfConsistent INT,
+    helpConsistent INT,
+    weightTool     DOUBLE NOT NULL,
+    restTime       INT    NOT NULL,
     exerciseId     BIGINT NOT NULL,
     drillId        BIGINT NOT NULL,
+    PRIMARY KEY (setId),
     FOREIGN KEY (exerciseId) REFERENCES ExerciseGroup (exerciseId),
     FOREIGN KEY (drillId) REFERENCES DrillGroup (drillId)
 );
