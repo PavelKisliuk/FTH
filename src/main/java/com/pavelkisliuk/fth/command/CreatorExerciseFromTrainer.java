@@ -102,7 +102,7 @@ class CreatorExerciseFromTrainer implements FthDataByRequestFactory {
 			lastExerciseNumber = (FthInt) FthRepository.INSTANCE.query(selectSpecifier).get(0);
 		} catch (FthRepositoryException e) {
 			throw new FthCommandException(
-					"FthControllerException in CreatorExerciseFromTrainer -> getCurrentExerciseNumber(long)", e);
+					"FthRepositoryException in CreatorExerciseFromTrainer -> getCurrentExerciseNumber(long)", e);
 		}
 		return lastExerciseNumber.get();
 	}
