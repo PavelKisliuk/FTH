@@ -25,7 +25,7 @@ public class AuthenticateTrainerSelectSpecifier implements FthSelectSpecifier {
 	 */
 	private static final String REQUEST = "SELECT " +
 			"COUNT(*) " +
-			"FROM AuthenticationData WHERE eMail = ? AND password = ? AND trainerId IS NOT NULL";
+			"FROM AuthenticationData WHERE eMail = ? AND trainerId IS NOT NULL";
 
 	/**
 	 * Class with e-mail and password fields.
@@ -64,7 +64,6 @@ public class AuthenticateTrainerSelectSpecifier implements FthSelectSpecifier {
 	public PreparedStatement pasteMeta(PreparedStatement statement) throws FthRepositoryException {
 		try {
 			statement.setString(1, authenticationData.getEmail());
-			statement.setString(2, authenticationData.getPassword());
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
 					"SQLException in AuthenticateSelectSpecifier -> pasteMeta(PreparedStatement).", e);
