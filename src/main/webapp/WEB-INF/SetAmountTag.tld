@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>sa</short-name>
+    <uri>http://mycompany.com</uri>
+    <tag>
+        <name>setAmount</name>
+        <tag-class>com.pavelkisliuk.fth.tag.SetAmountTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>from</name>
+            <required>false</required>
+        </attribute>
+        <attribute>
+            <name>to</name>
+            <required>false</required>
+        </attribute>
+        <attribute>
+            <name>restTime</name>
+            <required>false</required>
+        </attribute>
+    </tag>
+
+</taglib>
