@@ -15,6 +15,7 @@ import com.pavelkisliuk.fth.specifier.FthSelectSpecifier;
 import com.pavelkisliuk.fth.specifier.select.ClientByIdSelectSpecifier;
 import com.pavelkisliuk.fth.specifier.select.ClientRequestedSelectSpecifier;
 import com.pavelkisliuk.fth.specifier.select.IsExerciseOutedSelectSpecifier;
+import com.pavelkisliuk.fth.specifier.select.SeasonPassExpiredSelectSpecifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -83,8 +84,19 @@ public class ClientPageService implements FthService<FthLong> {
 	 */
 	private void setButtonCondition(ArrayList<FthBoolean> hiddenElementList, FthLong clientId)
 			throws FthServiceException {
-		FthSelectSpecifier selectSpecifier = new ClientRequestedSelectSpecifier(clientId);
+		FthSelectSpecifier selectSpecifier = new SeasonPassExpiredSelectSpecifier(clientId);
 		try {
+			FthBoolean isActual = (FthBoolean) FthRepository.INSTANCE.query(selectSpecifier).get(0);
+			if (!isActual.get()) {
+				LOGGER.log(Level.INFO,
+						"Season pass expired.");
+				hiddenElementList.add(new FthBoolean(false));
+				hiddenElementList.add(new FthBoolean(false));
+				hiddenElementList.add(new FthBoolean(false));
+				hiddenElementList.add(new FthBoolean(false));
+			}
+
+			selectSpecifier = new ClientRequestedSelectSpecifier(clientId);
 			FthBoolean isRequested = (FthBoolean) FthRepository.INSTANCE.query(selectSpecifier).get(0);
 			if (isRequested.get()) {
 				LOGGER.log(Level.INFO,
