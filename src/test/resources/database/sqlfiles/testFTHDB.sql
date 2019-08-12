@@ -23,11 +23,11 @@ VALUES ('Павел', 'Кислюк', '../avatars/1ПавелКислюк123.jpg
 
 CREATE TABLE RegistrationData
 (
-    firstName       varchar(30)  NOT NULL,
-    lastName        varchar(40)  NOT NULL,
-    eMail           varchar(255) NOT NULL,
-    password        varchar(30)  NOT NULL,
-    registrationKey varchar(30)  NOT NULL
+    firstName       varchar(30)    NOT NULL,
+    lastName        varchar(40)    NOT NULL,
+    eMail           varchar(255)   NOT NULL,
+    password        varchar(32672) NOT NULL,
+    registrationKey varchar(30)    NOT NULL
 );
 
 CREATE TABLE ClientPersonalData
@@ -68,18 +68,23 @@ CREATE TABLE AuthenticationData
 (
     trainerId BIGINT,
     clientId  BIGINT,
-    eMail     varchar(255) NOT NULL,
-    password  varchar(30)  NOT NULL,
+    eMail     varchar(255)   NOT NULL,
+    password  varchar(32672) NOT NULL,
     FOREIGN KEY (clientId) REFERENCES ClientPersonalData (clientId),
     FOREIGN KEY (trainerId) REFERENCES TrainerData (trainerId)
 );
 
 INSERT INTO AuthenticationData (trainerId, clientId, eMail, password)
-VALUES (1, null, 'pavel_trainer@mail.ru', '210194'),
-       (null, 1, 'pavel_client@mail.ru', '210194'),
-       (null, 2, 'roman_client@mail.ru', '210194'),
-       (null, 3, 'olga_client@mail.ru', '210194'),
-       (null, 4, 'newbie_client@mail.ru', '210194');
+VALUES (1, null, 'pavel_trainer@mail.ru',
+        '$s0$10505$TV09w5Yp6UApmz3k9X63SQ==$hk780S7nd088FUH5Hghn2rfdgjVhKFLwHRftC96fcxc='),
+       (null, 1, 'pavel_client@mail.ru',
+        '$s0$10505$TV09w5Yp6UApmz3k9X63SQ==$hk780S7nd088FUH5Hghn2rfdgjVhKFLwHRftC96fcxc='),
+       (null, 2, 'roman_client@mail.ru',
+        '$s0$10505$TV09w5Yp6UApmz3k9X63SQ==$hk780S7nd088FUH5Hghn2rfdgjVhKFLwHRftC96fcxc='),
+       (null, 3, 'olga_client@mail.ru',
+        '$s0$10505$TV09w5Yp6UApmz3k9X63SQ==$hk780S7nd088FUH5Hghn2rfdgjVhKFLwHRftC96fcxc='),
+       (null, 4, 'newbie_client@mail.ru',
+        '$s0$10505$TV09w5Yp6UApmz3k9X63SQ==$hk780S7nd088FUH5Hghn2rfdgjVhKFLwHRftC96fcxc=');
 
 CREATE TABLE DrillMuscleGroup
 (
