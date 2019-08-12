@@ -20,7 +20,7 @@ import java.sql.SQLException;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class ClientRequestRemoverUpdateSpecifier implements FthUpdateSpecifier {
+public class ClientRequestUpdateSpecifier implements FthUpdateSpecifier {
 	/**
 	 * Update request to database.
 	 */
@@ -46,7 +46,7 @@ public class ClientRequestRemoverUpdateSpecifier implements FthUpdateSpecifier {
 	 * @param clientId for {@code clientId} initialization.
 	 * @param condition for {@code condition} initialization.
 	 */
-	public ClientRequestRemoverUpdateSpecifier(FthLong clientId, FthBoolean condition) {
+	public ClientRequestUpdateSpecifier(FthLong clientId, FthBoolean condition) {
 		this.clientId = clientId;
 		this.condition = condition;
 	}
@@ -62,7 +62,7 @@ public class ClientRequestRemoverUpdateSpecifier implements FthUpdateSpecifier {
 	public void update(PreparedStatement statement) throws FthRepositoryException {
 		try {
 			statement.setBoolean(1, condition.get());
-			statement.setLong(1, clientId.get());
+			statement.setLong(2, clientId.get());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
