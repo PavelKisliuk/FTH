@@ -4,12 +4,16 @@
 
 package com.pavelkisliuk.fth.validator;
 
+import com.lambdaworks.crypto.SCryptUtil;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
 import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthAuthenticationData;
 import com.pavelkisliuk.fth.model.FthInt;
+import com.pavelkisliuk.fth.model.FthString;
 import com.pavelkisliuk.fth.repository.FthRepository;
+import com.pavelkisliuk.fth.specifier.FthSelectSpecifier;
 import com.pavelkisliuk.fth.specifier.select.AuthenticateClientSelectSpecifier;
+import com.pavelkisliuk.fth.specifier.select.PasswordByEmailSelectSpecifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,13 +66,23 @@ public class ClientExistValidator implements FthValidator<FthAuthenticationData>
 	private boolean isExist(FthAuthenticationData authenticationData) throws FthServiceException {
 		boolean flag = true;
 		try {
-			FthInt fthInt = (FthInt) FthRepository.INSTANCE.query(
-					new AuthenticateClientSelectSpecifier(authenticationData)).get(0);
+			FthSelectSpecifier selectSpecifier = new AuthenticateClientSelectSpecifier(authenticationData);
+			FthInt fthInt = (FthInt) FthRepository.INSTANCE.query(selectSpecifier).get(0);
 			if (fthInt.get() != 1) {
 				LOGGER.log(Level.WARN,
 						"Client not exist in system!");
 				messageGroup.add(INCORRECT);
 				flag = false;
+			} else {
+				FthString eMail = new FthString(authenticationData.getEmail());
+				selectSpecifier = new PasswordByEmailSelectSpecifier(eMail);
+				FthString password = (FthString) FthRepository.INSTANCE.query(selectSpecifier).get(0);
+				if (!SCryptUtil.check(authenticationData.getPassword(), password.get())) {
+					LOGGER.log(Level.WARN,
+							"Client not exist in system!");
+					messageGroup.add(INCORRECT);
+					flag = false;
+				}
 			}
 		} catch (FthRepositoryException e) {
 			throw new FthServiceException(
