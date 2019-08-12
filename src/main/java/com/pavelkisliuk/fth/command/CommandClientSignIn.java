@@ -69,7 +69,7 @@ public class CommandClientSignIn implements FthServletCommand {
 			String stringLong = new ObtainmentIdService().serve(authenticationData);
 			clientId = new FthLong(Long.parseLong(stringLong));
 			FthSelectSpecifier selectSpecifier = new TrainerIdByClientSelectSpecifier(clientId);
-			trainerId = (FthLong) FthRepository.INSTANCE.query(selectSpecifier);
+			trainerId = (FthLong) FthRepository.INSTANCE.query(selectSpecifier).get(0);
 		} catch (FthServiceException e) {
 			throw new FthCommandException(
 					"FthServiceException in CommandTrainerSingIn -> execute(HttpServletRequest)", e);
