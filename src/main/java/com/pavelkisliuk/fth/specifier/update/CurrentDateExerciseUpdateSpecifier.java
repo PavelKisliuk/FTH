@@ -5,35 +5,43 @@
 package com.pavelkisliuk.fth.specifier.update;
 
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
-import com.pavelkisliuk.fth.model.FthInt;
 import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.specifier.FthUpdateSpecifier;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Date;
 
 /**
- * The {@code SeasonPassUpdateSpecifier} class is {@code FthUpdateSpecifier} realization for
- * ClientPublicData updating restVisitation.
+ * The {@code CurrentDateExerciseUpdateSpecifier} class is {@code FthUpdateSpecifier} realization for
+ * ExerciseGroup updating exerciseDate.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class SeasonPassUpdateSpecifier implements FthUpdateSpecifier {
+public class CurrentDateExerciseUpdateSpecifier implements FthUpdateSpecifier {
 	/**
 	 * Update request to database.
 	 */
 	private static final String REQUEST = "UPDATE " +
-			"ClientPublicData " +
-			"SET restVisitation = restVisitation + ?" +
-			"WHERE clientId = ?";
+			"ExerciseGroup " +
+			"SET exerciseDate = " + new Date().getTime() +
+			"WHERE exerciseId = (SELECT MAX(exerciseId) " +
+			"FROM ExerciseGroup WHERE clientId = ?)";
 
-	private FthInt augend;
+	/**
+	 * ID of client.
+	 */
 	private FthLong clientId;
 
-	public SeasonPassUpdateSpecifier(FthInt augend, FthLong clientId) {
-		this.augend = augend;
+	/**
+	 * Constructor for fields initialization.
+	 * <p>
+	 *
+	 * @param clientId for {@code clientId} initialization.
+	 */
+	public CurrentDateExerciseUpdateSpecifier(FthLong clientId) {
 		this.clientId = clientId;
 	}
 
@@ -47,12 +55,11 @@ public class SeasonPassUpdateSpecifier implements FthUpdateSpecifier {
 	@Override
 	public void update(PreparedStatement statement) throws FthRepositoryException {
 		try {
-			statement.setLong(1, augend.get());
-			statement.setLong(2, clientId.get());
+			statement.setLong(1, clientId.get());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
-					"SQL exception in SeasonPassUpdateSpecifier -> update(PreparedStatement).", e);
+					"SQL exception in CurrentDateExerciseUpdateSpecifier -> update(PreparedStatement).", e);
 		}
 	}
 
