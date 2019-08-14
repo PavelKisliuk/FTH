@@ -7,6 +7,7 @@ package com.pavelkisliuk.fth.repository;
 import com.pavelkisliuk.fth.exception.ConnectionPoolException;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
 import com.pavelkisliuk.fth.model.FthData;
+import com.pavelkisliuk.fth.model.FthString;
 import com.pavelkisliuk.fth.model.exercise.ExerciseComponent;
 import com.pavelkisliuk.fth.pool.ConnectionPool;
 import com.pavelkisliuk.fth.specifier.FthDeleteSpecifier;
@@ -54,7 +55,7 @@ public enum FthRepository {
 	 * The {@code TransactionOperationType} class enum describing actions with database in transactions.
 	 */
 	public enum TransactionOperationType {
-		INSERT, UPDATE, DELETE, EXERCISE_INSERT
+		INSERT, UPDATE, DELETE
 	}
 
 	/**
@@ -238,6 +239,23 @@ public enum FthRepository {
 		}
 
 		EXERCISE_INSERT.insert(exerciseComponent, obtainConnection());
+	}
+
+	/**
+	 * Reposition information from registration to user's.
+	 * <p>
+	 *
+	 * @param tableName       is name of user table.
+	 * @param registrationKey is key obtained by registration.
+	 * @throws FthRepositoryException if {@param exerciseComponent} is null.
+	 */
+	public void newUserInsert(FthString tableName, FthString registrationKey) throws FthRepositoryException {
+		if (tableName == null || registrationKey == null) {
+			throw new FthRepositoryException(
+					"null parameter in FthRepository -> newUserInsert(ExerciseComponent).");
+		}
+
+		new NewUserInsert(tableName).insert(registrationKey, obtainConnection());
 	}
 
 	/**
