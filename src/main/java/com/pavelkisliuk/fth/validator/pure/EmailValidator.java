@@ -4,8 +4,8 @@
 
 package com.pavelkisliuk.fth.validator.pure;
 
-import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthInt;
 import com.pavelkisliuk.fth.model.FthString;
 import com.pavelkisliuk.fth.repository.FthRepository;
@@ -51,7 +51,7 @@ public class EmailValidator implements FthValidator<FthString> {
 	 */
 
 	@Override
-	public boolean isCorrect(FthString email) throws FthControllerException {
+	public boolean isCorrect(FthString email) throws FthServiceException {
 		LOGGER.log(Level.DEBUG,
 				"Start EmailValidator -> isCorrect(FthString).");
 		if (email == null) {
@@ -100,7 +100,7 @@ public class EmailValidator implements FthValidator<FthString> {
 	 * @return {@code true} if {@param email} e-mail don't exist in database,
 	 * else return {@code false}.
 	 */
-	private boolean isEmailUnique(FthString email) throws FthControllerException {
+	private boolean isEmailUnique(FthString email) throws FthServiceException {
 		LOGGER.log(Level.DEBUG,
 				"Start EmailValidator -> isEmailUnique(FthString).");
 		boolean flag = true;
@@ -125,7 +125,7 @@ public class EmailValidator implements FthValidator<FthString> {
 				}
 			}
 		} catch (FthRepositoryException e) {
-			throw new FthControllerException(
+			throw new FthServiceException(
 					"FthRepositoryException in EmailValidator -> isEmailUnique(FthString).", e);
 		}
 		LOGGER.log(Level.DEBUG,

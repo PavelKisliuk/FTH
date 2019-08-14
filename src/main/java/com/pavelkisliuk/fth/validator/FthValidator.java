@@ -4,7 +4,7 @@
 
 package com.pavelkisliuk.fth.validator;
 
-import com.pavelkisliuk.fth.exception.FthControllerException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthData;
 
 /**
@@ -18,11 +18,16 @@ import com.pavelkisliuk.fth.model.FthData;
  */
 public interface FthValidator<T extends FthData> {
 	/**
+	 * Message for incorrect password or e-mail..
+	 */
+	String INCORRECT = "Incorrect e-mail or password.";
+
+	/**
 	 * Inspect {@code FthData} instance for correct data.
 	 * <p>
 	 *
 	 * @param data is data for validation.
 	 * @return {@code true} if {@param data} valid, else return {@code false}.
 	 */
-	boolean isCorrect(T data) throws FthControllerException;
+	boolean isCorrect(T data) throws FthServiceException;
 }

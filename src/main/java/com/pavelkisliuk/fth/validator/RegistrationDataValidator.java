@@ -4,7 +4,7 @@
 
 package com.pavelkisliuk.fth.validator;
 
-import com.pavelkisliuk.fth.exception.FthControllerException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthRegistrationData;
 import com.pavelkisliuk.fth.model.FthString;
 import com.pavelkisliuk.fth.validator.pure.EmailValidator;
@@ -43,7 +43,7 @@ public class RegistrationDataValidator implements FthValidator<FthRegistrationDa
 	 * @return {@code true} if {@param registrationData} valid, else return {@code false}.
 	 */
 	@Override
-	public boolean isCorrect(FthRegistrationData registrationData) throws FthControllerException {
+	public boolean isCorrect(FthRegistrationData registrationData) throws FthServiceException {
 		LOGGER.log(Level.DEBUG,
 				"Start RegistrationDataValidator -> isCorrect(FthRegistrationData).");
 		if (registrationData == null) {
@@ -56,31 +56,31 @@ public class RegistrationDataValidator implements FthValidator<FthRegistrationDa
 		return isCorrectSyntax(registrationData);
 	}
 
-	private boolean isCorrectSyntax(FthRegistrationData registrationData) throws FthControllerException {
+	private boolean isCorrectSyntax(FthRegistrationData registrationData) throws FthServiceException {
 		boolean flag = true;
 		FthValidator<FthString> validator = new PersonalNameValidator();
-		if (validator.isCorrect(new FthString(registrationData.getName()))) {
+		if (!validator.isCorrect(new FthString(registrationData.getName()))) {
 			LOGGER.log(Level.WARN,
 					"Invalid name!");
 			flag = false;
 			messageGroup.add(validator.toString());
 		}
 		validator = new PersonalSurnameValidator();
-		if (validator.isCorrect(new FthString(registrationData.getSurname()))) {
+		if (!validator.isCorrect(new FthString(registrationData.getSurname()))) {
 			LOGGER.log(Level.WARN,
 					"Invalid surname!");
 			flag = false;
 			messageGroup.add(validator.toString());
 		}
 		validator = new PasswordValidator();
-		if (validator.isCorrect(new FthString(registrationData.getPassword()))) {
+		if (!validator.isCorrect(new FthString(registrationData.getPassword()))) {
 			LOGGER.log(Level.WARN,
 					"Invalid password!");
 			flag = false;
 			messageGroup.add(validator.toString());
 		}
 		validator = new EmailValidator();
-		if (validator.isCorrect(new FthString(registrationData.getEmail()))) {
+		if (!validator.isCorrect(new FthString(registrationData.getEmail()))) {
 			LOGGER.log(Level.WARN,
 					"Invalid e-mail!");
 			flag = false;
