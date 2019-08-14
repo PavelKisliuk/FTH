@@ -33,6 +33,8 @@ Proxy, Singleton, Repository, Command, Strategy, Composition, Factory, MVC.
 
 ConnectionPool на ArrayDeck и HashSet.
 
+ConnectionPool защищён от вымирания.
+
 Один репозиторий.
 
 Сервисы по принципу Strategy.
