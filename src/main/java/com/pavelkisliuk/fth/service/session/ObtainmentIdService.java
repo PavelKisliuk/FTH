@@ -2,14 +2,14 @@
  *  This is class for education and nothing rights don't reserved.
  */
 
-package com.pavelkisliuk.fth.controller.sessionservice;
+package com.pavelkisliuk.fth.service.session;
 
-import com.pavelkisliuk.fth.controller.FthService;
-import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthAuthenticationData;
 import com.pavelkisliuk.fth.model.FthString;
 import com.pavelkisliuk.fth.repository.FthRepository;
+import com.pavelkisliuk.fth.service.FthService;
 import com.pavelkisliuk.fth.specifier.select.IdByEmailSpecifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -32,14 +32,14 @@ public class ObtainmentIdService implements FthService<FthAuthenticationData> {
 	 *
 	 * @param authenticationData is e-mail processing.
 	 * @return id of user.
-	 * @throws FthControllerException if {@param authenticationData} null; {@code FthRepositoryException} occurred.
+	 * @throws FthServiceException if {@param authenticationData} null; {@code FthRepositoryException} occurred.
 	 */
 	@Override
-	public String serve(FthAuthenticationData authenticationData) throws FthControllerException {
+	public String serve(FthAuthenticationData authenticationData) throws FthServiceException {
 		LOGGER.log(Level.DEBUG,
 				"Start ObtainmentIdService -> serve(FthAuthenticationData).");
 		if (authenticationData == null) {
-			throw new FthControllerException(
+			throw new FthServiceException(
 					"null parameter in ObtainmentIdService -> serve(FthAuthenticationData)");
 		}
 
@@ -51,7 +51,7 @@ public class ObtainmentIdService implements FthService<FthAuthenticationData> {
 					"Finish ObtainmentIdService -> serve(FthAuthenticationData).");
 			return id;
 		} catch (FthRepositoryException e) {
-			throw new FthControllerException(
+			throw new FthServiceException(
 					"FthRepositoryException in ObtainmentIdService -> serve(FthData).", e);
 		}
 	}
