@@ -3,6 +3,7 @@ Fitness Trainer Helper
 
 Проект можно посмотреть по адресу:
 http://fth.ngrok.io/index.jsp
+
 Если нужно подтвердить регистрацию тренеру, или выдать абонемент-тренировку, напишите на Viber, Telegram, WhatsUp +375-29-388-92-76 или на почту pavel-2008.94@mail.ru.
 
 
