@@ -6,6 +6,8 @@ package com.pavelkisliuk.fth.model;
 
 import com.pavelkisliuk.fth.repository.FthRepository;
 
+import java.io.Serializable;
+
 /**
  * Interface for unification of reference data types, which are used by {@code FthRepository}.
  * <p>
@@ -16,5 +18,5 @@ import com.pavelkisliuk.fth.repository.FthRepository;
  * @see FthString
  * @since 12.0
  */
-public interface FthData {
+public interface FthData extends Serializable, Cloneable {
 }

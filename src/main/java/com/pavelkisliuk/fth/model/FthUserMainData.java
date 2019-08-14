@@ -2,18 +2,18 @@ package com.pavelkisliuk.fth.model;
 
 import java.util.Objects;
 
-public class FthTrainerData implements FthData {
-	private Long trainerId;
+public class FthUserMainData implements FthData {
+	private Long userId;
 	private String name;
 	private String surname;
 	private String photoPath;
 
-	public Long getTrainerId() {
-		return trainerId;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setTrainerId(Long trainerId) {
-		this.trainerId = trainerId;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getName() {
@@ -45,9 +45,9 @@ public class FthTrainerData implements FthData {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		FthTrainerData that = (FthTrainerData) o;
+		FthUserMainData that = (FthUserMainData) o;
 
-		if (!Objects.equals(trainerId, that.trainerId)) return false;
+		if (!Objects.equals(userId, that.userId)) return false;
 		if (!Objects.equals(name, that.name)) return false;
 		if (!Objects.equals(surname, that.surname)) return false;
 		return Objects.equals(photoPath, that.photoPath);
@@ -55,7 +55,7 @@ public class FthTrainerData implements FthData {
 
 	@Override
 	public int hashCode() {
-		int result = trainerId != null ? trainerId.hashCode() : 0;
+		int result = userId != null ? userId.hashCode() : 0;
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		result = 31 * result + (surname != null ? surname.hashCode() : 0);
 		result = 31 * result + (photoPath != null ? photoPath.hashCode() : 0);
@@ -65,7 +65,7 @@ public class FthTrainerData implements FthData {
 	@Override
 	public String toString() {
 		return "FthTrainerData{" +
-				"trainerId=" + trainerId +
+				"trainerId=" + userId +
 				", name='" + name + '\'' +
 				", surname='" + surname + '\'' +
 				", photoPath='" + photoPath + '\'' +

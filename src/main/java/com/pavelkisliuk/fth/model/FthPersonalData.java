@@ -1,20 +1,18 @@
 package com.pavelkisliuk.fth.model;
 
-import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
-
-public class FthClientPersonalData implements FthData {
-	private long clientID;
+public class FthPersonalData implements FthData {
+	private long clientId;
 	private String firstName;
 	private String lastName;
 	private String photoPath;
-	private long trainerId;
+	private boolean exerciseRequest;
 
-	public long getClientID() {
-		return clientID;
+	public long getClientId() {
+		return clientId;
 	}
 
-	public void setClientID(long clientID) {
-		this.clientID = clientID;
+	public void setClientId(long clientId) {
+		this.clientId = clientId;
 	}
 
 	public String getFirstName() {
@@ -41,11 +39,11 @@ public class FthClientPersonalData implements FthData {
 		this.photoPath = photoPath;
 	}
 
-	public long getTrainerId() {
-		return trainerId;
+	public boolean isExerciseRequest() {
+		return exerciseRequest;
 	}
 
-	public void setTrainerId(long trainerId) {
-		this.trainerId = trainerId;
+	public void setExerciseRequest(boolean exerciseRequest) {
+		this.exerciseRequest = exerciseRequest;
 	}
 }
