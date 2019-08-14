@@ -224,13 +224,13 @@ $(function () {
         }
 
         function recoverValue(value) {
-            if (!isNaN(value.selfConsistent)) {
+            if (isNaN(value.selfConsistent)) {
                 value.selfConsistent = 0;
             }
-            if (!isNaN(value.helpConsistent)) {
+            if (isNaN(value.helpConsistent)) {
                 value.helpConsistent = 0;
             }
-            if (!isNaN(value.weightTool)) {
+            if (isNaN(value.weightTool)) {
                 value.weightTool = 0;
             }
             return value;

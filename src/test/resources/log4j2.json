@@ -29,8 +29,13 @@
     },
     "loggers": {
       "root": {
-        "LevelRangeFilter": {"minLevel":"FATAL", "maxLevel": "TRACE", "onMatch": "ACCEPT", "OnMismatch": "DENY"},
-        "level": "DEBUG",
+        "LevelRangeFilter": {
+          "minLevel": "FATAL",
+          "maxLevel": "INFO",
+          "onMatch": "ACCEPT",
+          "OnMismatch": "DENY"
+        },
+        "level": "INFO",
         "appender-ref": [{
           "ref":"System"
         },

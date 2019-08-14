@@ -56,8 +56,6 @@ public class XssProtector {
 			return "";
 		}
 
-		LOGGER.log(Level.INFO,
-				"Replace dangerous symbols.");
 		String protectData = unprotectData.replaceAll(OPEN_GUILLEMET.pattern(), OPEN_GUILLEMET_HTML_SYMBOL).
 				replaceAll(CLOSE_GUILLEMET.pattern(), CLOSE_GUILLEMET_HTML_SYMBOL);
 		LOGGER.log(Level.INFO,

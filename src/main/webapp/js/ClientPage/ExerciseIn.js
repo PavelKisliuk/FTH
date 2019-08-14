@@ -128,7 +128,7 @@
                 "<div>Подход #" + i + "</div>" +
                 "</li>" +
                 "<li class=\"train-table__second-stroke\">" +
-                "<div>Сам</div><div>Пом</div>" +
+                "<div title=\"Выполнено самостоятельно\">Сам</div><div title=\"Выполнено с помощью\">Пом</div>" +
                 "</li>" +
                 "<li class=\"train-table__third-stroke\">" +
                 "<div class=\"table__input\" title=\"Выполнено самостоятельно\">" +

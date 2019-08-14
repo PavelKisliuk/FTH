@@ -35,6 +35,8 @@ public interface FthServletCommand {
 	String SET_GROUP = "setGroup";
 	String WITHOUT_TRAINER = "{\"without\" : \"true\"}";
 
+	String SUCCESS = "Registration confirmed/Регистрация прошла успешно";
+
 	/**
 	 * Representation of empty JSON string.
 	 */

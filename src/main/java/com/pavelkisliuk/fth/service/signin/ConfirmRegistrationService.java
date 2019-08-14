@@ -68,6 +68,6 @@ public class ConfirmRegistrationService implements FthService<FthString> {
 		}
 		LOGGER.log(Level.DEBUG,
 				"Finish ConfirmRegistrationService -> serve(FthAuthenticationData).");
-		return FthServletCommand.EMPTY_JSON;
+		return FthServletCommand.SUCCESS;
 	}
 }
