@@ -61,7 +61,7 @@ public class TrainerSingInService implements FthService<FthAuthenticationData> {
 			LOGGER.log(Level.INFO,
 					"Trainer exist. Put page for redirection in responseJson.");
 		} else {
-			responseJson.put(KEY_MESSAGE, validator.toString() + trainerExistValidator.toString());
+			responseJson.put(KEY_ERROR_MESSAGE, validator.toString() + trainerExistValidator.toString());
 			LOGGER.log(Level.INFO,
 					"Trainer doesn't exist. Put warn information in responseJson.");
 		}

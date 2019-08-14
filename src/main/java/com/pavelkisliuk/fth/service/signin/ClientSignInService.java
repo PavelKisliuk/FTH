@@ -1,6 +1,7 @@
 /*  By Pavel Kisliuk, 11.08.2019
  *  This is class for education and nothing rights don't reserved.
  */
+
 package com.pavelkisliuk.fth.service.signin;
 
 import com.pavelkisliuk.fth.exception.FthServiceException;
@@ -61,7 +62,7 @@ public class ClientSignInService implements FthService<FthAuthenticationData> {
 			LOGGER.log(Level.INFO,
 					"Client exist. Put page for redirection in responseJson.");
 		} else {
-			responseJson.put(KEY_MESSAGE, validator.toString() + clientExistValidator.toString());
+			responseJson.put(KEY_ERROR_MESSAGE, validator.toString() + clientExistValidator.toString());
 			LOGGER.log(Level.INFO,
 					"Client doesn't exist. Put warn information in responseJson.");
 		}
