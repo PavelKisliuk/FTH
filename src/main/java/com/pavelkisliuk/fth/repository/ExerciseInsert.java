@@ -17,14 +17,13 @@ import com.pavelkisliuk.fth.specifier.FthUpdateSpecifier;
 import com.pavelkisliuk.fth.specifier.insert.DrillGroupFromTrainerInsertSpecifier;
 import com.pavelkisliuk.fth.specifier.insert.SetGroupFromTrainerInsertSpecifier;
 import com.pavelkisliuk.fth.specifier.select.LastClientExerciseSelectSpecifier;
-import com.pavelkisliuk.fth.specifier.update.ClientRequestRemoverUpdateSpecifier;
+import com.pavelkisliuk.fth.specifier.update.ClientRequestUpdateSpecifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -89,10 +88,10 @@ class ExerciseInsert implements FthSpecialTransactionOperator<ExerciseComponent>
 			} catch (SQLException ex) {
 				// FIXME: 06.08.2019 отправить письмо админу
 				throw new FthRepositoryException(
-						"SQLException in FthRepository -> operateTransaction(List<TransactionDescriber>).", ex);
+						"SQLException in ExerciseInsert -> operateTransaction(List<TransactionDescriber>).", ex);
 			}
 			throw new FthRepositoryException(
-					"SQLException in FthRepository -> operateTransaction(List<TransactionDescriber>).", e);
+					"SQLException in ExerciseInsert -> operateTransaction(List<TransactionDescriber>).", e);
 		} finally {
 			ConnectionPool.INSTANCE.releaseConnection(connection);
 		}
@@ -115,7 +114,7 @@ class ExerciseInsert implements FthSpecialTransactionOperator<ExerciseComponent>
 			return getLastGeneratedKey(statement);
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
-					"SQLException in FthRepository -> add(DrillGroupFromTrainerInsertSpecifier, Connection).", e);
+					"SQLException in ExerciseInsert -> add(DrillGroupFromTrainerInsertSpecifier, Connection).", e);
 		}
 	}
 
@@ -134,31 +133,7 @@ class ExerciseInsert implements FthSpecialTransactionOperator<ExerciseComponent>
 			specifier.insert(statement);
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
-					"SQLException in FthRepository -> add(SetGroupFromTrainerInsertSpecifier, Connection).", e);
-		}
-	}
-
-	/**
-	 * Retrieve last generated id of inserted to database drill.
-	 * <p>
-	 *
-	 * @param statement is statement used for last drill to database insertion.
-	 * @return ast generated id.
-	 * @throws FthRepositoryException if {@code SQLException} occurred.
-	 */
-	private long getLastGeneratedKey(PreparedStatement statement) throws FthRepositoryException {
-		try {
-			ResultSet generatedKeys = statement.getGeneratedKeys();
-			if (generatedKeys.next()) {
-				return generatedKeys.getLong(1);
-			} else {
-				throw new FthRepositoryException(
-						"Can't retrieve id of created table" +
-								"in FthRepository -> getLastGeneratedKey(PreparedStatement).");
-			}
-		} catch (SQLException e) {
-			throw new FthRepositoryException(
-					"SQLException in FthRepository -> getLastGeneratedKey(PreparedStatement).", e);
+					"SQLException in ExerciseInsert -> add(SetGroupFromTrainerInsertSpecifier, Connection).", e);
 		}
 	}
 
@@ -172,13 +147,13 @@ class ExerciseInsert implements FthSpecialTransactionOperator<ExerciseComponent>
 	 */
 	private void updateClientRequest(FthLong clientId, Connection connection) throws FthRepositoryException {
 		FthBoolean falseCondition = new FthBoolean(false);
-		FthUpdateSpecifier updateSpecifier = new ClientRequestRemoverUpdateSpecifier(clientId, falseCondition);
+		FthUpdateSpecifier updateSpecifier = new ClientRequestUpdateSpecifier(clientId, falseCondition);
 		try (PreparedStatement statement =
 					 connection.prepareStatement(updateSpecifier.deriveSequelRequest())) {
 			updateSpecifier.update(statement);
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
-					"SQLException in FthRepository -> updateClientRequest(FthLong, Connection).", e);
+					"SQLException in ExerciseInsert -> updateClientRequest(FthLong, Connection).", e);
 		}
 	}
 
