@@ -2,7 +2,7 @@
  *  This is class for education and nothing rights don't reserved.
  */
 
-package com.pavelkisliuk.fth.controller.singupservice;
+package com.pavelkisliuk.fth.service.singup;
 
 import com.pavelkisliuk.fth.exception.FthMailException;
 
@@ -21,7 +21,7 @@ import java.util.Properties;
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
- * @see FthSingUpService
+ * @see SingUpService
  * @since 12.0
  */
 class MailSender {
