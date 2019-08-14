@@ -4,7 +4,6 @@
 
 package com.pavelkisliuk.fth.service.exercise;
 
-import com.pavelkisliuk.fth.command.FthServletCommand;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
 import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthBoolean;
@@ -24,6 +23,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The {@code ExerciseRemoveService} is {@code FthService} realization to removing
@@ -92,8 +93,10 @@ public class ExerciseRemoveService implements FthService<FthLong> {
 			throw new FthServiceException(
 					"FthRepositoryException in ExerciseRemoveService -> serve(FthLong).", e);
 		}
+		Map<String, String> responseJson = new HashMap<>();
+		responseJson.put(KEY_MESSAGE, EXERCISE_DENIED);
 		LOGGER.log(Level.DEBUG,
 				"Finish ExerciseRemoveService -> serve(FthLong).");
-		return FthServletCommand.EMPTY_JSON;
+		return GSON.toJson(responseJson);
 	}
 }

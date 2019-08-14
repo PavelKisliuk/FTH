@@ -33,7 +33,7 @@ public class ExerciseFromTrainerService implements FthService<ExerciseComponent>
 	private static final String EXERCISE_FROM_TRAINER_SUCCESS = "Exercise outed.";
 
 	/**
-	 * Start up process exercise insertion..
+	 * Start up process exercise insertion.
 	 * <p>
 	 *
 	 * @param exerciseComponent is composition of exercise from trainer.
@@ -48,6 +48,7 @@ public class ExerciseFromTrainerService implements FthService<ExerciseComponent>
 			throw new FthServiceException(
 					"null parameter in ExerciseFromTrainerService -> serve(ExerciseComponent).");
 		}
+
 		Map<String, String> responseJson = new HashMap<>();
 		try {
 			FthRepository.INSTANCE.exerciseInsert(exerciseComponent);

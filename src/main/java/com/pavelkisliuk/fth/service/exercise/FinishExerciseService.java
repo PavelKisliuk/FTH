@@ -15,7 +15,7 @@ import com.pavelkisliuk.fth.repository.FthRepository;
 import com.pavelkisliuk.fth.service.FthService;
 import com.pavelkisliuk.fth.specifier.FthUpdateSpecifier;
 import com.pavelkisliuk.fth.specifier.update.CurrentDateExerciseUpdateSpecifier;
-import com.pavelkisliuk.fth.specifier.update.SeasonPassUpdateSpecifier;
+import com.pavelkisliuk.fth.specifier.update.SeasonPassRestUpdateSpecifier;
 import com.pavelkisliuk.fth.specifier.update.SetFromClientUpdateSpecifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -75,7 +75,7 @@ public class FinishExerciseService implements FthService<FthString> {
 		LOGGER.log(Level.INFO,
 				"Set's updated.");
 		FthInt decrement = new FthInt(-1);
-		updateSpecifier = new SeasonPassUpdateSpecifier(decrement, clientId);
+		updateSpecifier = new SeasonPassRestUpdateSpecifier(decrement, clientId);
 		transactionDescriber =
 				new FthRepository.TransactionDescriber(
 						FthRepository.TransactionOperationType.UPDATE, updateSpecifier);
