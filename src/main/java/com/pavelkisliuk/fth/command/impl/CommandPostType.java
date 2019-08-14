@@ -6,7 +6,6 @@ public enum CommandPostType {
 	SING_UP(new CommandClientSingUp()),
 	TRAINER_SING_IN(new CommandTrainerSingIn()),
 	CLIENT_SIGN_IN(new CommandClientSignIn()),
-	CHANGE_PERSONAL_DATA(new CommandChangePersonalData()),
 	TRAINER_EXERCISE(new CommandExerciseFromTrainer()),
 	DISCARD_EXERCISE(new CommandDiscardExercise()),
 	DENY_CLIENT(new CommandDenyClientToExercise()),

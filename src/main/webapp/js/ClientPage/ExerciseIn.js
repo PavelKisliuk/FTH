@@ -1,72 +1,114 @@
 ﻿$(function () {
-    const host = "/FTH/start";
-    $(".action-1").click(function () {
+    $(".startExercise").click(function () {
         $.get(host,
             {
                 "command": "TO_CLIENT_EXERCISE"
-            }, request).fail(function (xhr, status, error) {
-            alert("Error");
+            }, request).fail(function () {
+            window.location.href = serverErrorPage;
         });
 
         function request(response) {
-            const names = JSON.parse(response.answer1).drillName;
-            const sets = JSON.parse(response.answer2).setInfo;
-            const id = JSON.parse(response.answer3).ID;
+            if (response.errorRedirect) {
+                window.location.href = response.errorRedirect;
+            } else {
+                if (response.errorMessage) {
+                    alert(response.errorMessage);
+                } else {
+                    if (response.message) {
+                        alert(response.message);
+                    }
+                    const names = JSON.parse(response.answer1).drillName;
+                    const sets = JSON.parse(response.answer2).setInfo;
+                    const id = JSON.parse(response.answer3).ID;
 
-            let setsToClient = [];
-            let it1 = 0;
-            while (it1 < id.length) {
-                const dynAr = [];
-                $.each(id[it1], function (index, value) {
-                    const dynSet = {};
-                    const setInfo = sets[it1];
-                    dynSet.id = value;
-                    dynSet.selfConsistent = 0;
-                    dynSet.helpConsistent = 0;
-                    dynSet.weightTool = setInfo.weightTool;
-                    dynAr.push(dynSet);
-                });
-                it1++;
-                setsToClient.push(dynAr);
+                    const cook1 = $.cookie("drillDynamicLength");
+                    const cook2 = $.cookie("drillStaticLength");
+                    if (cook1 === undefined || cook2 === undefined) {
+                        setStartCookie(sets, id);
+                    }
+
+
+                    let namesToPage = "<p>Текущая тренировка:</p>\n" + "<ul class=\"training-list\">\n";
+                    let i = 1;
+                    $.each(names, function (index, drillName) {
+                        let str = "<li class=\"training-list__stroke drillName\" id=\"" + i + "\">\n" +
+                            drillName +
+                            "</li>\n";
+                        namesToPage += str;
+                        i++;
+                    });
+                    namesToPage += "</ul>\n" + "</div>";
+                    $(".drillList").html(namesToPage);
+
+                    $(".startExercise").toggle(false);
+                    $(".finishExercise").toggle(true);
+                    $(".requestExercise").toggle(false);
+                    $(".discardExercise").toggle(true);
+                }
             }
-
-
-            const constAr = [];
-            $.each(sets, function (index, value) {
-                const constSet = {};
-                constSet.necessaryReps = value.necessaryReps;
-                constSet.restTime = value.restTime;
-                constAr.push(constSet);
-            });
-
-            it1 = 1;
-            $.each(setsToClient, function (index, value) {
-                $.cookie("drillDynamic" + it1, JSON.stringify(value));
-                it1++;
-            });
-
-            it1 = 1;
-            $.each(constAr, function (index, value) {
-                $.cookie("drillStatic" + it1, JSON.stringify(value));
-                it1++;
-            });
-
-
-            let namesToPage = "<p>Текущая тренировка:</p>\n" + "<ul class=\"training-list\">\n";
-            let i = 1;
-            $.each(names, function (index, drillName) {
-                let str = "<li class=\"training-list__stroke drillName\" id=\"" + i + "\">\n" +
-                    drillName +
-                    "</li>\n";
-                namesToPage += str;
-                i++;
-            });
-            namesToPage += "</ul>\n" + "</div>";
-            $(".drillList").html(namesToPage);
         }
     });
 
+    function setStartCookie(sets, id) {
+        let setsToClient = [];
+        let it1 = 0;
+        while (it1 < id.length) {
+            const dynAr = [];
+            $.each(id[it1], function (index, value) {
+                const dynSet = {};
+                const setInfo = sets[it1];
+                dynSet.id = value;
+                dynSet.selfConsistent = 0;
+                dynSet.helpConsistent = 0;
+                dynSet.weightTool = setInfo.weightTool;
+                dynAr.push(dynSet);
+            });
+            it1++;
+            setsToClient.push(dynAr);
+        }
+
+
+        const constAr = [];
+        $.each(sets, function (index, value) {
+            const constSet = {};
+            constSet.necessaryReps = value.necessaryReps;
+            constSet.restTime = value.restTime;
+            constAr.push(constSet);
+        });
+
+        it1 = 1;
+        $.each(setsToClient, function (index, value) {
+            $.cookie("drillDynamic" + it1, JSON.stringify(value));
+            $.cookie("drillDynamicLength", it1);
+            it1++;
+        });
+
+        it1 = 1;
+        $.each(constAr, function (index, value) {
+            $.cookie("drillStatic" + it1, JSON.stringify(value));
+            $.cookie("drillStaticLength", it1);
+            it1++;
+        });
+    }
+
     $(".drillList").on("click", ".drillName", function () {
+        const currentDrill = $(".drillName.selected");
+        if (currentDrill.length !== 0) {
+            const drillId = currentDrill[0].id;
+            const dynSet = JSON.parse($.cookie("drillDynamic" + drillId));//!!!!!!!!!!!!!!
+
+            const self = $(".setGroup")[0].getElementsByClassName("self");
+            const help = $(".setGroup")[0].getElementsByClassName("help");
+            const workWeight = $(".setGroup")[0].getElementsByClassName("workWeight");
+
+            for (let i = 0; i < dynSet.length; i++) {
+                dynSet[i].selfConsistent = self[i].value;
+                dynSet[i].helpConsistent = help[i].value;
+                dynSet[i].weightTool = workWeight[i].value;
+            }
+            $.cookie("drillDynamic" + drillId, JSON.stringify(dynSet));
+            var v = 0;
+        }
         $(".drillName").removeClass("selected");
         $(this).addClass("selected");
         drawSets(this.id);
@@ -90,10 +132,10 @@
                 "</li>" +
                 "<li class=\"train-table__third-stroke\">" +
                 "<div class=\"table__input\" title=\"Выполнено самостоятельно\">" +
-                "<input class=\"consistent\" type=\"text\" name=\"\" maxlength=\"3\" value=\"" + value.selfConsistent + "\">" +
+                "<input class=\"consistent self\" type=\"text\" name=\"\" maxlength=\"3\" value=\"" + value.selfConsistent + "\">" +
                 "</div>" +
                 "<div class=\"table__input\" title=\"Выполнено с помощью\">" +
-                "<input class=\"consistent\" type=\"text\" name=\"\" maxlength=\"3\" value=\"" + value.helpConsistent + "\">" +
+                "<input class=\"consistent help\" type=\"text\" name=\"\" maxlength=\"3\" value=\"" + value.helpConsistent + "\">" +
                 "</div>" +
                 "</li>" +
                 "<li class=\"train-table__fourth-stroke\">" +

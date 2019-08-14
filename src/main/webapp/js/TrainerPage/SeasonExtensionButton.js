@@ -54,5 +54,39 @@
             eventObject.preventDefault();
             alert("Enter amount of exercises!");
         }
+
+        const clientId = $.cookie("chosenOne");
+        const amount = $(".extend-train").val() === "" ? -1 : $(".extend-train").val();
+        const expiredDate = $(".dateTill").val();
+        const expiredDateMillis = Date.parse(expiredDate + "T00:00:00+0000");
+
+        $.post(host,
+            {
+                "command": "SPREAD_SEASON",
+                "clientId": clientId,
+                "amount": amount,
+                "expiredDate": expiredDateMillis
+            }, request).fail(function () {
+            window.location.href = serverErrorPage;
+        });
+
+        function request(response) {
+            if (response.errorRedirect) {
+                window.location.href = response.errorRedirect;
+            } else {
+                if (response.errorMessage) {
+                    alert(response.errorMessage);
+                } else {
+                    if (response.message) {
+                        alert(response.message);
+                    }
+                    $(".extend-sub").attr("disabled", true);
+                    popupExtend.classList.remove("modal-content-show--flex");
+                    overlay.classList.remove("modal-overlay-show");
+                }
+            }
+        }
     });
+
+
 });

@@ -20,7 +20,7 @@ import com.pavelkisliuk.fth.specifier.select.ClientCorrespondWithTrainerSelectSp
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-class TrainerActionValidator {
+public class TrainerActionValidator {
 	/**
 	 * Verify belonging client to trainer.
 	 * <p>

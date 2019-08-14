@@ -24,6 +24,8 @@ var russian = document.querySelector(".russian");
 var english = document.querySelector(".english");
 var languageChoice = document.querySelector(".language__choice");
 var actionsLanguage = document.querySelector(".actions__language");
+var popupChoice = document.querySelector(".modal-choice");
+var closeChoice = document.querySelector(".modal-choice-close");
 
 russian.addEventListener("click", function(event) {
   if (actionsLanguage.classList.contains("actions__language--usa")) {

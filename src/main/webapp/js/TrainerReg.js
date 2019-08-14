@@ -1,11 +1,11 @@
 const host = "/start";
 const serverErrorPage = "error500.jsp";
 $(function () {
-    $(".wrapper").ready(function () {
+    $(".registration-form").ready(function () {
         $.get(host,
             {
-                "command" : "IN_SYSTEM",
-                "str": "TrainerAuth.jsp"
+                "command": "IN_SYSTEM",
+                "str": "TrainerReg.jsp"
             }, request).fail(function () {
             window.location.href = serverErrorPage;
         });
@@ -28,13 +28,16 @@ $(function () {
         }
     });
 
-
-    $(".login-button").click(function () {
+    $(".regButton").click(function () {
         $.post(host,
             {
-                "command": "TRAINER_SING_IN",
-                "emailSingIn": $(".login").val(),
-                "passwordSingIn": $(".password").val()
+                "command": "SING_UP",
+                "name": $(".nameSingUp").val(),
+                "surname": $(".surnameSingUp").val(),
+                "email": $(".emailSingUp").val(),
+                "password": $(".passwordSingUp").val(),
+                "confirmPassword": $(".confirmPasswordSingUp").val(),
+                "bool": "true" //от тренера
             }, request).fail(function () {
             window.location.href = serverErrorPage;
         });

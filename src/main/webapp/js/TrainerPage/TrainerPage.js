@@ -1,31 +1,52 @@
-﻿const host = "/FTH/start";
+﻿const host = "/start";
+const serverErrorPage = "error500.jsp";
 $(function () {
     $(".couch-info").ready(function () {
         $.get(host,
             {
                 "command": "IN_SYSTEM",
-                "str": "TRAINER_AUTH",
-                "condition": "false"
-            }, request).fail(function (xhr, status, error) {
-            alert("Error");
+                "str": "TrainerPage.jsp"
+            }, request).fail(function () {
+            window.location.href = serverErrorPage;
         });
 
         function request(response) {
-            if (response.redirect) {
-                window.location.href = response.redirect;
+            if (response.errorRedirect) {
+                window.location.href = response.errorRedirect;
             } else {
-                $.get(host,
-                    {
-                        "command": "TRAINER_PAGE"
-                    }, request).fail(function (xhr, status, error) {
-                    alert("Error");
-                });
-
-                //
-                function request(response) {
-                    if (response.errorRedirect) {
-                        window.location.href = response.errorRedirect;
+                if (response.errorMessage) {
+                    alert(response.errorMessage);
+                } else {
+                    if (response.message) {
+                        alert(response.message);
+                    }
+                    if (response.redirect) {
+                        window.location.href = response.redirect;
                     } else {
+                        start();
+                    }
+                }
+            }
+        }
+
+        function start() {
+            $.get(host,
+                {
+                    "command": "TRAINER_PAGE"
+                }, request).fail(function (xhr, status, error) {
+                window.location.href = serverErrorPage;
+            });
+
+            function request(response) {
+                if (response.errorRedirect) {
+                    window.location.href = response.errorRedirect;
+                } else {
+                    if (response.errorMessage) {
+                        alert(response.errorMessage);
+                    } else {
+                        if (response.message) {
+                            alert(response.message);
+                        }
                         $(".name").prop("checked", true);
                         $.cookie("sort-name", "name");
                         $(".each_And_Every").prop("checked", true);
@@ -42,16 +63,23 @@ $(function () {
             $.get(host,
                 {
                     "command": "DRILL_BASE"
-                }, request).fail(function (xhr, status, error) {
-                alert("Error");
+                }, request).fail(function () {
+                window.location.href = serverErrorPage;
             });
 
             function request(response) {
                 if (response.errorRedirect) {
                     window.location.href = response.errorRedirect;
                 } else {
-                    const data = response.data;
-                    createDrills(data);
+                    if (response.errorMessage) {
+                        alert(response.errorMessage);
+                    } else {
+                        if (response.message) {
+                            alert(response.message);
+                        }
+                        const data = response.data;
+                        createDrills(data);
+                    }
                 }
             }
 
@@ -154,18 +182,99 @@ $(function () {
                 "command": "CONDITION_REFRESH",
                 "condition_name": condition_name,
                 "condition_quality": condition_quality
-            }, request).fail(function (xhr, status, error) {
-            alert("Error");
+            }, request).fail(function () {
+            window.location.href = serverErrorPage;
         });
-    }
 
-    function request(response) {
-        if (response.errorRedirect) {
-            window.location.href = response.errorRedirect;
-        } else {
-            insertClientGroup(response.client);
+        function request(response) {
+            if (response.errorRedirect) {
+                window.location.href = response.errorRedirect;
+            } else {
+                if (response.errorMessage) {
+                    alert(response.errorMessage);
+                } else {
+                    if (response.message) {
+                        alert(response.message);
+                    }
+                    insertClientGroup(response.client);
+                }
+            }
         }
     }
 
+    $(".createNewDrill").click(function () {
+        const drillName = $(".newDrillName").val();
+        if (drillName === "") {
+            return;
+        }
+        const muscleGroupId = $(".muscleGroupId").val();
 
+        $.post(host,
+            {
+                "command": "CREATE_DRILL",
+                "name": drillName,
+                "muscle": muscleGroupId
+            }, request).fail(function () {
+            window.location.href = serverErrorPage;
+        });
+
+        function request(response) {
+            if (response.errorRedirect) {
+                window.location.href = response.errorRedirect;
+            } else {
+                if (response.errorMessage) {
+                    alert(response.errorMessage);
+                } else {
+                    if (response.message) {
+                        alert(response.message);
+                    }
+                    popupTrainings.classList.remove("modal-content-show");
+                    overlay.classList.remove("modal-overlay-show");
+                }
+            }
+        }
+    });
+
+
+    $(".exit-button").click(function () {
+        $.get(host,
+            {
+                "command": "OUT"
+            }, request).fail(function () {
+            $.removeCookie("chosenOne");
+            const clients = $(".client-base__actual");
+            $.each(clients, function (index, value) {
+                $.removeCookie("client" + value.id);
+            });
+            $.removeCookie("muscleGroup");
+            $.removeCookie("chosenDrillId");
+            $.removeCookie("sort-name");
+            $.removeCookie("sort");
+            window.location.href = "../index.jsp";
+        });
+
+        function request(response) {
+            if (response.errorRedirect) {
+                window.location.href = response.errorRedirect;
+            } else {
+                if (response.errorMessage) {
+                    alert(response.errorMessage);
+                } else {
+                    if (response.message) {
+                        alert(response.message);
+                    }
+                    $.removeCookie("chosenOne");
+                    const clients = $(".client-base__actual");
+                    $.each(clients, function (index, value) {
+                        $.removeCookie("client" + value.id);
+                    });
+                    $.removeCookie("muscleGroup");
+                    $.removeCookie("chosenDrillId");
+                    $.removeCookie("sort-name");
+                    $.removeCookie("sort");
+                    window.location.href = "../index.jsp";
+                }
+            }
+        }
+    });
 });

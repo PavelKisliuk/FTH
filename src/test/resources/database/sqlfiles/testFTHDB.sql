@@ -32,19 +32,18 @@ CREATE TABLE RegistrationData
 
 CREATE TABLE ClientPersonalData
 (
-    clientId        BIGINT       NOT NULL GENERATED ALWAYS AS IDENTITY,
-    firstName       varchar(30)  NOT NULL,
-    lastName        varchar(40)  NOT NULL,
-    photoPath       varchar(255) NOT NULL,
-    registrationKey varchar(30)  NOT NULL,
+    clientId  BIGINT       NOT NULL GENERATED ALWAYS AS IDENTITY,
+    firstName varchar(30)  NOT NULL,
+    lastName  varchar(40)  NOT NULL,
+    photoPath varchar(255) NOT NULL,
     PRIMARY KEY (clientId)
 );
 
-INSERT INTO ClientPersonalData (firstName, lastName, photoPath, registrationKey)
-VALUES ('<script>alert("1");</script>', 'Kisliuk', '../avatars/1PavelKisliuk123.jpg', ''),
-       ('Роман', 'Жминько', '../avatars/2РоманЖминько123.jpg', ''),
-       ('Ольга', 'Безрукова', '../avatars/3ОльгаБезрукова123.jpg', ''),
-       ('Новый', 'Клиент', '../avatars/default.jpg', '');
+INSERT INTO ClientPersonalData (firstName, lastName, photoPath)
+VALUES ('<script>alert("1");</script>', 'Kisliuk', '../avatars/1PavelKisliuk123.jpg'),
+       ('Роман', 'Жминько', '../avatars/2РоманЖминько123.jpg'),
+       ('Ольга', 'Безрукова', '../avatars/3ОльгаБезрукова123.jpg'),
+       ('Новый', 'Клиент', '../avatars/default.jpg');
 
 CREATE TABLE ClientPublicData
 (
@@ -59,10 +58,10 @@ CREATE TABLE ClientPublicData
 );
 
 INSERT INTO ClientPublicData (clientId, unavailableTrainerGroup, exerciseRequest, expiredDay, restVisitation, trainerId)
-VALUES (1, '[]', true, 1567900800000, -1, 1),
-       (2, '[]', true, 1567900800000, 0, 1),
-       (3, '[]', false, 1565049600000, 4, 1),
-       (4, '[]', false, -1, 0, null);
+VALUES (1, ',', true, 1567900800000, -1, 1),
+       (2, ',', true, 1567900800000, 2, 1),
+       (3, ',', false, 1565049600000, 4, 1),
+       (4, ',', false, -1, 0, null);
 
 CREATE TABLE AuthenticationData
 (
@@ -88,19 +87,19 @@ VALUES (1, null, 'pavel_trainer@mail.ru',
 
 CREATE TABLE DrillMuscleGroup
 (
-    muscleGroupId   BIGINT      NOT NULL GENERATED ALWAYS AS IDENTITY,
+    muscleGroupId   BIGINT      NOT NULL,
     muscleGroupName varchar(16) NOT NULL,
     PRIMARY KEY (muscleGroupId)
 );
 
-INSERT INTO DrillMuscleGroup (muscleGroupName)
-VALUES ('Breast'),
-       ('Back'),
-       ('Shoulders'),
-       ('Biceps'),
-       ('Triceps'),
-       ('Legs'),
-       ('Stomach');
+INSERT INTO DrillMuscleGroup (muscleGroupId, muscleGroupName)
+VALUES (1, 'Breast'),
+       (2, 'Back'),
+       (3, 'Shoulders'),
+       (4, 'Biceps'),
+       (5, 'Triceps'),
+       (6, 'Legs'),
+       (7, 'Stomach');
 
 CREATE TABLE DrillBase
 (

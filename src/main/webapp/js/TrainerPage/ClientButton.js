@@ -32,23 +32,30 @@
             {
                 "command": "REQUEST_AND_EXPIRED",
                 "long": id
-            }, request).fail(function (xhr, status, error) {
-            alert("Error");
-        }); //посылаем запрос серверу, чтобы узнать нужно ли клиенту выдавать абонемент и запросил ли он тренировку
+            }, request).fail(function () {
+            window.location.href = serverErrorPage;
+        });//посылаем запрос серверу, чтобы узнать нужно ли клиенту выдавать абонемент и запросил ли он тренировку
 
         function request(response) {
             if (response.errorRedirect) {
                 window.location.href = response.errorRedirect;
             } else {
-                const data = response.data;
-                if (data.restVisitation === 0 || data.expiredDay < new Date().getTime()) { //если абонемент недействителен
-                    $(".extend-sub").attr("disabled", false);//включаем кнопку выдачи абонемент
-                }
-                if (data.exerciseRequest) { //если есть запрос на тренировку
-                    $(chosenClient).addClass("requested");
-                    $(".give-train").attr("disabled", false); //включаем кнопку выдачи тренировки
+                if (response.errorMessage) {
+                    alert(response.errorMessage);
                 } else {
-                    $(chosenClient).removeClass("requested");
+                    if (response.message) {
+                        alert(response.message);
+                    }
+                    const data = response.data;
+                    if (data.restVisitation === 0 || data.expiredDay < new Date().getTime()) { //если абонемент недействителен
+                        $(".extend-sub").attr("disabled", false);//включаем кнопку выдачи абонемент
+                    }
+                    if (data.exerciseRequest) { //если есть запрос на тренировку
+                        $(chosenClient).addClass("requested");
+                        $(".give-train").attr("disabled", false); //включаем кнопку выдачи тренировки
+                    } else {
+                        $(chosenClient).removeClass("requested");
+                    }
                 }
             }
         }

@@ -218,29 +218,35 @@
         const exercise = $.cookie("client" + clientId);
         $(".give-train").attr("disabled", true); //отключаем кнопку выдачи тренировки
         postExercise(clientId, exercise);
-        clearCookie(clientId);
+        $.removeCookie("client" + clientId);
         popupGive.classList.remove("modal-content-show--flex");
         overlay.classList.remove("modal-overlay-show");
     });
 
     function postExercise(clientId, exercise) {
-        $.get(host,
+        $.post(host,
             {
                 "command": "TRAINER_EXERCISE",
                 "clientId": clientId,
                 "exercise": exercise
-            }, request).fail(function (xhr, status, error) {
-            alert("Error");
+            }, request).fail(function () {
+            window.location.href = serverErrorPage;
         });
 
         function request(response) {
             if (response.errorRedirect) {
                 window.location.href = response.errorRedirect;
-                $(".give-train").attr("disabled", false); //отключаем кнопку выдачи тренировки
             } else {
-                alert(response.message);
-                const chosen = $("#" + clientId + ".requested");
-                chosen.removeClass("requested"); //убираем идентификатор запроса (колокольчик)
+                if (response.errorMessage) {
+                    alert(response.errorMessage);
+                } else {
+                    if (response.message) {
+                        alert(response.message);
+                    }
+                    const chosen = $("#" + clientId + ".requested");
+                    chosen.removeClass("requested"); //убираем идентификатор запроса (колокольчик)
+                    $(".client-base__actions").removeClass("active");
+                }
             }
         }
     }

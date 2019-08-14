@@ -6,27 +6,39 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sa" uri="http://mycompany.com" %>
+<c:set var="language" value="${not empty param.language ? param.language : 'en'}" scope="session"/>
+<fmt:setLocale value="${language}"/>
+<fmt:setBundle basename="TrainerPage"/>
 <%@ page pageEncoding="UTF-8" %>
-<%@ taglib uri="/WEB-INF/UserInfo.tld" prefix="ui" %>
+<%@ taglib uri="/WEB-INF/SetAmountTag.tld" prefix="sam" %>
 
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="${language}">
 <head>
-    <title>Личный кабинет</title>
+    <title>FTH</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../css/TrainerPage/style.css">
     <link rel="stylesheet" href="../css/TrainerPage/normalize.css">
 </head>
+<form class="actions__language">
+    <select id="language" name="language" onchange="submit()">
+        <option value="en" ${language == 'en' ? 'selected' : ''}>English</option>
+        <option value="ru" ${language == 'ru' ? 'selected' : ''}>Русский</option>
+    </select>
+</form>
 <body>
 <header class="page-header">
     <section class="couch-info"> <%--trainer init--%>
     </section>
     <section class="actions">
         <p class="actions__text">
-            Fitness trainer helper
+            <fmt:message key="trainer.label.headUp"/>
         </p>
-        <span class="actions__language">
+        <span class="actions__language" hidden>
           <ul class="language">
             <li class="language__stroke">
               <button class="language__choice russian">Русский</button>
@@ -41,10 +53,10 @@
                 <button type="button" class="actions__button settings-button">
                     <ul class="settings">
                         <li class="settings__variant">
-                            <a href="#" class="profile">Профиль</a>
+                            <a href="#" class="profile"><fmt:message key="trainer.label.changeData"/></a>
                         </li>
                         <li class="settings__variant">
-                            <a href="#" class="trainings">Тренировки</a>
+                            <a href="#" class="trainings"><fmt:message key="trainer.label.createExercise"/></a>
                         </li>
                     </ul>
                 </button>
@@ -59,19 +71,19 @@
     <section class="client-base">
         <form class="sort">
             <p class="sort-name">
-                Упорядочить:
+                <fmt:message key="trainer.label.sortAll"/>
             </p>
             <div class="sort-wrapper__name">
                 <label class="sort-label">
                     <input class="conditionRefresh name" id="name" type="radio" name="sort-name"/>
                     <div class="sort-div">
-                        По имени
+                        <fmt:message key="trainer.label.byName"/>
                     </div>
                 </label>
                 <label class="sort-label">
                     <input class="conditionRefresh" id="surname" type="radio" name="sort-name"/>
                     <div class="sort-div">
-                        По фамилии
+                        <fmt:message key="trainer.label.bySurname"/>
                     </div>
                 </label>
             </div>
@@ -79,25 +91,25 @@
                 <label class="sort-label">
                     <input class="conditionRefresh" id="expired" type="radio" name="sort"/>
                     <div class="sort-div">
-                        Истекшие
+                        <fmt:message key="trainer.label.expired"/>
                     </div>
                 </label>
                 <label class="sort-label">
                     <input class="conditionRefresh" id="actual" type="radio" name="sort"/>
                     <div class="sort-div">
-                        Действительные
+                        <fmt:message key="trainer.label.actual"/>
                     </div>
                 </label>
                 <label class="sort-label">
                     <input class="conditionRefresh" id="requested" type="radio" name="sort"/>
                     <div class="sort-div">
-                        Запросившие
+                        <fmt:message key="trainer.label.requestedExercise"/>
                     </div>
                 </label>
                 <label class="sort-label">
                     <input class="conditionRefresh each_And_Every" id="each_And_Every" type="radio" name="sort"/>
                     <div class="sort-div">
-                        Показать всех
+                        <fmt:message key="trainer.label.eachAndEvery"/>
                     </div>
                 </label>
             </div>
@@ -106,9 +118,8 @@
     </section>
     <section class="client-info">
         <div class="client-info__wrapper">
-            <h2>Информация о сайте</h2>
+            <h2></h2>
             <p>
-                Информация, поступающая с сервера при нажатии на клиента.
             </p>
         </div>
     </section>
@@ -117,64 +128,76 @@
 
 </footer>
 <div class="modal-content-profile">
-    <button class="modal-content-profile-close" type="button" title="Закрыть">Закрыть</button>
-    <h2 class="modal-content-title">Изменение данных</h2>
+    <button class="modal-content-profile-close" type="button" title="Закрыть"><fmt:message
+            key="trainer.label.closeModal"/></button>
+    <h2 class="modal-content-title"><fmt:message key="trainer.label.changingData"/></h2>
     <form class="change-form" action="" method="post">
         <input class="change-name" type="text" name="name" placeholder="Введите новое имя"/>
         <input class="change-surname" type="text" name="surname" placeholder="Введите новую фамилию"/>
         <input class="change-email" type="email" name="email" placeholder="Введите новый email"/>
         <input class="change-password" type="password" name="password" placeholder="Введите новый пароль"/>
         <input class="change-password--repeat" type="password" name="password" placeholder="Повторите новый пароль"/>
-        <button class="modal-button wide--button" type="submit">Подтвердить</button>
+        <%--        <button class="modal-button wide--button" type="submit">Подтвердить</button>--%>
     </form>
 </div>
 <div class="modal-content-trainings">
-    <button class="modal-content-trainings-close" type="button" title="Закрыть">Закрыть</button>
-    <h2 class="modal-content-title">Настройки</h2>
+    <button class="modal-content-trainings-close" type="button" title="Закрыть"><fmt:message
+            key="trainer.label.closeModal"/></button>
+    <h2 class="modal-content-title"><fmt:message key="trainer.label.creationDrill"/></h2>
     <form class="change-form" action="" method="post">
-        <input class="change-train" type="text" name="train" placeholder="Введите название тренировки"/>
-        <p>Выбирете мышечную группу
-            <select>
-                <option>
-                    Бицепсы
+        <input class="change-train newDrillName" type="text" maxlength="256" value="" name="train"
+               placeholder="Введите название упражнения"/>
+        <p><fmt:message key="trainer.label.choiceMuscleGroup"/>
+            <select class="muscleGroupId">
+                <option value="1">
+                    <fmt:message key="trainer.label.breast"/>
                 </option>
-                <option>
-                    Трицепсы
+                <option value="2">
+                    <fmt:message key="trainer.label.back"/>
                 </option>
-                <option>
-                    Трапеции
+                <option value="3">
+                    <fmt:message key="trainer.label.shoulders"/>
                 </option>
-                <option>
-                    Грудные
+                <option value="4">
+                    <fmt:message key="trainer.label.biceps"/>
                 </option>
-                <option>
-                    Пресс
+                <option value="5">
+                    <fmt:message key="trainer.label.triceps"/>
+                </option>
+                <option value="6">
+                    <fmt:message key="trainer.label.legs"/>
+                </option>
+                <option value="7">
+                    <fmt:message key="trainer.label.press"/>
                 </option>
             </select>
         </p>
-        <button class="modal-button wide--button" type="submit">Подтвердить</button>
+        <button class="modal-button wide--button createNewDrill" type="button"><fmt:message
+                key="trainer.label.confirmData"/></button>
     </form>
 </div>
-<div class="modal-content-delete">
-    <button class="modal-content-delete-close" type="button" title="Закрыть">Закрыть</button>
+<div class="modal-content-delete delete-user">
+    <button class="modal-content-delete-close" type="button" title="Закрыть"><fmt:message
+            key="trainer.label.closeModal"/></button>
     <p class="modal-content-delete__text">
-        Удалить выбранного пользователя?
+        <fmt:message key="trainer.label.deleteUserQuestion"/>
     </p>
     <div class="delete-wrapper">
-        <button class="modal-button delete-button" type="button">Удалить</button>
-        <button class="modal-button annul-button" type="button">Отвергнуть запрос</button>
-        <button class="modal-button fire-button" type="button">Сжечь абонемент</button>
-        <button class="modal-button bun-button" type="button">Забанить</button>
-        <button class="modal-button cancel-button" type="button">Отмена</button>
+        <button class="modal-button delete-button" type="button"><fmt:message key="trainer.label.deleteUser"/></button>
+        <button class="modal-button deny-button" type="button"><fmt:message key="trainer.label.denyRequest"/>с</button>
+        <button class="modal-button fire-button" type="button"><fmt:message key="trainer.label.fireSeason"/></button>
+        <button class="modal-button bun-button" type="button" hidden><fmt:message key="trainer.label.ban"/></button>
+        <button class="modal-button cancel-button" type="button"><fmt:message key="trainer.label.cancel"/></button>
     </div>
 </div>
 <div class="modal-content-give">
-    <button class="modal-content-give-close" type="button" title="Закрыть">Закрыть</button>
+    <button class="modal-content-give-close" type="button" title="Закрыть"><fmt:message
+            key="trainer.label.closeModal"/></button>
     <form class="modal-give__form">
         <table class="modal-give__table" cellspacing="0" cellpadding="5" border="1" bordercolor="#9c9c9c">
             <tr>
                 <th>
-                    Название:
+                    <fmt:message key="trainer.label.mainDrillName"/>
                 </th>
                 <th valign="center">
                     <span class="medium-image approaches-img"></span>
@@ -193,56 +216,57 @@
             </tr>
         </table>
         <div class="modal-give__buttons">
-            <button type="button" class="modal-button outButton" disabled="disabled">Выдать</button>
-            <button type="reset" class="modal-button clearButton">Очистить</button>
+            <button type="button" class="modal-button outButton" disabled="disabled"><fmt:message
+                    key="trainer.label.outExercise"/></button>
+            <button type="reset" class="modal-button clearButton"><fmt:message key="trainer.label.clear"/></button>
         </div>
     </form>
     <div class="modal-give__wrapper">
         <ul class="modal-give__list">
             <li class="modal-give__point muscleGroup" id="1">
-                Грудная мышечная группа
+                <fmt:message key="trainer.label.chestGroup"/>
                 <div class="modal-give__menu">
                     <ul class="modal-give__hide__menu group1">
                     </ul>
                 </div>
             </li>
             <li class="modal-give__point muscleGroup" id="2">
-                Мышечная группа спины
+                <fmt:message key="trainer.label.backGroup"/>
                 <div class="modal-give__menu">
                     <ul class="modal-give__hide__menu group2">
                     </ul>
                 </div>
             </li>
             <li class="modal-give__point muscleGroup" id="3">
-                Плечевая мышечная группа
+                <fmt:message key="trainer.label.shouldersGroup"/>
                 <div class="modal-give__menu">
                     <ul class="modal-give__hide__menu group3">
                     </ul>
                 </div>
             </li>
             <li class="modal-give__point muscleGroup" id="4">
-                Бицепс
+                <fmt:message key="trainer.label.bicepsGroup"/>
                 <div class="modal-give__menu">
                     <ul class="modal-give__hide__menu group4">
                     </ul>
                 </div>
             </li>
             <li class="modal-give__point muscleGroup" id="5">
-                Трицепс
+                <fmt:message key="trainer.label.tricepsGroup"/>
                 <div class="modal-give__menu">
                     <ul class="modal-give__hide__menu group5">
                     </ul>
                 </div>
             </li>
             <li class="modal-give__point muscleGroup" id="6">
-                Мышечная группа ног
+                <fmt:message key="trainer.label.legGroup"/>
                 <div class="modal-give__menu">
                     <ul class="modal-give__hide__menu group6">
                     </ul>
                 </div>
             </li>
             <li class="modal-give__point muscleGroup" id="7">
-                Брюшная мышечная группа
+                <fmt:message key="trainer.label.pressGroup"/>
                 <div class="modal-give__menu">
                     <ul class="modal-give__hide__menu group7">
                     </ul>
@@ -253,415 +277,37 @@
             <table class="modal-give__table-form" cellpadding="5">
                 <tr>
                     <td class="modal-give__table-form--td">
-                        Количество подходов<span class="small-image approaches-img"></span>
+                        <fmt:message key="trainer.label.setsAmount"/><span class="small-image approaches-img"></span>
                     </td>
                     <td>
                         <select class="modal-give__select setAmount" disabled>
-                            <option>
-                                3
-                            </option>
-                            <option>
-                                4
-                            </option>
-                            <option>
-                                5
-                            </option>
-                            <option>
-                                6
-                            </option>
-                            <option>
-                                7
-                            </option>
-                            <option>
-                                8
-                            </option>
-                            <option>
-                                9
-                            </option>
-                            <option>
-                                10
-                            </option>
-                            <option>
-                                11
-                            </option>
-                            <option>
-                                12
-                            </option>
-                            <option>
-                                13
-                            </option>
-                            <option>
-                                14
-                            </option>
-                            <option>
-                                15
-                            </option>
-                            <option>
-                                16
-                            </option>
-                            <option>
-                                17
-                            </option>
-                            <option>
-                                18
-                            </option>
-                            <option>
-                                19
-                            </option>
-                            <option>
-                                20
-                            </option>
+                            <sam:setAmount from="3" to="20"/>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td class="modal-give__table-form--td">
-                        Количество повторений<span class="small-image repeat-img"></span>
+                        <fmt:message key="trainer.label.repeatsAmount"/><span class="small-image repeat-img"></span>
                     </td>
                     <td>
                         <select class="modal-give__select repeatAmount" disabled>
-                            <option>
-                                1
-                            </option>
-                            <option>
-                                2
-                            </option>
-                            <option>
-                                3
-                            </option>
-                            <option>
-                                4
-                            </option>
-                            <option>
-                                5
-                            </option>
-                            <option>
-                                6
-                            </option>
-                            <option>
-                                7
-                            </option>
-                            <option>
-                                8
-                            </option>
-                            <option>
-                                9
-                            </option>
-                            <option>
-                                10
-                            </option>
-                            <option>
-                                11
-                            </option>
-                            <option>
-                                12
-                            </option>
-                            <option>
-                                13
-                            </option>
-                            <option>
-                                14
-                            </option>
-                            <option>
-                                15
-                            </option>
-                            <option>
-                                16
-                            </option>
-                            <option>
-                                17
-                            </option>
-                            <option>
-                                18
-                            </option>
-                            <option>
-                                19
-                            </option>
-                            <option>
-                                20
-                            </option>
-                            <option>
-                                21
-                            </option>
-                            <option>
-                                22
-                            </option>
-                            <option>
-                                23
-                            </option>
-                            <option>
-                                24
-                            </option>
-                            <option>
-                                25
-                            </option>
-                            <option>
-                                26
-                            </option>
-                            <option>
-                                27
-                            </option>
-                            <option>
-                                28
-                            </option>
-                            <option>
-                                29
-                            </option>
-                            <option>
-                                30
-                            </option>
-                            <option>
-                                31
-                            </option>
-                            <option>
-                                32
-                            </option>
-                            <option>
-                                33
-                            </option>
-                            <option>
-                                34
-                            </option>
-                            <option>
-                                35
-                            </option>
-                            <option>
-                                36
-                            </option>
-                            <option>
-                                37
-                            </option>
-                            <option>
-                                38
-                            </option>
-                            <option>
-                                39
-                            </option>
-                            <option>
-                                40
-                            </option>
-                            <option>
-                                41
-                            </option>
-                            <option>
-                                42
-                            </option>
-                            <option>
-                                43
-                            </option>
-                            <option>
-                                44
-                            </option>
-                            <option>
-                                45
-                            </option>
-                            <option>
-                                46
-                            </option>
-                            <option>
-                                47
-                            </option>
-                            <option>
-                                48
-                            </option>
-                            <option>
-                                49
-                            </option>
-                            <option>
-                                50
-                            </option>
-                            <option>
-                                51
-                            </option>
-                            <option>
-                                52
-                            </option>
-                            <option>
-                                53
-                            </option>
-                            <option>
-                                54
-                            </option>
-                            <option>
-                                55
-                            </option>
-                            <option>
-                                56
-                            </option>
-                            <option>
-                                57
-                            </option>
-                            <option>
-                                58
-                            </option>
-                            <option>
-                                59
-                            </option>
-                            <option>
-                                60
-                            </option>
-                            <option>
-                                61
-                            </option>
-                            <option>
-                                62
-                            </option>
-                            <option>
-                                63
-                            </option>
-                            <option>
-                                64
-                            </option>
-                            <option>
-                                65
-                            </option>
-                            <option>
-                                66
-                            </option>
-                            <option>
-                                67
-                            </option>
-                            <option>
-                                68
-                            </option>
-                            <option>
-                                69
-                            </option>
-                            <option>
-                                70
-                            </option>
-                            <option>
-                                71
-                            </option>
-                            <option>
-                                72
-                            </option>
-                            <option>
-                                73
-                            </option>
-                            <option>
-                                74
-                            </option>
-                            <option>
-                                75
-                            </option>
-                            <option>
-                                76
-                            </option>
-                            <option>
-                                77
-                            </option>
-                            <option>
-                                78
-                            </option>
-                            <option>
-                                79
-                            </option>
-                            <option>
-                                80
-                            </option>
-                            <option>
-                                81
-                            </option>
-                            <option>
-                                82
-                            </option>
-                            <option>
-                                83
-                            </option>
-                            <option>
-                                84
-                            </option>
-                            <option>
-                                85
-                            </option>
-                            <option>
-                                86
-                            </option>
-                            <option>
-                                87
-                            </option>
-                            <option>
-                                88
-                            </option>
-                            <option>
-                                89
-                            </option>
-                            <option>
-                                90
-                            </option>
-                            <option>
-                                91
-                            </option>
-                            <option>
-                                92
-                            </option>
-                            <option>
-                                93
-                            </option>
-                            <option>
-                                94
-                            </option>
-                            <option>
-                                95
-                            </option>
-                            <option>
-                                96
-                            </option>
-                            <option>
-                                97
-                            </option>
-                            <option>
-                                98
-                            </option>
-                            <option>
-                                99
-                            </option>
+                            <sam:setAmount from="1" to="100"/>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td class="modal-give__table-form--td">
-                        Время отдыха<span class="small-image rest-img"></span>
+                        <fmt:message key="trainer.label.restedTime"/><span class="small-image rest-img"></span>
                     </td>
                     <td>
                         <select class="modal-give__select restTime" disabled>
-                            <option value="40">
-                                0:40
-                            </option>
-                            <option value="45">
-                                0:45
-                            </option>
-                            <option value="50">
-                                0:50
-                            </option>
-                            <option value="60">
-                                1:00
-                            </option>
-                            <option value="70">
-                                1:10
-                            </option>
-                            <option value="80">
-                                1:20
-                            </option>
-                            <option value="90">
-                                1:30
-                            </option>
-                            <option value="120">
-                                2:00
-                            </option>
-                            <option value="180">
-                                3:00
-                            </option>
-                            <option value="300">
-                                5:00
-                            </option>
+                            <sam:setAmount restTime="true"/>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td class="modal-give__table-form--td">
-                        Стартовый вес снаряда<span class="small-image weight-img"></span>
+                        <fmt:message key="trainer.label.startWeight"/><span class="small-image weight-img"></span>
                     </td>
                     <td class="modal-give__table-form--input">
                         <input type="text" maxlength="5" class="modal-give__select workWeight" disabled/>
@@ -669,7 +315,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <button type="button" class="modal-button addExercise">Добавить</button>
+                        <button type="button" class="modal-button addExercise"><fmt:message
+                                key="trainer.label.addExercise"/></button>
                     </td>
                     <td>
                     </td>
@@ -679,40 +326,43 @@
     </div>
 </div>
 <div class="modal-content-extend">
-    <button class="modal-content-extend-close" type="button" title="Закрыть">Закрыть</button>
-    <h2 class="modal-content-title">Выдача абонемента</h2>
+    <button class="modal-content-extend-close" type="button" title="Закрыть"><fmt:message
+            key="trainer.label.closeModal"/></button>
+    <h2 class="modal-content-title"><fmt:message key="trainer.label.seasonPass"/></h2>
     <form class="extend-form" action="" method="post">
         <label class="extend-label">
             <input type="checkbox" name="extend-checkbox" class="extend-checkbox"/>
             <span></span>
             <div class="extend-div">
-                Анлим
+                <fmt:message key="trainer.label.unlim"/>
             </div>
         </label>
         <label class="extend-label__train">
             <input class="extend-train" type="text" maxlength="3" name="train" value="1"/>
             <div class="extend-div__train">
-                Количество тренировок
+                <fmt:message key="trainer.label.exerciseAmount"/>
             </div>
         </label>
         <label class="extend-label__date">
-            <span class="extend-span">From</span>
+            <span class="extend-span"><fmt:message key="trainer.label.fromDate"/></span>
             <input class="extend-date dateFrom" type="date" name="date" readonly>
         </label>
         <label class="extend-label__date">
-            <span class="extend-span">До</span>
+            <span class="extend-span"><fmt:message key="trainer.label.tillDate"/></span>
             <input class="extend-date dateTill" type="date" name="extend-date"/>
         </label>
-        <button class="modal-button extend-button" type="button">Продлить</button>
+        <button class="modal-button extend-button" type="button"><fmt:message key="trainer.label.extendPass"/></button>
     </form>
 </div>
 <div class="modal-overlay"></div>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../js/lib/bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/lib/cookie/jquery.cookie.js"></script>
 <script type="text/javascript" charset="utf-8" src="../js/TrainerPage/variables.js"></script>
 <script type="text/javascript" charset="utf-8" src="../js/TrainerPage/TrainerPage.js"></script>
 <script type="text/javascript" charset="utf-8" src="../js/TrainerPage/ClientButton.js"></script>
 <script type="text/javascript" charset="utf-8" src="../js/TrainerPage/SeasonExtensionButton.js"></script>
 <script type="text/javascript" charset="utf-8" src="../js/TrainerPage/ExerciseOut.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/TrainerPage/RemoveButton.js"></script>
 </body>
 </html>

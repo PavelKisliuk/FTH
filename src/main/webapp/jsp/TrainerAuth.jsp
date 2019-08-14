@@ -10,24 +10,29 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
 <fmt:setLocale value="${language}" />
-<fmt:setBundle basename="text" />
+<fmt:setBundle basename="TrainerAuth"/>
 <%@ page pageEncoding="UTF-8" %>
 <html lang="${language}">
 <head>
     <meta charset="UTF-8">
-    <title>Log in</title>
+    <title>FTH Log In</title>
     <link rel="stylesheet" href="../css/TrainerAuth.css" />
+    <%--    <link rel="stylesheet" href="../css/style.css"/>--%>
 </head>
+<form class="actions__language">
+    <select id="language" name="language" onchange="submit()">
+        <option value="en" ${language == 'en' ? 'selected' : ''}>English</option>
+        <option value="ru" ${language == 'ru' ? 'selected' : ''}>Русский</option>
+    </select>
+</form>
 <body>
-<h1>Sign In Form</h1>
+<h1><fmt:message key="trainerAuth.label.register"/></h1>
 <div id="wrapper">
     <form method="post"  action="" class="form" id="signIn" >
         <input type="text" class="login" name="user" placeholder="e-mail"/>
         <input type="password" class="password" name="pass" placeholder="password"/>
 
         <button class="login-button" type="button">&#xf0da;</button>
-
-        <p>forgot your password? <a href="#">click here</a></p>
     </form>
 </div>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
