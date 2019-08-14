@@ -25,7 +25,7 @@ public class TrainerRemoveClientUpdateSpecifier implements FthUpdateSpecifier {
 	 */
 	private static final String REQUEST = "UPDATE " +
 			"ClientPublicData " +
-			"SET trainerId = -1 " +
+			"SET trainerId = NULL " +
 			"WHERE clientId = ?";
 
 	/**

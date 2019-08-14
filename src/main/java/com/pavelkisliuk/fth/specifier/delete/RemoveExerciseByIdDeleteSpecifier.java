@@ -21,7 +21,7 @@ import java.sql.SQLException;
  */
 public class RemoveExerciseByIdDeleteSpecifier implements FthDeleteSpecifier {
 	/**
-	 * Insert request to database.
+	 * Delete request to database.
 	 */
 	private static final String REQUEST = "DELETE FROM ExerciseGroup " +
 			"WHERE exerciseId = ?";

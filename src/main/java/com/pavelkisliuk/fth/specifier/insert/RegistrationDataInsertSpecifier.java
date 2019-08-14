@@ -4,6 +4,7 @@
 
 package com.pavelkisliuk.fth.specifier.insert;
 
+import com.lambdaworks.crypto.SCryptUtil;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
 import com.pavelkisliuk.fth.model.FthRegistrationData;
 import com.pavelkisliuk.fth.repository.FthRepository;
@@ -56,6 +57,10 @@ public class RegistrationDataInsertSpecifier implements FthInsertSpecifier {
 	 */
 	@Override
 	public void insert(PreparedStatement statement) throws FthRepositoryException {
+		int N = 16;
+		int r = 16;
+		int p = 16;
+		data.setPassword(SCryptUtil.scrypt(data.getPassword(), N, r, p));
 		try {
 			statement.setString(1, data.getName());
 			statement.setString(2, data.getSurname());
@@ -64,7 +69,8 @@ public class RegistrationDataInsertSpecifier implements FthInsertSpecifier {
 			statement.setString(5, data.getKey());
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			throw new FthRepositoryException("SQL exception in RegistrationDataInsertSpecifier -> insert().", e);
+			throw new FthRepositoryException(
+					"SQL exception in RegistrationDataInsertSpecifier -> insert().", e);
 		}
 	}
 

@@ -1,46 +1,41 @@
-/*  By Pavel Kisliuk, 11.08.2019
- *  This is class for education and nothing rights don't reserved.
- */
-
 package com.pavelkisliuk.fth.specifier.update;
 
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
-import com.pavelkisliuk.fth.model.FthClientPublicData;
+import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.specifier.FthUpdateSpecifier;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-/**
- * The {@code SeasonPassUpdateSpecifier} class is {@code FthUpdateSpecifier} realization for
- * ClientPublicData updating season pass information.
- * <p>
- *
- * @author Kisliuk Pavel Sergeevich
- * @since 12.0
- */
-public class SpreadSeasonPassUpdateSpecifier implements FthUpdateSpecifier {
+public class ClientTrainerUpdateSpecifier implements FthUpdateSpecifier {
 	/**
 	 * Update request to database.
 	 */
 	private static final String REQUEST = "UPDATE " +
 			"ClientPublicData " +
-			"SET restVisitation = ?, expiredDay = ? " +
+			"SET trainerId = ? " +
 			"WHERE clientId = ?";
 
 	/**
-	 * Public data about client.
+	 * ID of client.
 	 */
-	private FthClientPublicData clientPublicData;
+	private FthLong clientId;
+
+	/**
+	 * New condition of client request to exercise.
+	 */
+	private FthLong trainerId;
 
 	/**
 	 * Constructor for fields initialization.
 	 * <p>
 	 *
-	 * @param clientPublicData for {@code clientPublicData} initialization.
+	 * @param clientId  for {@code clientId} initialization.
+	 * @param trainerId for {@code trainerId} initialization.
 	 */
-	public SpreadSeasonPassUpdateSpecifier(FthClientPublicData clientPublicData) {
-		this.clientPublicData = clientPublicData;
+	public ClientTrainerUpdateSpecifier(FthLong clientId, FthLong trainerId) {
+		this.clientId = clientId;
+		this.trainerId = trainerId;
 	}
 
 	/**
@@ -53,13 +48,12 @@ public class SpreadSeasonPassUpdateSpecifier implements FthUpdateSpecifier {
 	@Override
 	public void update(PreparedStatement statement) throws FthRepositoryException {
 		try {
-			statement.setLong(1, clientPublicData.getRestVisitation());
-			statement.setLong(2, clientPublicData.getExpiredDay());
-			statement.setLong(3, clientPublicData.getClientId());
+			statement.setLong(1, trainerId.get());
+			statement.setLong(2, clientId.get());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new FthRepositoryException(
-					"SQL exception in SpreadSeasonPassUpdateSpecifier -> update(PreparedStatement).", e);
+					"SQL exception in ClientTrainerUpdateSpecifier -> update(PreparedStatement).", e);
 		}
 	}
 

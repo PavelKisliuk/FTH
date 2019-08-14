@@ -11,7 +11,7 @@ import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CreatorDrillBase implements FthDataByResultSetFactory {
+class CreatorDrillBase implements FthDataByResultSetFactory {
 	private static final String DRILL_BASE_ID = "drillBaseId";
 	private static final String MUSCLE_GROUP_ID = "muscleGroupId";
 	private static final String DRILL_NAME = "drillName";

@@ -21,6 +21,7 @@ package com.pavelkisliuk.fth.specifier.select;
  * LastClientExerciseSelectSpecifier - возвращает ID последней тренировки пользователя.
  * LastNumberClientExerciseSelectSpecifier - возвращает номер последней созданной клиентом тренировки. !!!!исправить!!!!
  * RegistrationEmailExistSelectSpecifier - возвращает количество пользователей с таким емэйлом (из таблицы регистрации).
+ * SeasonPassExpiredSelectSpecifier - возвращает состояние действительности абонемента.
  * <p>
  * TrainerByIdSpecifier - возвращает основную информацию о тренере по ID
  * TrainerIdByClientSelectSpecifier - возвращает ID тренера по ID клиента

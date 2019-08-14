@@ -7,7 +7,7 @@ import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CreatorDrillToClient implements FthDataByResultSetFactory {
+class CreatorDrillToClient implements FthDataByResultSetFactory {
 	private static final String DRILL_ID = "drillId";
 	private static final String DRILL_BASE_ID = "drillBaseId";
 

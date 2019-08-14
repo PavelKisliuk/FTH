@@ -11,7 +11,7 @@ import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CreatorClientRequestAndExpired implements FthDataByResultSetFactory {
+class CreatorClientRequestAndExpired implements FthDataByResultSetFactory {
 	private static final String EXERCISE_REQUEST = "exerciseRequest";
 	private static final String EXPIRED_DAY = "expiredDay";
 	private static final String REST_VISITATION = "restVisitation";

@@ -7,7 +7,7 @@ import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CreatorId implements FthDataByResultSetFactory {
+class CreatorId implements FthDataByResultSetFactory {
 	private static final int TRAINER_ID = 1;
 	private static final int CLIENT_ID = 2;
 

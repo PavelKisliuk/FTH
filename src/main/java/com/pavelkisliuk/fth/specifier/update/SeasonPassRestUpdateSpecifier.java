@@ -20,7 +20,7 @@ import java.sql.SQLException;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class SeasonPassUpdateSpecifier implements FthUpdateSpecifier {
+public class SeasonPassRestUpdateSpecifier implements FthUpdateSpecifier {
 	/**
 	 * Update request to database.
 	 */
@@ -29,10 +29,23 @@ public class SeasonPassUpdateSpecifier implements FthUpdateSpecifier {
 			"SET restVisitation = restVisitation + ?" +
 			"WHERE clientId = ?";
 
+	/**
+	 * Augend for restVisitation summing.
+	 */
 	private FthInt augend;
+
+	/**
+	 * ID of client
+	 */
 	private FthLong clientId;
 
-	public SeasonPassUpdateSpecifier(FthInt augend, FthLong clientId) {
+	/**
+	 * Constructor for fields initialization.
+	 * <p>
+	 *
+	 * @param clientId for {@code clientId} initialization.
+	 */
+	public SeasonPassRestUpdateSpecifier(FthInt augend, FthLong clientId) {
 		this.augend = augend;
 		this.clientId = clientId;
 	}

@@ -7,7 +7,7 @@ import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CreatorClientPersonalData implements FthDataByResultSetFactory {
+class CreatorClientPersonalData implements FthDataByResultSetFactory {
 	private static final String CLIENT_ID = "clientId";
 	private static final String NAME = "firstName";
 	private static final String SURNAME = "lastName";

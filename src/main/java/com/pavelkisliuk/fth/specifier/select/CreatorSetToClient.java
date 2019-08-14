@@ -7,7 +7,7 @@ import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CreatorSetToClient implements FthDataByResultSetFactory {
+class CreatorSetToClient implements FthDataByResultSetFactory {
 	private static final String SET_ID = "setId";
 	private static final String NECESSARY_REPS = "necessaryReps";
 	private static final String WEIGHT_TOOL = "weightTool";

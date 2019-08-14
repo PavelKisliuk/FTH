@@ -7,7 +7,7 @@ import com.pavelkisliuk.fth.repository.FthDataByResultSetFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CreatorInt implements FthDataByResultSetFactory {
+class CreatorInt implements FthDataByResultSetFactory {
 	@Override
 	public FthInt create(ResultSet resultSet) throws FthRepositoryException {
 		try {
