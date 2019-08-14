@@ -4,10 +4,11 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.service.singup.FthSingUpService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.exception.FthServiceException;
+import com.pavelkisliuk.fth.model.FthBoolean;
 import com.pavelkisliuk.fth.model.FthRegistrationData;
+import com.pavelkisliuk.fth.service.singup.SingUpService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,11 +19,11 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Kisliuk Pavel Sergeevich
  * @see FthServletCommand
- * @see FthSingUpService
+ * @see SingUpService
  * @see com.pavelkisliuk.fth.model.FthRegistrationData
  * @since 12.0
  */
-class CommandSingUp implements FthServletCommand {
+class CommandClientSingUp implements FthServletCommand {
 	/**
 	 * Obtain data and response it to {@code FthSingUpService} for processing.
 	 * <p>
@@ -32,13 +33,13 @@ class CommandSingUp implements FthServletCommand {
 	@Override
 	public String  execute(HttpServletRequest request) throws FthCommandException {
 		FthRegistrationData registrationData = new CreatorRegistrationData().create(request);
-		String message;
+		FthBoolean isTrainer = new CreatorBoolean().create(request);
+		SingUpService singUpService = new SingUpService(isTrainer);
 		try {
-			message = new FthSingUpService().serve(registrationData);
+			return singUpService.serve(registrationData);
 		} catch (FthServiceException e) {
 			throw new FthCommandException(
 					"FthServiceException in CommandSingUp -> execute(HttpServletRequest)", e);
 		}
-		return message;
 	}
 }

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.pavelkisliuk.fth.model.FthRegistrationData
  * @since 12.0
  */
-public class CreatorAuthenticationData implements FthDataByRequestFactory {
+class CreatorAuthenticationData implements FthDataByRequestFactory {
 	/**
 	 * E-mail as login parameter in request.
 	 */

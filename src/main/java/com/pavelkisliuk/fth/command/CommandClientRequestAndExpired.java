@@ -4,10 +4,10 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.service.obtainment.ClientRequestAndExpiredService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthLong;
+import com.pavelkisliuk.fth.service.obtainment.ClientRequestAndExpiredService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class CommandClientRequestAndExpired implements FthServletCommand {
+class CommandClientRequestAndExpired implements FthServletCommand {
 	/**
 	 * Obtain conditions of client's season's and exercises request's.
 	 * <p>

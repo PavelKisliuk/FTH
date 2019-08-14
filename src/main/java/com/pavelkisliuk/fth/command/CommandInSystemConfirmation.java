@@ -4,10 +4,11 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.service.page.PageRedirectionService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.exception.FthServiceException;
+import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.model.FthString;
+import com.pavelkisliuk.fth.service.page.PageRedirectionService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,39 +21,29 @@ import javax.servlet.http.HttpServletRequest;
  * @since 12.0
  */
 class CommandInSystemConfirmation implements FthServletCommand {
-	/**
-	 * Expected condition of session for further actions.
-	 * We can redirect to another page if already in system, or if not in system,
-	 * and condition designate it.
-	 * E.g. on authentication page we redirect to main page if session established,
-	 * but on main page we redirect if session NOT established.
-	 */
-	private static final String CONDITION = "condition";
 
 	/**
-	 * Determine condition of user in system and in terms of {@code CONDITION} decide
-	 * redirect his to another page or not.
+	 * Define page for redirection.
 	 * <p>
 	 *
 	 * @param request is request from user.
-	 * @return redirect page if necessary, or return empty JSON string.
+	 * @return page for redirection as JSON string.
 	 * @throws FthCommandException if {@code FthServiceException} occurred.
 	 */
 	@Override
 	public String execute(HttpServletRequest request) throws FthCommandException {
-		FthString redirectionPage = new CreatorString().create(request);
-		String message = EMPTY_JSON;
 		try {
-			//check is session already established for special ID
-			boolean inSystemFlag = request.getSession().getAttribute(ID_ATTRIBUTE) != null;
-			boolean condition = Boolean.parseBoolean(request.getParameter(CONDITION));
-			if (inSystemFlag == condition) {
-				message = new PageRedirectionService().serve(redirectionPage);
-			}
+			FthLong id = (FthLong) request.getSession().getAttribute(ID_ATTRIBUTE);
+			String role = (String) request.getSession().getAttribute(ROLE_ATTRIBUTE);
+			FthString fthRole = new FthString(role);
+
+			FthString page = new CreatorString().create(request);
+
+			PageRedirectionService pageRedirectionService = new PageRedirectionService(id, fthRole);
+			return pageRedirectionService.serve(page);
 		} catch (FthServiceException e) {
 			throw new FthCommandException(
 					"FthServiceException in CommandInSystemConfirmation -> execute(HttpServletRequest)", e);
 		}
-		return message;
 	}
 }

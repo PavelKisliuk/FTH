@@ -23,6 +23,7 @@ import com.pavelkisliuk.fth.specifier.select.ClientCorrespondWithTrainerSelectSp
 class TrainerActionValidator {
 	/**
 	 * Verify belonging client to trainer.
+	 * <p>
 	 *
 	 * @param trainerId is ID of trainer.
 	 * @param clientId  is ID of client.

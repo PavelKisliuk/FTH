@@ -22,27 +22,27 @@ class CreatorRegistrationData implements FthDataByRequestFactory {
 	/**
 	 * Name parameter in request.
 	 */
-	private static final String NAME = "nameSingUp";
+	private static final String NAME = "name";
 
 	/**
 	 * Surname parameter in request.
 	 */
-	private static final String SURNAME = "surnameSingUp";
+	private static final String SURNAME = "surname";
 
 	/**
 	 * E-mail parameter in request.
 	 */
-	private static final String EMAIL = "emailSingUp";
+	private static final String EMAIL = "email";
 
 	/**
 	 * Password parameter in request.
 	 */
-	private static final String PASSWORD = "passwordSingUp";
+	private static final String PASSWORD = "password";
 
 	/**
 	 * Confirm password parameter in request.
 	 */
-	private static final String CONFIRM_PASSWORD = "confirmPasswordSingUp";
+	private static final String CONFIRM_PASSWORD = "confirmPassword";
 
 	/**
 	 * Return instance of {@code FthRegistrationData} created by {@code HttpServletRequest}.
@@ -54,9 +54,9 @@ class CreatorRegistrationData implements FthDataByRequestFactory {
 	@Override
 	public FthRegistrationData create(HttpServletRequest request) {
 		FthRegistrationData registrationData = new FthRegistrationData();
-		registrationData.setName(request.getParameter(NAME));
-		registrationData.setSurname(request.getParameter(SURNAME));
-		registrationData.setEmail(request.getParameter(EMAIL).toLowerCase().trim());
+		registrationData.setName(request.getParameter(NAME).strip());
+		registrationData.setSurname(request.getParameter(SURNAME).strip());
+		registrationData.setEmail(request.getParameter(EMAIL).toLowerCase().strip());
 		registrationData.setPassword(request.getParameter(PASSWORD));
 		registrationData.setConfirmPassword(request.getParameter(CONFIRM_PASSWORD));
 		return registrationData;

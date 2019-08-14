@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class CommandFinishExercise implements FthServletCommand {
+class CommandFinishExercise implements FthServletCommand {
 	/**
 	 * Finish exercise by updating specify data.
 	 * <p>

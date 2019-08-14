@@ -5,7 +5,7 @@ import com.pavelkisliuk.fth.model.FthDrillBase;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class CreatorNewDrillBase implements FthDataByRequestFactory {
+class CreatorNewDrillBase implements FthDataByRequestFactory {
 	private static final String DRILL_NAME = "name";
 	private static final String MUSCLE_GROUP_ID = "muscle";
 

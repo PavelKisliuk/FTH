@@ -1,21 +1,20 @@
 package com.pavelkisliuk.fth.command;
 
-public enum CommandType {
-	SING_UP(new CommandSingUp()),
-	TRAINER_SING_IN(new CommandTrainerSingIn()),
+public enum CommandGetType {
 	TRAINER_PAGE(new CommandTrainerPage()),
+	CLIENT_PAGE(new CommandClientPage()),
 	IN_SYSTEM(new CommandInSystemConfirmation()),
-	CHANGE_PERSONAL_DATA(new CommandChangePersonalData()),
-	TRAINER_DELETE_CLIENT(new CommandTrainerDeleteClient()),
 	REQUEST_AND_EXPIRED(new CommandClientRequestAndExpired()),
 	DRILL_BASE(new CommandDrillBase()),
 	CONDITION_REFRESH(new CommandRefreshClientGroup()),
-	TRAINER_EXERCISE(new CommandExerciseFromTrainer()),
-	TO_CLIENT_EXERCISE(new CommandExerciseToClient());
+	TO_CLIENT_EXERCISE(new CommandExerciseToClient()),
+	OBTAIN_TRAINER(new CommandTrainerForClient()),
+	CONFIRM(new CommandConfirmRegistration()),
+	OUT(new CommandOut());
 
 	private FthServletCommand command;
 
-	CommandType(FthServletCommand command) {
+	CommandGetType(FthServletCommand command) {
 		this.command = command;
 	}
 

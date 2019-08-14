@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class CommandClientSignIn implements FthServletCommand {
+class CommandClientSignIn implements FthServletCommand {
 	/**
 	 * Determine existence of client in system. If trainer exist return client page, otherwise return
 	 * error message.
@@ -38,16 +38,16 @@ public class CommandClientSignIn implements FthServletCommand {
 	@Override
 	public String execute(HttpServletRequest request) throws FthCommandException {
 		FthAuthenticationData authenticationData = new CreatorAuthenticationData().create(request);
-		ClientSignInService trainerSingInService = new ClientSignInService();
+		ClientSignInService clientSignInService = new ClientSignInService();
 
 		String message;
 		try {
-			message = trainerSingInService.serve(authenticationData);
+			message = clientSignInService.serve(authenticationData);
 		} catch (FthServiceException e) {
 			throw new FthCommandException(
 					"FthServiceException in CommandTrainerSingIn -> execute(HttpServletRequest)", e);
 		}
-		if (trainerSingInService.isClientExist()) {
+		if (clientSignInService.isClientExist()) {
 			specifySession(request, authenticationData);
 		}
 		return message;

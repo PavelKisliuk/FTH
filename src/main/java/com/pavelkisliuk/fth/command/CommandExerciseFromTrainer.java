@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class CommandExerciseFromTrainer implements FthServletCommand {
+class CommandExerciseFromTrainer implements FthServletCommand {
 	/**
 	 * Obtain exercise from request and insert it.
 	 * <p>
@@ -49,8 +49,9 @@ public class CommandExerciseFromTrainer implements FthServletCommand {
 							"in CommandExerciseFromTrainer -> execute(HttpServletRequest)");
 		}
 		ExerciseComponent exerciseComponent = new CreatorExerciseFromTrainer().create(request);
+		ExerciseFromTrainerService exerciseFromTrainerService = new ExerciseFromTrainerService();
 		try {
-			return new ExerciseFromTrainerService().serve(exerciseComponent);
+			return exerciseFromTrainerService.serve(exerciseComponent);
 		} catch (FthServiceException e) {
 			throw new FthCommandException(
 					"FthServiceException in CommandExerciseFromTrainer -> execute(HttpServletRequest).", e);

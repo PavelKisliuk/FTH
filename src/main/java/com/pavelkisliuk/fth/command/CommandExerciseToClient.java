@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class CommandExerciseToClient implements FthServletCommand {
+class CommandExerciseToClient implements FthServletCommand {
 	/**
 	 * Obtain client exercise.
 	 * <p>

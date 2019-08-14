@@ -5,9 +5,13 @@
 package com.pavelkisliuk.fth.command;
 
 import com.pavelkisliuk.fth.exception.FthCommandException;
+import com.pavelkisliuk.fth.exception.FthRepositoryException;
 import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthLong;
+import com.pavelkisliuk.fth.repository.FthRepository;
 import com.pavelkisliuk.fth.service.page.ClientPageService;
+import com.pavelkisliuk.fth.specifier.FthSelectSpecifier;
+import com.pavelkisliuk.fth.specifier.select.TrainerIdByClientSelectSpecifier;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class CommandClientPage implements FthServletCommand {
+class CommandClientPage implements FthServletCommand {
 	/**
 	 * Obtain data for client page by client id.
 	 * <p>
@@ -31,6 +35,17 @@ public class CommandClientPage implements FthServletCommand {
 	@Override
 	public String execute(HttpServletRequest request) throws FthCommandException {
 		FthLong clientId = (FthLong) request.getSession().getAttribute(ID_ATTRIBUTE);
+		FthSelectSpecifier selectSpecifier = new TrainerIdByClientSelectSpecifier(clientId);
+		FthLong trainerId;
+		try {
+			trainerId = (FthLong) FthRepository.INSTANCE.query(selectSpecifier).get(0);
+		} catch (FthRepositoryException e) {
+			throw new FthCommandException(
+					"FthRepositoryException in CommandClientPage -> execute(HttpServletRequest)", e);
+		}
+		if (trainerId.get() == 0) {
+			return WITHOUT_TRAINER;
+		}
 		ClientPageService clientPageService = new ClientPageService();
 		try {
 			return clientPageService.serve(clientId);

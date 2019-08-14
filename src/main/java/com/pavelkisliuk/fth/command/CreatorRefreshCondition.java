@@ -8,7 +8,7 @@ import com.pavelkisliuk.fth.model.FthRefreshCondition;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class CreatorRefreshCondition implements FthDataByRequestFactory {
+class CreatorRefreshCondition implements FthDataByRequestFactory {
 	private static final String CONDITION_NAME = "condition_name";
 	private static final String CONDITION_QUALITY = "condition_quality";
 

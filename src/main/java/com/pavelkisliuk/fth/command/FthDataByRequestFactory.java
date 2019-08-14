@@ -4,6 +4,7 @@
 
 package com.pavelkisliuk.fth.command;
 
+import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.model.FthData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,5 +26,5 @@ interface FthDataByRequestFactory {
 	 * @param request of data for creation {@code FthData} instance.
 	 * @return instance of {@code FthData}.
 	 */
-	FthData create(HttpServletRequest request);
+	FthData create(HttpServletRequest request) throws FthCommandException;
 }

@@ -1,14 +1,13 @@
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.model.FthData;
-import com.pavelkisliuk.fth.model.FthTrainerData;
+import com.pavelkisliuk.fth.model.FthUserMainData;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class CreatorTrainerData implements FthDataByRequestFactory {
+class CreatorTrainerData implements FthDataByRequestFactory {
 	@Override
-	public FthTrainerData create(HttpServletRequest request) {
-		FthTrainerData trainerData = new FthTrainerData();
+	public FthUserMainData create(HttpServletRequest request) {
+		FthUserMainData trainerData = new FthUserMainData();
 		return null;
 	}
 }

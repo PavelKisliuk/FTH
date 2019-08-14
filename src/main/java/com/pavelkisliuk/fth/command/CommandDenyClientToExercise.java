@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class CommandDenyClientToExercise implements FthServletCommand {
+class CommandDenyClientToExercise implements FthServletCommand {
 	/**
 	 * Deny client exercise.
 	 * <p>

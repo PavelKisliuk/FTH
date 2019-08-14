@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class CommandCreateDrillBase implements FthServletCommand {
+class CommandCreateDrillBase implements FthServletCommand {
 	/**
 	 * Create new drill.
 	 * <p>

@@ -4,10 +4,10 @@
 
 package com.pavelkisliuk.fth.command;
 
-import com.pavelkisliuk.fth.service.obtainment.DrillBaseByTrainerService;
 import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthLong;
+import com.pavelkisliuk.fth.service.obtainment.DrillBaseByTrainerService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class CommandDrillBase implements FthServletCommand {
+class CommandDrillBase implements FthServletCommand {
 	/**
 	 * Obtain list of drills created by concrete trainer.
 	 * <p>
