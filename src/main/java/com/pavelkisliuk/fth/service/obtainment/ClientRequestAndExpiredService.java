@@ -1,15 +1,15 @@
 /*  By Pavel Kisliuk, 07.08.2019
  *  This is class for education and nothing rights don't reserved.
  */
-package com.pavelkisliuk.fth.controller.obtainmentservice;
+package com.pavelkisliuk.fth.service.obtainment;
 
-import com.pavelkisliuk.fth.controller.FthService;
-import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthClientPublicData;
 import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.repository.FthRepository;
+import com.pavelkisliuk.fth.service.FthService;
 import com.pavelkisliuk.fth.specifier.select.ClientRequestExpiredByIdSelectSpecifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -37,14 +37,14 @@ public class ClientRequestAndExpiredService implements FthService<FthLong> {
 	 * @param clientId is id of client.
 	 * @return information about client season condition and condition of
 	 * request to exercise as JSON string.
-	 * @throws FthControllerException if {@param clientId} null; {@code FthRepositoryException} occurred.
+	 * @throws FthServiceException if {@param clientId} null; {@code FthRepositoryException} occurred.
 	 */
 	@Override
-	public String serve(FthLong clientId) throws FthControllerException {
+	public String serve(FthLong clientId) throws FthServiceException {
 		LOGGER.log(Level.DEBUG,
 				"Start ClientRequestAndExpiredService -> serve(FthLong).");
 		if (clientId == null) {
-			throw new FthControllerException(
+			throw new FthServiceException(
 					"null parameter in ClientRequestAndExpiredService -> serve(FthLong).");
 		}
 
@@ -55,9 +55,11 @@ public class ClientRequestAndExpiredService implements FthService<FthLong> {
 							new ClientRequestExpiredByIdSelectSpecifier(clientId)).get(0);
 			responseJson.put(KEY_DATA, clientPublicData);
 		} catch (FthRepositoryException e) {
-			throw new FthControllerException(
+			throw new FthServiceException(
 					"FthRepositoryException in ClientRequestAndExpiredService -> serve(FthData).", e);
 		}
+		LOGGER.log(Level.DEBUG,
+				"Finish ClientRequestAndExpiredService -> serve(FthAuthenticationData).");
 		return GSON.toJson(responseJson);
 	}
 }

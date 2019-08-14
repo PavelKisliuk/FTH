@@ -2,16 +2,15 @@
  *  This is class for education and nothing rights don't reserved.
  */
 
-package com.pavelkisliuk.fth.controller.obtainmentservice;
+package com.pavelkisliuk.fth.service.obtainment;
 
-import com.google.gson.Gson;
-import com.pavelkisliuk.fth.controller.FthService;
-import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.repository.FthRepository;
-import com.pavelkisliuk.fth.specifier.select.ClientGroupByTrainerSpecifier;
+import com.pavelkisliuk.fth.service.FthService;
+import com.pavelkisliuk.fth.specifier.select.AllClientByTrainerSelectSpecifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,46 +27,41 @@ import java.util.Map;
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class ClientGroupByTrainerService implements FthService {
+public class ClientGroupByTrainerService implements FthService<FthLong> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Query list of client's from database by ID of the trainer.
 	 * <p>
 	 *
-	 * @param data is id of trainer to find all his client's.
+	 * @param trainerId is id of trainer to find all his client's.
 	 * @return list of client's.
-	 * @throws FthControllerException if {@code FthRepositoryException} occurred.
+	 * @throws FthServiceException if {@param trainerId} null; {@code FthRepositoryException} occurred.
 	 */
 	@Override
-	public String serve(FthData data) throws FthControllerException {
+	public String serve(FthLong trainerId) throws FthServiceException {
 		LOGGER.log(Level.DEBUG,
-				"Start ClientGroupByTrainerService -> serve(FthData).");
-		if (data == null ||
-				data.getClass() != FthLong.class) {
-			LOGGER.log(Level.ERROR,
-					"Incorrect parameter in ClientGroupByTrainerService -> serve(FthData)!!!");
-			return "";
+				"Start ClientGroupByTrainerService -> serve(FthLong).");
+		if (trainerId == null) {
+			throw new FthServiceException(
+					"null parameter in ClientGroupByTrainerService -> serve(FthLong).");
 		}
 
 		Map<String, List<FthData>> responseJson = new HashMap<>();
-		FthLong trainerId = (FthLong) data;
-
 		List<FthData> clientGroup;
 		try {
 			LOGGER.log(Level.INFO,
 					"Start obtaining list of clients.");
-			clientGroup = FthRepository.INSTANCE.query(new ClientGroupByTrainerSpecifier(trainerId));
+			clientGroup = FthRepository.INSTANCE.query(new AllClientByTrainerSelectSpecifier(trainerId));
 			LOGGER.log(Level.INFO,
 					"List retrieved.");
 		} catch (FthRepositoryException e) {
-			throw new FthControllerException(
-					"FthRepositoryException in ClientGroupByTrainerService -> serve(FthData).", e);
+			throw new FthServiceException(
+					"FthRepositoryException in ClientGroupByTrainerService -> serve(FthLong).", e);
 		}
 		responseJson.put("client", clientGroup);
-		String message = new Gson().toJson(responseJson);
 		LOGGER.log(Level.DEBUG,
-				"Finish ClientGroupByTrainerService -> serve(FthData).");
-		return message;
+				"Finish ClientGroupByTrainerService -> serve(FthLong).");
+		return GSON.toJson(responseJson);
 	}
 }

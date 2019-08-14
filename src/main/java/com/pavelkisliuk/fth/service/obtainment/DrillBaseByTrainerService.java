@@ -2,14 +2,14 @@
  *  This is class for education and nothing rights don't reserved.
  */
 
-package com.pavelkisliuk.fth.controller.obtainmentservice;
+package com.pavelkisliuk.fth.service.obtainment;
 
-import com.pavelkisliuk.fth.controller.FthService;
-import com.pavelkisliuk.fth.exception.FthControllerException;
 import com.pavelkisliuk.fth.exception.FthRepositoryException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthData;
 import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.repository.FthRepository;
+import com.pavelkisliuk.fth.service.FthService;
 import com.pavelkisliuk.fth.specifier.select.DrillBaseByTrainerSelectSpecifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -36,14 +36,14 @@ public class DrillBaseByTrainerService implements FthService<FthLong> {
 	 *
 	 * @param trainerId is id of trainer.
 	 * @return drill's group as JSON string.
-	 * @throws FthControllerException if {@param trainerId} null; {@code FthRepositoryException} occurred.
+	 * @throws FthServiceException if {@param trainerId} null; {@code FthRepositoryException} occurred.
 	 */
 	@Override
-	public String serve(FthLong trainerId) throws FthControllerException {
+	public String serve(FthLong trainerId) throws FthServiceException {
 		LOGGER.log(Level.DEBUG,
 				"Start DrillBaseByTrainerService -> serve(FthLong).");
 		if (trainerId == null) {
-			throw new FthControllerException(
+			throw new FthServiceException(
 					"null parameter in DrillBaseByTrainerService -> serve(FthLong).");
 		}
 
@@ -56,9 +56,11 @@ public class DrillBaseByTrainerService implements FthService<FthLong> {
 					"drillBaseGroup obtained.");
 			responseJson.put(KEY_DATA, drillBaseGroup);
 		} catch (FthRepositoryException e) {
-			throw new FthControllerException(
-					"FthRepositoryException in ClientRequestAndExpiredService -> serve(FthData).", e);
+			throw new FthServiceException(
+					"FthRepositoryException in ClientRequestAndExpiredService -> serve(FthLong).", e);
 		}
+		LOGGER.log(Level.DEBUG,
+				"Finish DrillBaseByTrainerService -> serve(FthAuthenticationData).");
 		return GSON.toJson(responseJson);
 	}
 }

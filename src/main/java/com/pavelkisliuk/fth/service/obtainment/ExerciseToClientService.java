@@ -66,15 +66,15 @@ public class ExerciseToClientService implements FthService<FthLong> {
 		FthSelectSpecifier selectSpecifier = new LastClientExerciseSelectSpecifier(clientId);
 		ArrayList<String> drillNameList = new ArrayList<>();
 		ArrayList<FthSetToClient> setToClientList = new ArrayList<>();
-
 		ArrayList<ArrayList<Long>> allId = new ArrayList<>();
-
 		try {
 			FthLong exerciseId = (FthLong) FthRepository.INSTANCE.query(selectSpecifier).get(0);
+			LOGGER.log(Level.INFO,
+					"exerciseId obtained.");
 			selectSpecifier = new DrillToClientSelectSpecifier(exerciseId);
 			List<FthData> drillToClientList = FthRepository.INSTANCE.query(selectSpecifier);
-
-
+			LOGGER.log(Level.INFO,
+					"drillToClientList obtained.");
 			for (FthData element : drillToClientList) {
 				FthDrillToClient drill = (FthDrillToClient) element;
 				FthLong drillBaseId = new FthLong(drill.getDrillBaseId());
@@ -88,10 +88,11 @@ public class ExerciseToClientService implements FthService<FthLong> {
 				FthSetToClient setToClient = createSetData(setList, allId);
 				setToClientList.add(setToClient);
 			}
-
-
+			LOGGER.log(Level.INFO,
+					"List of set's obtained.");
 		} catch (FthRepositoryException e) {
-			e.printStackTrace();
+			throw new FthServiceException(
+					"FthRepositoryException in ExerciseToClientService -> serve(FthLong).", e);
 		}
 		HashMap<String, ArrayList<String>> answer1 = new HashMap<>();
 		answer1.put(KEY_DRILL_NAME, drillNameList);
@@ -107,7 +108,8 @@ public class ExerciseToClientService implements FthService<FthLong> {
 		responseJson.put(KEY_ANSWER1, json1);
 		responseJson.put(KEY_ANSWER2, json2);
 		responseJson.put(KEY_ANSWER3, json3);
-
+		LOGGER.log(Level.DEBUG,
+				"Finish ExerciseToClientService -> serve(FthAuthenticationData).");
 		return GSON.toJson(responseJson);
 	}
 
