@@ -18,4 +18,16 @@ Fitness trainer helper это приложение которое позволя
 Когда тренер выдаёт тренировку в базе данных она полностью формируется. Когда клиент заканчивает тренировку, вся информация, которая была сформирована заранее – обновляется.
 
 Применяемые паттерны:
-Proxy, Singleton, Repository, Command, Composition, Factory, MVC.
+Proxy, Singleton, Repository, Command, Strategy, Composition, Factory, MVC.
+
+Особенности:
+ConnectionPool на ArrayDeck и HashSet.
+Один репозиторий.
+Сервисы по принципу Strategy.
+AllClientByTrainerSelectSpecifier – спецификация на INNER JOIN.
+ClientGroupByConditionSelectSpecifier – формирование запроса на лету.
+Фабрики по созданию данных package private, есть фабрики по созданию данных из HttpRequest для команд и фабрики для создания данных из ResultSet для SelectSpecifier.
+Фильтр формирует Content Type в зависимости от того, какой файл приходит.
+Защита от Session Fixation Attack.
+Запросы на AJAX.
+GitHub не на origin ветке.
