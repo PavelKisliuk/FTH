@@ -1,8 +1,8 @@
 package com.pavelkisliuk.fth.servlet;
 
+import com.pavelkisliuk.fth.command.FthServletCommand;
 import com.pavelkisliuk.fth.command.impl.CommandGetType;
 import com.pavelkisliuk.fth.command.impl.CommandPostType;
-import com.pavelkisliuk.fth.command.FthServletCommand;
 import com.pavelkisliuk.fth.exception.ConnectionPoolException;
 import com.pavelkisliuk.fth.exception.FthCommandException;
 import com.pavelkisliuk.fth.pool.ConnectionPool;
@@ -74,7 +74,7 @@ public class FthServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Map<String, String> messageJson = new HashMap<>();
 
 		String commandType = request.getParameter(COMMAND);
@@ -102,9 +102,27 @@ public class FthServlet extends HttpServlet {
 			messageJson.put(ERROR_MESSAGE, TRY_AGAIN_MESSAGE);
 			response.getWriter().write(FthService.GSON.toJson(messageJson));
 			return;
+		} catch (NullPointerException e) {
+			LOGGER.log(Level.FATAL,
+					"SERVER ERROR OCCURRED!!! NULL POINTER EXCEPTION!", e);
+			messageJson.put(FthService.KEY_ERROR, PageType.ERROR_500.get());
+			response.getWriter().write(FthService.GSON.toJson(messageJson));
+			return;
+		} catch (ClassCastException e) {
+			LOGGER.log(Level.FATAL,
+					"SERVER ERROR OCCURRED!!! CLASS CAST EXCEPTION!", e);
+			messageJson.put(FthService.KEY_ERROR, PageType.ERROR_500.get());
+			response.getWriter().write(FthService.GSON.toJson(messageJson));
+			return;
+		} catch (IllegalArgumentException e) {
+			LOGGER.log(Level.FATAL,
+					"SERVER ERROR OCCURRED!!! ILLEGAL ARGUMENT EXCEPTION!", e);
+			messageJson.put(FthService.KEY_ERROR, PageType.ERROR_500.get());
+			response.getWriter().write(FthService.GSON.toJson(messageJson));
+			return;
 		} catch (RuntimeException e) {
 			LOGGER.log(Level.FATAL,
-					"SERVER ERROR OCCURRED!!!", e);
+					"SERVER ERROR OCCURRED!!! ANOTHER RUNTIME EXCEPTION OCCURRED!", e);
 			messageJson.put(FthService.KEY_ERROR, PageType.ERROR_500.get());
 			response.getWriter().write(FthService.GSON.toJson(messageJson));
 			return;
