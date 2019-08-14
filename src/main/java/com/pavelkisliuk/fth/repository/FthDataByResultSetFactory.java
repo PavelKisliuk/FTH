@@ -20,6 +20,11 @@ import java.sql.ResultSet;
  */
 public interface FthDataByResultSetFactory {
 	/**
+	 * Define {@code ResultSet} {@code columnLabel} first element.
+	 */
+	int FIRST_ELEMENT = 1;
+
+	/**
 	 * Return instance of {@code FthData}.
 	 * <p>
 	 *
