@@ -1,6 +1,7 @@
 package com.pavelkisliuk.fth.servlet;
 
-import com.pavelkisliuk.fth.command.CommandType;
+import com.pavelkisliuk.fth.command.CommandGetType;
+import com.pavelkisliuk.fth.command.CommandPostType;
 import com.pavelkisliuk.fth.command.FthServletCommand;
 import com.pavelkisliuk.fth.exception.ConnectionPoolException;
 import com.pavelkisliuk.fth.exception.FthCommandException;
@@ -27,6 +28,7 @@ public class FthServlet extends HttpServlet {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String COMMAND = "command";
+	private static final String ERROR_MESSAGE = "errorMessage";
 	private static final String TRY_AGAIN_MESSAGE = "Something wrong! Try again later.";
 	private static final XssProtector XSS_PROTECTOR = new XssProtector();
 
@@ -35,10 +37,10 @@ public class FthServlet extends HttpServlet {
 		super.init();
 		try {
 			if (!ConnectionPool.INSTANCE.isOpen()) {
-				throw new ServletException();
+				throw new ServletException("Pool damaged.");
 			}
 		} catch (ConnectionPoolException e) {
-			throw new ServletException();
+			throw new ServletException("Pool damaged.");
 		}
 	}
 
@@ -48,7 +50,7 @@ public class FthServlet extends HttpServlet {
 			ConnectionPool.INSTANCE.destroyPool();
 		} catch (ConnectionPoolException e) {
 			throw new RuntimeException(
-					"Can't destroy a pool of connections!");
+					"Can't destroy a pool of connections!", e);
 		}
 		super.destroy();
 	}
@@ -60,25 +62,47 @@ public class FthServlet extends HttpServlet {
 		String commandType = request.getParameter(COMMAND);
 		FthServletCommand command;
 		try {
-			command = CommandType.valueOf(commandType).create();
-		} catch (Exception e) {
+			command = CommandGetType.valueOf(commandType).create();
+		} catch (IllegalArgumentException e) {
 			LOGGER.log(Level.FATAL,
 					"INCORRECT DATA FROM CLIENT!!!", e);
 			messageJson.put(FthService.KEY_ERROR, PageType.ERROR_400.get());
 			response.getWriter().write(FthService.GSON.toJson(messageJson));
 			return;
 		}
+		execute(command, request, response);
+	}
 
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Map<String, String> messageJson = new HashMap<>();
+
+		String commandType = request.getParameter(COMMAND);
+		FthServletCommand command;
+		try {
+			command = CommandPostType.valueOf(commandType).create();
+		} catch (IllegalArgumentException e) {
+			LOGGER.log(Level.FATAL,
+					"INCORRECT DATA FROM CLIENT!!!", e);
+			messageJson.put(FthService.KEY_ERROR, PageType.ERROR_400.get());
+			response.getWriter().write(FthService.GSON.toJson(messageJson));
+			return;
+		}
+		execute(command, request, response);
+	}
+
+	private void execute(FthServletCommand command, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Map<String, String> messageJson = new HashMap<>();
 		String message;
 		try {
 			message = command.execute(request);
 		} catch (FthCommandException e) {
-			LOGGER.log(Level.FATAL,
+			LOGGER.log(Level.ERROR,
 					"NOT CRITICAL ERROR OCCURRED!!!", e);
-			messageJson.put(FthService.KEY_MESSAGE, TRY_AGAIN_MESSAGE);
+			messageJson.put(ERROR_MESSAGE, TRY_AGAIN_MESSAGE);
 			response.getWriter().write(FthService.GSON.toJson(messageJson));
 			return;
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			LOGGER.log(Level.FATAL,
 					"SERVER ERROR OCCURRED!!!", e);
 			messageJson.put(FthService.KEY_ERROR, PageType.ERROR_500.get());
@@ -86,17 +110,8 @@ public class FthServlet extends HttpServlet {
 			return;
 		}
 		response.getWriter().write(XSS_PROTECTOR.protect(message));
-		request.changeSessionId();
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/*String description = request.getParameter("description"); // Retrieves <input type="text" name="description">
-		Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
-		String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
-		InputStream fileContent = filePart.getInputStream();*/
-
-
-		doGet(request, response);
+		if (!request.getSession().isNew()) {
+			request.changeSessionId();
+		}
 	}
 }
