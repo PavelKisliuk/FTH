@@ -1,4 +1,4 @@
-/*  By Pavel Kisliuk, 07.07.2019
+/*  By Pavel Kisliuk, 24.07.2019
  *  This is class for education and nothing rights don't reserved.
  */
 
@@ -11,50 +11,55 @@ import com.pavelkisliuk.fth.model.FthLong;
 import com.pavelkisliuk.fth.repository.FthRepository;
 import com.pavelkisliuk.fth.service.FthService;
 import com.pavelkisliuk.fth.specifier.FthUpdateSpecifier;
-import com.pavelkisliuk.fth.specifier.update.FireSeasonPassUpdateSpecifier;
+import com.pavelkisliuk.fth.specifier.update.ClientTrainerUpdateSpecifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * The {@code FireSeasonPassService} class is {@code FthService} realization for
- * discarding client season pass.
+ * The {@code ChangeTrainerService} is {@code FthService} realization for
+ * changing client trainer.
  * <p>
  *
  * @author Kisliuk Pavel Sergeevich
  * @since 12.0
  */
-public class FireSeasonPassService implements FthService<FthLong> {
+public class ChangeTrainerService implements FthService<FthLong> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
-	 * Update client rest visitation's to zero.
+	 * ID of client.
+	 */
+	private FthLong clientId;
+
+	/**
+	 * Construct for {@code clientId} initialisation.
 	 * <p>
 	 *
-	 * @param clientId is id of client.
-	 * @return EMPTY_JSON.
-	 * @throws FthServiceException if {@param clientId} null; {@code FthRepositoryException} occurred.
+	 * @param clientId for {@code clientId} initialisation.
 	 */
+	public ChangeTrainerService(FthLong clientId) {
+		this.clientId = clientId;
+	}
+
 	@Override
-	public String serve(FthLong clientId) throws FthServiceException {
+	public String serve(FthLong trainerId) throws FthServiceException {
 		LOGGER.log(Level.DEBUG,
-				"Start SpreadSeasonService -> serve(FthLong).");
-		if (clientId == null) {
+				"Start ChangeTrainerService -> serve(FthLong).");
+		if (trainerId == null) {
 			throw new FthServiceException(
-					"null parameter in FireSeasonPassService -> serve(FthLong).");
+					"null parameter in ChangeTrainerService -> serve(FthLong).");
 		}
 
-		FthUpdateSpecifier updateSpecifier = new FireSeasonPassUpdateSpecifier(clientId);
+		FthUpdateSpecifier updateSpecifier = new ClientTrainerUpdateSpecifier(clientId, trainerId);
 		try {
 			FthRepository.INSTANCE.replace(updateSpecifier);
-			LOGGER.log(Level.INFO,
-					"Season pass fired.");
 		} catch (FthRepositoryException e) {
 			throw new FthServiceException(
-					"FthRepositoryException in FireSeasonPassService -> serve(FthData).", e);
+					"FthRepositoryException in ChangeTrainerService -> serve(FthData).", e);
 		}
 		LOGGER.log(Level.DEBUG,
-				"Finish FireSeasonPassService -> serve(FthLong).");
+				"Finish ChangeTrainerService -> serve(FthLong).");
 		return FthServletCommand.EMPTY_JSON;
 	}
 }
