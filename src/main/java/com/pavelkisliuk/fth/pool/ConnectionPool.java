@@ -9,12 +9,15 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -34,6 +37,26 @@ public enum ConnectionPool {
 	INSTANCE(16);
 
 	private final Logger LOGGER;
+
+	/**
+	 * Database properties.
+	 */
+	private final Properties DATABASE_PROPERTIES;
+
+	/**
+	 * Url to database property file.
+	 */
+	private final String PROPERTY_URL = "database.properties";
+
+	/**
+	 * URL key in property file.
+	 */
+	private final String KEY_URL = "url";
+
+	/**
+	 * Path to database.
+	 */
+	private final String DATABASE_URL;
 
 	/**
 	 * Lock for multithreading realization.
@@ -79,6 +102,21 @@ public enum ConnectionPool {
 		this.poolSize = startPoolSize;
 		isCreated = new AtomicBoolean();
 		try {
+			try (InputStream fileInputStream =
+						 ConnectionPool.class.getClassLoader().getResourceAsStream(PROPERTY_URL)) {
+				if (fileInputStream == null) {
+					throw new ConnectionPoolException(
+							"null input stream in ConnectionPool -> crateConnection().");
+				}
+
+				DATABASE_PROPERTIES = new Properties();
+				DATABASE_PROPERTIES.load(fileInputStream);
+				DATABASE_URL = DATABASE_PROPERTIES.getProperty(KEY_URL);
+			} catch (IOException e) {
+				throw new ConnectionPoolException(
+						"IOException in ConnectionPool -> crateConnection().", e);
+			}
+
 			createPool();
 		} catch (ConnectionPoolException e) {
 			LogManager.getLogger().log(Level.FATAL,
@@ -157,7 +195,7 @@ public enum ConnectionPool {
 	 *
 	 * @param connection is returning connection.
 	 */
-	public void releaseConnection(Connection connection){
+	public void releaseConnection(Connection connection) {
 		LOGGER.log(Level.DEBUG,
 				"Start ConnectionPool -> releaseConnection(Connection).");
 		if (connection == null ||
@@ -208,11 +246,7 @@ public enum ConnectionPool {
 			LOGGER.log(Level.INFO,
 					"Start creation.");
 			DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-			for (int i = 0; i < poolSize; i++) {
-				connectionPool.add(new ConnectionProxy(
-						DriverManager.getConnection(PoolPropertyInitializer.getDatabaseUrl(),
-								PoolPropertyInitializer.getDataBaseProperties())));
-			}
+			seedPool();
 			if (isOpen()) {
 				isCreated.set(true);
 				LOGGER.log(Level.INFO,
@@ -227,6 +261,23 @@ public enum ConnectionPool {
 		}
 		LOGGER.log(Level.DEBUG,
 				"Finish ConnectionPool -> createPool().");
+	}
+
+	/**
+	 * Create connection's and pit in pool.
+	 * <p>
+	 *
+	 * @throws ConnectionPoolException if {@code IOException}, {@code SQLException} occurred.
+	 */
+	private void seedPool() throws ConnectionPoolException {
+		try {
+			for (int i = 0; i < poolSize; i++) {
+				connectionPool.add(new ConnectionProxy(DriverManager.getConnection(DATABASE_URL, DATABASE_PROPERTIES)));
+			}
+		} catch (SQLException e) {
+			throw new ConnectionPoolException(
+					"SQLException in ConnectionPool -> crateConnection().", e);
+		}
 	}
 
 	/**
@@ -372,8 +423,7 @@ public enum ConnectionPool {
 				LOGGER.log(Level.ERROR,
 						"Invalid connection in pool. Recreate connection!!!");
 				connectionProxy.closeProxy();
-				return new ConnectionProxy(DriverManager.getConnection(PoolPropertyInitializer.getDatabaseUrl(),
-						PoolPropertyInitializer.getDataBaseProperties()));
+				return new ConnectionProxy(DriverManager.getConnection(DATABASE_URL, DATABASE_PROPERTIES));
 			}
 		} catch (SQLException e) {
 			throw new ConnectionPoolException(
@@ -389,7 +439,7 @@ public enum ConnectionPool {
 	 * @param connectionProxy for validation.
 	 * @return valid {@code ConnectionProxy}.
 	 */
-	private ConnectionProxy validateIn(ConnectionProxy connectionProxy){
+	private ConnectionProxy validateIn(ConnectionProxy connectionProxy) {
 		try {
 			if (!connectionProxy.getAutoCommit()) {
 				LOGGER.log(Level.ERROR,
@@ -399,14 +449,13 @@ public enum ConnectionPool {
 		} catch (SQLException e) {
 			try {
 				connectionProxy.closeProxy();
-				connectionProxy = new ConnectionProxy(DriverManager.getConnection(PoolPropertyInitializer.getDatabaseUrl(),
-						PoolPropertyInitializer.getDataBaseProperties()));
+				connectionProxy = new ConnectionProxy(DriverManager.getConnection(DATABASE_URL, DATABASE_PROPERTIES));
 			} catch (SQLException | ConnectionPoolException ex) {
+				// FIXME: 06.08.2019 отправить письмо админу
 				LOGGER.log(Level.FATAL,
 						"POSSIBLE CONNECTION LEAK IN CONNECTION POOL!!!");
 				throw new RuntimeException(
 						"POSSIBLE CONNECTION LEAK IN CONNECTION POOL!!!", ex);
-				// FIXME: 06.08.2019 отправить письмо админу
 			}
 		}
 		return connectionProxy;
