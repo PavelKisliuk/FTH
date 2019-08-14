@@ -101,21 +101,15 @@ public enum ConnectionPool {
 
 		this.poolSize = startPoolSize;
 		isCreated = new AtomicBoolean();
-		try {
-			try (InputStream fileInputStream =
-						 ConnectionPool.class.getClassLoader().getResourceAsStream(PROPERTY_URL)) {
-				if (fileInputStream == null) {
-					throw new ConnectionPoolException(
-							"null input stream in ConnectionPool -> crateConnection().");
-				}
-
-				DATABASE_PROPERTIES = new Properties();
-				DATABASE_PROPERTIES.load(fileInputStream);
-				DATABASE_URL = DATABASE_PROPERTIES.getProperty(KEY_URL);
-			} catch (IOException e) {
+		try (InputStream fileInputStream =
+					 ConnectionPool.class.getClassLoader().getResourceAsStream(PROPERTY_URL)) {
+			if (fileInputStream == null) {
 				throw new ConnectionPoolException(
-						"IOException in ConnectionPool -> crateConnection().", e);
+						"null input stream in ConnectionPool -> crateConnection().");
 			}
+			DATABASE_PROPERTIES = new Properties();
+			DATABASE_PROPERTIES.load(fileInputStream);
+			DATABASE_URL = DATABASE_PROPERTIES.getProperty(KEY_URL);
 
 			createPool();
 		} catch (ConnectionPoolException e) {
@@ -123,6 +117,11 @@ public enum ConnectionPool {
 					"ConnectionPoolException IN ConnectionPool CONSTRUCTOR!!!", e);
 			throw new RuntimeException(
 					"ConnectionPoolException in ConnectionPool constructor.", e);
+		} catch (IOException e) {
+			LogManager.getLogger().log(Level.FATAL,
+					"IOException IN ConnectionPool CONSTRUCTOR!!!", e);
+			throw new RuntimeException(
+					"IOException in ConnectionPool constructor.", e);
 		}
 	}
 
