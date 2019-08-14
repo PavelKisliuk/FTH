@@ -1,10 +1,10 @@
 /*  By Pavel Kisliuk, 07.07.2019
  *  This is class for education and nothing rights don't reserved.
  */
-package com.pavelkisliuk.fth.controller;
+package com.pavelkisliuk.fth.service;
 
 import com.google.gson.Gson;
-import com.pavelkisliuk.fth.exception.FthControllerException;
+import com.pavelkisliuk.fth.exception.FthServiceException;
 import com.pavelkisliuk.fth.model.FthData;
 
 /**
@@ -27,6 +27,39 @@ public interface FthService<T extends FthData> {
 	String KEY_REDIRECT = "redirect";
 
 	/**
+	 * Key in JSON String.
+	 */
+	String KEY_ERROR = "errorRedirect";
+
+	/**
+	 * Key in JSON String.
+	 */
+	String KEY_DATA = "data";
+
+	/**
+	 * Key in JSON String.
+	 */
+	String KEY_CLIENT = "client";
+
+	/**
+	 * Key in JSON String.
+	 */
+
+	String KEY_TRAINER = "trainer";
+	/**
+	 * Key in JSON String.
+	 */
+	String KEY_ERROR_MESSAGE = "errorMessage";
+
+	/**
+	 * Key in JSON String.
+	 */
+	String KEY_BUTTON_CONDITION = "buttonCondition";
+
+	String EXERCISE_DENIED = "Exercise denied.";
+	String EXERCISE_REQUESTED = "Exercise requested.";
+
+	/**
 	 * Instance for JSON string creation.
 	 */
 	Gson GSON = new Gson();
@@ -38,7 +71,7 @@ public interface FthService<T extends FthData> {
 	 *
 	 * @param data special instance of {@code FthData} for processing.
 	 * @return JSON string.
-	 * @throws FthControllerException if special situations occurred.
+	 * @throws FthServiceException if special situations occurred.
 	 */
-	String serve(T data) throws FthControllerException;
+	String serve(T data) throws FthServiceException;
 }
