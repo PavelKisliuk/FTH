@@ -1,7 +1,7 @@
 package com.pavelkisliuk.fth.servlet;
 
-import com.pavelkisliuk.fth.command.CommandGetType;
-import com.pavelkisliuk.fth.command.CommandPostType;
+import com.pavelkisliuk.fth.command.impl.CommandGetType;
+import com.pavelkisliuk.fth.command.impl.CommandPostType;
 import com.pavelkisliuk.fth.command.FthServletCommand;
 import com.pavelkisliuk.fth.exception.ConnectionPoolException;
 import com.pavelkisliuk.fth.exception.FthCommandException;

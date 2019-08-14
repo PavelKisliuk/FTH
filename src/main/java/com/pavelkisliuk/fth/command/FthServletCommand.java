@@ -4,6 +4,7 @@
 
 package com.pavelkisliuk.fth.command;
 
+import com.pavelkisliuk.fth.command.impl.TrainerActionValidator;
 import com.pavelkisliuk.fth.exception.FthCommandException;
 
 import javax.servlet.http.HttpServletRequest;
